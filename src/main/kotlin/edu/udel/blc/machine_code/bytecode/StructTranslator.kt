@@ -133,7 +133,7 @@ class StructTranslator(
 
                     // if field not equal, return false
                     method.invokeStatic(java_util_Objects, "boolean equals(Object, Object)")
-                    method.ifZCmp(NE, falseLabel)
+                    method.ifZCmp(EQ, falseLabel)
                 }
                 // if all fields equal, return true
                 method.push(true)

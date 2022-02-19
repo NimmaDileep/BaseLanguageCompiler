@@ -4,11 +4,15 @@ var p1: Point = Point(10, 10);
 var p2: Point = Point(10, 10);
 var p3: Point = Point(0, 0);
 
-var a1: [[Int]] = [[1], [2], [3]];
+//var points: [Point] = [p1, p2, p3];
 
-print(len(a1));
+//print(points);
 
-print(p1);
+//var a1: [[Int]] = [[1], [2], [3]];
+
+//print(len(a1));
+
+//print(p1);
 print(p1 == p1);
 print(p1 == p2);
 print(p1 == p3);
