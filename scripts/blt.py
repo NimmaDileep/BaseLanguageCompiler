@@ -82,6 +82,11 @@ def get_test_files(path):
 
 
 def run_test(path, compiler):
+    # check if compiler is executable
+    if not os.path.isfile(compiler):
+        print("Compiler not found: {}".format(compiler))
+        exit(1)
+
     # run the program and get the stdout and stderr
     process = subprocess.Popen(
         [compiler, path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
