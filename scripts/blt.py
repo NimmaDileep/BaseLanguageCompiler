@@ -48,10 +48,10 @@ def main():
                 print(error)
             print("-----------------------------------------------------")
 
-        print("Some tests failed, see above for details")
+        print("[✗] Some tests failed, see above for details")
         exit(1)
 
-    print("All tests passed")
+    print("[✔] All tests passed")
 
 
 def parse_args():
