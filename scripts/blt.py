@@ -13,6 +13,7 @@ If the tests fail, the script will print the output of the program and the expec
 import argparse
 from email.policy import default
 import os
+import subprocess
 
 
 def main():
@@ -25,21 +26,32 @@ def main():
 
     print("Running {} tests".format(len(tests)))
     for test in tests:
-        output = run_test(test, args.compiler)
+        output, error = run_test(test, args.compiler)
         passed, expected = check_test_output(test, output)
 
         if not passed:
-            failed_tests.append((test, output, expected))
+            failed_tests.append((test, output, expected, error))
 
     if len(failed_tests) > 0:
-        for test, output, expected in failed_tests:
-            print("Test {} failed".format(test))
+        print("Passed {}/{} tests".format(len(tests) - len(failed_tests), len(tests)))
+        for test, output, expected, error in failed_tests:
+            print("-----------------------------------------------------")
+            print('Test "{}" failed'.format(test))
+            print("=====================================================")
             print("Expected:")
             print(expected)
             print("Got:")
             print(output)
-    else:
-        print("All tests passed")
+
+            if error:
+                print("Error:")
+                print(error)
+            print("-----------------------------------------------------")
+
+        print("Some tests failed, see above for details")
+        exit(1)
+
+    print("All tests passed")
 
 
 def parse_args():
@@ -70,11 +82,13 @@ def get_test_files(path):
 
 
 def run_test(path, compiler):
-    # run the program and get the exit code and output
-    process = os.popen(compiler + " " + path)
-    output = process.read()
+    # run the program and get the stdout and stderr
+    process = subprocess.Popen(
+        [compiler, path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+    stdout, stderr = stdout.decode("utf-8"), stderr.decode("utf-8")
 
-    return output
+    return stdout, stderr
 
 
 def check_test_output(path, output):
