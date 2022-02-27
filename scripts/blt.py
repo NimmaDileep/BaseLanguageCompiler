@@ -15,6 +15,7 @@ import argparse
 from email.policy import default
 import os
 import subprocess
+from difflib import unified_diff
 
 
 def main():
@@ -39,10 +40,10 @@ def main():
             print("-----------------------------------------------------")
             print('Test "{}" failed'.format(test))
             print("=====================================================")
-            print("Expected:")
-            print(expected)
-            print("Got:")
-            print(output)
+
+            diff = unified_diff(output.splitlines(),
+                                expected.splitlines(), lineterm="", fromfile="Output", tofile="Expected")
+            print("\n".join(diff))
 
             if error:
                 print("Error:")

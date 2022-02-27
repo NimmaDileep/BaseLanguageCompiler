@@ -4,6 +4,7 @@
 /generated
 /java.hprof.txt
 /.gradle
+/bin
 /*.jar
 
 # IntelliJ User-specific stuff

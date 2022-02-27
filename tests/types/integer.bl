@@ -1,0 +1,17 @@
+var x: Int = 10;
+
+print(x);
+
+var y: Int = -212;
+
+print(y);
+
+var z: Int = 0;
+print(z);
+
+var w: Int = -0;
+
+print(w);
+
+
+print(2394);
