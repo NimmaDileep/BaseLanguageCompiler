@@ -3,8 +3,9 @@ Base Language Tester
 ====================
 
 This script is used to run tests on the base language. Given a folder/file, it will run all `.bl` files 
-and (a.) ensure they properly run and (b.) ensure that the output given is the same as the provided
-`.bl.expected` file.
+and 
+(a.) ensure they properly run (or intentionally fail to compile) and 
+(b.) ensure that the output given is the same as the provided `.bl.expected` file.
 
 If the tests fail, the script will print the output of the program and the expected output.
 
@@ -27,7 +28,7 @@ def main():
     print("Running {} tests".format(len(tests)))
     for test in tests:
         output, error = run_test(test, args.compiler)
-        passed, expected = check_test_output(test, output)
+        passed, expected = check_test_output(test, output, error)
 
         if not passed:
             failed_tests.append((test, output, expected, error))
@@ -96,7 +97,7 @@ def run_test(path, compiler):
     return stdout, stderr
 
 
-def check_test_output(path, output):
+def check_test_output(path, output, error):
     # check the output against the expected output
     expected_path = path.replace(".bl", ".bl.expected")
 
@@ -106,6 +107,12 @@ def check_test_output(path, output):
     else:
         print("Expected output file not found: {}".format(expected_path))
         return False, ""
+
+    output = output.strip()
+    expected = expected.strip()
+
+    if expected == "ERROR":
+        return len(error) > 0, expected
 
     return output == expected, expected
 

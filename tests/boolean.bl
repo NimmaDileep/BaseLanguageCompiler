@@ -1,7 +1,0 @@
-var x: Boolean = false;
-
-print(x);
-
-x = !x;
-
-print(x);
