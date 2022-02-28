@@ -1,0 +1,13 @@
+struct Dog {
+    age: Int,
+    name: String,
+    isHappy: Boolean
+}
+
+print(Dog(5, "Fido", true));
+
+var dog: Dog = Dog(3, "Spot", false);
+
+print(dog.age);
+print(dog.name);
+print(dog.isHappy);

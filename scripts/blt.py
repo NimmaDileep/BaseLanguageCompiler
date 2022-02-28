@@ -12,7 +12,6 @@ If the tests fail, the script will print the output of the program and the expec
 """
 
 import argparse
-from email.policy import default
 import os
 import subprocess
 from difflib import unified_diff
@@ -20,13 +19,13 @@ from difflib import unified_diff
 
 def main():
     args = parse_args()
-    tests = get_test_files(args.path)
+    tests, ignored = get_test_files(args.path)
 
     # for each file, run the program and compare the output to the expected output
     # if the output is different, store this in a list of failed tests
     failed_tests = []
 
-    print("Running {} tests".format(len(tests)))
+    print("Running {} tests ({} ignored)".format(len(tests), ignored))
     for test in tests:
         output, error = run_test(test, args.compiler)
         passed, expected = check_test_output(test, output, error)
@@ -68,6 +67,7 @@ def parse_args():
 def get_test_files(path):
     # Find which files need to be tested
     tests = []
+    ignored = 0
 
     if os.path.isfile(path):
         tests = [path]
@@ -76,11 +76,13 @@ def get_test_files(path):
             for file in files:
                 if file.endswith(".bl"):
                     tests.append(os.path.join(root, file))
+                elif file.endswith(".ignore"):
+                    ignored += 1
     else:
         print("Invalid path, please provide a valid file or folder")
         exit(1)
 
-    return tests
+    return tests, ignored
 
 
 def run_test(path, compiler):
@@ -112,8 +114,8 @@ def check_test_output(path, output, error):
     output = output.strip()
     expected = expected.strip()
 
-    if expected == "ERROR":
-        return len(error) > 0, expected
+    if len(error) > 0 or expected == "ERROR":
+        return expected == "ERROR" and len(error) > 0, expected
 
     return output == expected, expected
 

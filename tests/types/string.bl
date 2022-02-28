@@ -1,0 +1,14 @@
+var s: String = "hello";
+
+print(s);
+
+var t: String = " world";
+
+print(t);
+
+print("");
+
+print(" ");
+
+print(concat(s, t));
+
