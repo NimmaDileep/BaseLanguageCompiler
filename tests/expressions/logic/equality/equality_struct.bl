@@ -1,0 +1,14 @@
+struct Point {
+    x: Int,
+    y: Int
+}
+
+var a: Point = Point(1, 2);
+var b: Point = Point(1, 2);
+var c: Point = a;
+
+print(a == b);
+print(b == c);
+print(c != b);
+print(a == Point(2, 1));
+
