@@ -30,5 +30,7 @@
 
   * Precedence of operators property is followed with || and && operators. 
 
+  * Void functions/methods with return type 'unit' doesn’t work.
+  
   
      
