@@ -1,0 +1,11 @@
+var x: Boolean = false;
+var y: Boolean = true;
+var z: Boolean = true;
+
+print(x || y);
+print(y && z);
+print(!x);
+
+print(x || !y);
+print(!y && z);
+

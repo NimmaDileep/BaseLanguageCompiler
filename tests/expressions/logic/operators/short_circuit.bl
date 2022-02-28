@@ -1,0 +1,7 @@
+fun f() -> Boolean {
+    print("f called");
+    return true;
+} 
+
+if(true || f()) {}
+if(false && f()) {}
