@@ -1,0 +1,8 @@
+fun modInt(x: Int) -> Int {
+    x = 1;
+    return x;
+}
+
+var y: Int = 5;
+modInt(y);
+print(y);

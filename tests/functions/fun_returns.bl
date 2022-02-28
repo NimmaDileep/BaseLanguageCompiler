@@ -1,0 +1,30 @@
+struct Point {
+    x: Int,
+    y: Int
+}
+
+fun x() -> Int {
+    return 1;
+}
+
+fun y() -> String {
+    return "dog";
+}
+
+fun z() -> Boolean {
+    return true;
+}
+
+fun pt() -> Point {
+    return Point(1, 2);
+}
+
+fun arr() -> [Int] {
+    return [1, 2, 3];
+}
+
+print(x());
+print(y());
+print(z());
+print(pt());
+print(arr());
