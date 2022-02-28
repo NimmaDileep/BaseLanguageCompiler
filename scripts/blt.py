@@ -35,7 +35,6 @@ def main():
             failed_tests.append((test, output, expected, error))
 
     if len(failed_tests) > 0:
-        print("Passed {}/{} tests".format(len(tests) - len(failed_tests), len(tests)))
         for test, output, expected, error in failed_tests:
             print("-----------------------------------------------------")
             print('Test "{}" failed'.format(test))
@@ -50,6 +49,7 @@ def main():
                 print(error)
             print("-----------------------------------------------------")
 
+        print("Passed {}/{} tests".format(len(tests) - len(failed_tests), len(tests)))
         print("[✗] Some tests failed, see above for details")
         exit(1)
 
