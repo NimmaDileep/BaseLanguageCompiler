@@ -25,7 +25,8 @@ def main():
     # if the output is different, store this in a list of failed tests
     failed_tests = []
 
-    print("Running {} tests ({} ignored)".format(len(tests), ignored))
+    print("Found {} tests (running {}, ignoring {})".format(
+        len(tests) + ignored, len(tests), ignored))
     for test in tests:
         output, error = run_test(test, args.compiler)
         passed, expected = check_test_output(test, output, error)

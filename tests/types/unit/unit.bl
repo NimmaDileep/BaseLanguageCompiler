@@ -1,0 +1,3 @@
+var u: Unit = unit;
+
+print(u);
