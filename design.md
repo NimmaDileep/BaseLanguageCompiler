@@ -8,6 +8,8 @@ The test cases were designed to be as comprehensive as possible. Each test case 
 
 The overall language is covered by testing each documented feature of the language as described in the language spec. These tests cover desired and undesired usages of certain features to ensure general correctness of the compiler implementation. Tests are separated into logical subfolders that categorize the tests by the overall language feature they test. Positive and negative examples are used to expect certain errors or to expect certain outputs from the compiler execution. Together, these tests aim to cover the Base Language in its entirety.
 
+**Note**: Some test files contain the `.ignore` suffix due to known issues in the compiler that are not yet fixed (described further in `README.md`).
+
 ### Types
 
 `tests/types/struct/struct_empty.bl` - Test that a struct with no fields is valid.
