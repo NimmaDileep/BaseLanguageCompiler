@@ -48,9 +48,9 @@ String comparison goes character by character to compare (doesn’t check length
   Syntax- `var name: Int = value`
 
   Here,
-   var: keyword for variable
-   name: variable name
-   value: Integers
+   *var: keyword for variable
+   *name: variable name
+   *value: Integers
 
   Example- var num: Int = 56;
 
