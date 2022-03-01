@@ -177,7 +177,7 @@ Comparison operators consume two values that are either both `Boolean`, `Int`, o
 
 ### Boolean 
 
-Syntax- `value3 = value1 `comparison operator` value2`
+Syntax- value3 = value1 `comparison operator` value2
 
 value1: Boolean
 value2: Boolean
@@ -186,7 +186,7 @@ Example- print(true <= false);
 
 ### Int
 
-Syntax- `value3 = value1 `comparison operator` value2`
+Syntax- value3 = value1 `comparison operator` value2
 
 value1: Int
 value2: Int
@@ -195,7 +195,7 @@ Example- print(55 > 5);
 
 ### String
 
-Syntax- `value3 = value1 `comparison operator` value2`
+Syntax- value3 = value1 `comparison operator` value2
 
 value1: String
 value2: String
@@ -208,7 +208,7 @@ Equality operators produce a `Boolean` value
 
 Equality operators consume two values that are any type
 
-Syntax- `value3 = value1 `Equality operator` value2`
+Syntax- value3 = value1 `Equality operator` value2
 
 value1: Any type
 value2: Any type
@@ -223,6 +223,13 @@ Binary logical operators (&&, ||) consume two `Boolean` values
 Unary logical operators (!) consume one `Boolean` value
 
 Binary logical operators "short-circuit". If the result of the expression can be determined from only evaluating the left-hand side value, the right-hand side value is not evaluated.
+
+Syntax- value3 = value1 `logical operator` value2
+
+value1: Boolean
+value2: Boolean
+
+Example- print(true && false);
 
 ### Literal values
 
