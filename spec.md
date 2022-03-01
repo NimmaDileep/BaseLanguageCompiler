@@ -67,12 +67,58 @@ String comparison goes character by character to compare (doesn’t check length
 
   Example- var str: String = "Hello, World";
 
-* `Unit` - indicates the absence of a value. unit is the only value of type Unit
+* `Unit`
+
+  It indicates the absence of a value. unit is the only value of type Unit.
+  Unit is used to indicate that a function is called only for its side effects.
+  It's functions can be used generically wherever a generic first class function is required.
+
+  Syntax- `var name: Unit = value;`
+
+  Here,
+   var: keyword for variable
+   name: variable name
+   value: unit
+
+  Example- var u: Unit = unit;
 
 * `Structure`: `struct <identifier> { <identifier> : <type>, ... }`
+
+  Structure is a user-defined datatype in C language which allows us to combine data of different types together.
+  Structure helps to construct a complex data type which is more meaningful. It is somewhat similar to an Array,
+  but an array holds data of similar type only.
+
+  Syntax- `struct name {
+           var1: type1,
+           var2: type2,
+           var3: type3
+           }`
+
+  Here,
+   name: Structure name
+   var: variable name
+   type: variable type
+
+  Example- struct Student {
+            name: String,
+            age: Int,
+           }
+
 * `Array`: `[<type>]`
 
+  An array is a collection of a fixed number of values. The array items are called elements of the array.
+  Each element can be referred to by an index. Arrays need at least one element.
+
 * `Any` - super type of all types
+
+  Syntax- `var name: Any = value;`
+
+  Here,
+   var: keyword for variable
+   name: variable name
+   value: Any type of value
+
+  Example- var amount: Any = 35.6;
 
 ## Expressions
 
