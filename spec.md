@@ -160,6 +160,14 @@ Example-  var x: Int = 5;
 
           print(x * y);
 
+###Modulo
+
+Syntax- `value3 = value1 % value2`
+
+Example-  var x: Int = 10;
+          var y: Int = 2;
+
+          print(x % y);
 
 ### Comparison (>, >=, <, <=)
 
