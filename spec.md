@@ -9,6 +9,11 @@
   by the based or current versions i.e., some extensions like object oriented programming for C++, Java etc and collects for Java. 
   This Base Language is based on Kotlin syntax. Most of the syntaxes and semantics are based on the Kotlin language. 
 
+## Variables
+
+Variables are declared using the "var" keyword. Variables must specify their type and must be initialized with an expression (e.g., `var x: Int = 5;`)
+
+
 ## Types
 
 * `Boolean`
@@ -264,13 +269,45 @@ An expression followed by a semi-colon `;` is am expression statement
 
 An if statement executes one of two statements based on some condition value (e.g., `if (c) s1 else s2`)
 
+Syntax:
+
+```
+ if (condition){
+          statement1
+        }
+        else{
+          statement2
+        }
+```
+
+Example: 
+
+```
+if(x == 4) {
+    print("x is 4");
+} else {
+    print("x is not 4");
+}
+```
+An if statement cannot be executed without providing any condition. 
+else block should always consists of its preceding if statement.
+
 ### While
 
 A while loop executes the body repeatedly as long as the condition expression evaluates to true (e.g., `while (c) s`)
 
-## Variables
+Syntax: while(condition){
+          statement or block of statements
+        }
 
-Variables are declared using the "var" keyword. Variables must specify their type and must be initialized with an expression (e.g., `var x: Int = 5;`)
+Example: 
+
+```
+while(x < 10) {
+    print(x);
+    x = x + 1;
+}
+```
 
 ## Functions
 
