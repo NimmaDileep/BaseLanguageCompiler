@@ -1,12 +1,11 @@
-
 # Base Language Compiler Testing
 
 Author:
-  * James Clause <clause@udel.edu>
+  * James Clause - <clause@udel.edu>
 
 Primary assignees:
-  * Jinay Jain  <jjain@udel.edu>
-  * Dileep Nimma <dileep@udel.edu>
+  * Jinay Jain - <jjain@udel.edu>
+  * Dileep Nimma - <dileep@udel.edu>
 
 ## Problem Description
 The objective of this assignment is to get familiar with reading and
