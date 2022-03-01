@@ -1,52 +1,105 @@
-# Base Language Compiler Testing
+# Test Suite Design
 
-Author:
-  * James Clause - <clause@udel.edu>
+## Methodology
 
-Primary assignees:
-  * Jinay Jain - <jjain@udel.edu>
-  * Dileep Nimma - <dileep@udel.edu>
+The test cases were designed to be as comprehensive as possible. Each test case should ideally test a single aspect of the language while being minimally dependent on other language features. Some cases, however, are more complex than that and integrate several language features (found under `tests/programs`).
 
-## Problem Description
-The objective of this assignment is to get familiar with reading and
-writing programs in Base Language Programming language. It is expected
-to get familiar and write several input programs in base language referring
-the Base Language documentation. The goal is to gain knowlege of working 
-of base language compiler and to test the overall working when the the input
-programs and coresponding test cases are executed together to understand its 
-behaviour.
+## Test Case Description
 
-## Background and References
-Knowledge of basic C programming language is required and the concept 
-of what happens when we write and run the program on an IDE. Though 
-there is a supporting documentation provided for Base Language, It is
-preferable to gain some basic concepts of writing programs i.e., 
-program syntaxes and semantics. Since the assignment majorly involves
-testing the behaviour and performance of a compiler, hence it is preferable
-to gain some knowledge of unit testing.
+The overall language is covered by testing each documented feature of the language as described in the language spec. These tests cover desired and undesired usages of certain features to ensure general correctness of the compiler implementation. Tests are separated into logical subfolders that categorize the tests by the overall language feature they test. Positive and negative examples are used to expect certain errors or to expect certain outputs from the compiler execution. Together, these tests aim to cover the Base Language in its entirety.
 
-## Requirements
-The Base Language Compiler has been developed such that it could be easily 
-understood by an entry level programmer. It is written such that it can 
-perform all major types of operations, handle methods and user defined 
-data types. As a whole, it has been designed to function as a normal compiler.
-The challenge here is to test, how well do they cover the language check if 
-all the functionalities work properly and all together by testing all the 
-functionalities based on how much confidence we want. 
+### Types
 
-## Proposed Design
-We have documented a list of test cases. The test cases have been designed 
-based on concepts on basic programming languages and corresponding testcases 
-have been developed to cover majority of the concepts. We used following 
-testcase plan:
-1. Types	
-2. Expressions
-3. Statements
-4. Variables
-5. Functions
+`tests/types/struct/struct_empty.bl` - Test that a struct with no fields is valid.
 
+`tests/types/struct/complex_type.bl.ignore` - Test the creation of a complex struct type with various nested structs and arrays.
 
-## Testing
-A python testing script was developed to run all the tests and compare original 
-behaviour and expected outputs to check the working and coverage of the language.
+`tests/types/struct/struct_basic.bl` - Test the creation of a basic struct type with primitive fields.
 
+`tests/types/string/string.bl` - Test the creation and operation on basic string types.
+
+`tests/types/unit/unit.bl` - Test the creation of the single unit type with the unit literal.
+
+`tests/types/unit/unit_as_not_unit.bl` - Test whether creating a unit type as a non-unit type is an error.
+
+`tests/types/any/any.bl` - Test the creation of the single Any type, using other types as the underlying type.
+
+`tests/types/any/any_assignment.bl` - Test assigning Any to a non-Any type, even if the non-Any type is a subtype of Any.
+
+`tests/types/any/any_operations.bl` - Test the possibility of using operations on the Any type.
+
+`tests/types/boolean/boolean.bl` - Test basic assignment and negation of booleans.
+
+`tests/types/int/int_as_string.bl` - Test the (invalid) creation of an integer type with a string literal.
+
+`tests/types/int/integer.bl` - Test the creation of an integer type with various integer literals (positives, negatives, zero)
+
+`tests/types/int/int_as_bool.bl` - Test the (invalid) creation of an integer type with a boolean literal.
+
+`tests/types/array/arrays.bl.ignore` - Test the creation of an array with indexing and length checking.
+
+### Functions
+
+`tests/functions/fun_returns.bl` - Test the functionality of the `return` keyword in functions.
+
+`tests/functions/fun_simple.bl.ignore` - Test the creation of a simple function that has no return or arguments.
+
+`tests/functions/fun_invalid_arg.bl` - Test calling a function using an invalid argument type.
+
+`tests/functions/fun_pass_by.bl.ignore` - Test the passing of arguments by value or by reference.
+
+`tests/functions/builtins.bl` - Test the usage of built-in functions.
+
+`tests/functions/fun_invalid_arg_num.bl` - Test calling a function using an invalid number of arguments.
+
+### Expressions
+
+`tests/expressions/logic/operators/short_circuit.bl.ignore` - Test the short-circuit evaluation of logical operators.
+
+`tests/expressions/logic/operators/logical_ops.bl.ignore` - Test the usage of logical operators (&&, ||, !).
+
+`tests/expressions/logic/operators/logical_order_of_operations.bl.ignore` - Test the order of operations of logical operators.
+
+`tests/expressions/logic/equality/equality_array.bl` - Test the equality of arrays.
+
+`tests/expressions/logic/equality/equality_two_type.bl` - Test the equality of two different types.
+
+`tests/expressions/logic/equality/equality.bl` - Test the equality of two expressions of the same type.
+
+`tests/expressions/logic/equality/equality_struct.bl` - Test the equality of two expressions of the same struct type.
+
+`tests/expressions/logic/comparison/cmp_bool.bl` - Test the comparison of two boolean expressions using the comparison operations (<, >, <=, >=).
+
+`tests/expressions/logic/comparison/cmp_int.bl` - Test the comparison of two integer expressions using the comparison operations.
+
+`tests/expressions/logic/comparison/cmp_string.bl` - Test the comparison of two string expressions using the comparison operations.
+
+`tests/expressions/arithmetic/mod_zero.bl` - Test the usage of the modulo operator with a zero divisor (should be an error).
+
+`tests/expressions/arithmetic/order_of_operations.bl.ignore` - Test the order of operations of the arithmetic operators.
+
+`tests/expressions/arithmetic/add.bl.ignore` - Test the addition of two integer expressions.
+
+`tests/expressions/arithmetic/sub.bl` - Test the subtraction of two integer expressions.
+
+`tests/expressions/arithmetic/mod.bl.ignore` - Test the modulo of two integer expressions.
+
+`tests/expressions/arithmetic/mul.bl.ignore` - Test the multiplication of two integer expressions.
+
+## Special Statements
+
+`tests/statements/while/while_loop.bl` - Test the usage of the `while` statement with a simple loop.
+
+`tests/statements/while/while_no_cond.bl` - Test the usage of the `while` statement with no condition (should be an error).
+
+`tests/statements/if/if_stmt.bl` - Test the usage of the `if` statement with a simple condition.
+
+`tests/statements/if/only_else.bl` - Test the usage of an isolated `else` statement (should be an error).
+
+`tests/statements/if/if_no_cond.bl` - Test the usage of the `if` statement with no condition (should be an error).
+
+## Comprehensive Test Cases
+
+`tests/programs/pyramid.bl` - Creates a pyramid of asterisks using various language features like `while`, `if`, assignment, comparison, printing, etc.
+
+`tests/programs/fibonacci.bl.ignore` - Ouputs the Fibonacci numbers using function recursion.
