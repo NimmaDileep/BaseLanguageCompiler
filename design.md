@@ -39,11 +39,12 @@ We have documented a list of test cases. The test cases have been designed
 based on concepts on basic programming languages and corresponding testcases 
 have been developed to cover majority of the concepts. We used following 
 testcase plan:
-> Types	
-> Expressions
-> Statements
-> Variables
-> Functions
+1. Types	
+2. Expressions
+3. Statements
+4. Variables
+5. Functions
+
 
 ## Testing
 A python testing script was developed to run all the tests and compare original 
