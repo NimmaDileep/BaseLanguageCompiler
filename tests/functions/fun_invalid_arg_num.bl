@@ -1,0 +1,5 @@
+fun bar(x: Int, y: Boolean) {
+    return y;
+}
+
+bar(2);

@@ -1,0 +1,20 @@
+struct Car {
+    wheels: Int,
+    doors: Int
+}
+
+// Print
+print(3);
+print("Hello");
+print(false);
+print([3, 2]);
+print(Car(4, 1));
+
+// Concat
+print(concat("Hello", " World"));
+
+// Str
+var x: Int = 5;
+var y: String = str(x);
+
+print(y);

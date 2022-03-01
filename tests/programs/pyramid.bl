@@ -1,0 +1,16 @@
+var num_levels: Int = 5;
+
+while(num_levels > 0) {
+
+    var num_stars: Int = num_levels;
+    var level_str: String = "";
+
+    while(num_stars > 0) {
+        level_str = concat(level_str, "*");
+        num_stars = num_stars - 1;
+    }
+
+    print(level_str);
+
+    num_levels = num_levels - 1;
+}

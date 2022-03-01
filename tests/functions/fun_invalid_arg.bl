@@ -1,0 +1,6 @@
+fun foo(x: Int, y: String) -> String {
+    return y;
+}
+
+// should be a string in the second arg
+print(foo(1, 2));
