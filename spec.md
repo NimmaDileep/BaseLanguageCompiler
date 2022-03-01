@@ -133,7 +133,7 @@ Unary arithmetic operators (-) consume one `Int` value
 
 Arithmetic operations - `Addition, Subtraction, Multiplication, Modulo`
 
-###Addition
+### Addition
 
 Syntax- `value3 = value1 + value2`
 
@@ -142,7 +142,7 @@ Example-  var x: Int = 5;
 
           print(x + y);
 
-###Subtraction
+### Subtraction
 
 Syntax- `value3 = value1 1 value2`
 
@@ -151,7 +151,7 @@ Example-  var x: Int = 25;
 
           print(x - y);
 
-###Multiplication
+### Multiplication
 
 Syntax- `value3 = value1 + value2`
 
@@ -160,7 +160,7 @@ Example-  var x: Int = 5;
 
           print(x * y);
 
-###Modulo
+### Modulo
 
 Syntax- `value3 = value1 % value2`
 
@@ -175,11 +175,45 @@ Comparison operators produce a `Boolean` value
 
 Comparison operators consume two values that are either both `Boolean`, `Int`, or `String`
 
+### Boolean 
+
+Syntax- `value3 = value1 `comparison operator` value2`
+
+value1: Boolean
+value2: Boolean
+
+Example- print(true <= false);
+
+### Int
+
+Syntax- `value3 = value1 `comparison operator` value2`
+
+value1: Int
+value2: Int
+
+Example- print(55 > 5);
+
+### String
+
+Syntax- `value3 = value1 `comparison operator` value2`
+
+value1: String
+value2: String
+
+Example- print("Compiler" <= "Construction");
+
 ### Equality (==, !=)
 
 Equality operators produce a `Boolean` value
 
 Equality operators consume two values that are any type
+
+Syntax- `value3 = value1 `Equality operator` value2`
+
+value1: Any type
+value2: Any type
+
+Example- print(true == "false");
 
 ### Logical (!, &&, ||)
 
