@@ -1,162 +1,193 @@
 # Base Language
 
-# Introduction 
+# Introduction
 
-* The Base Language is a programming language built on the knowledge of basic C programming language and involves all the concepts
-  similar to C programming. Although here the file handling concepts have not been explored other functionality seems to work relatively
-  same but there are certain things which operate differently. Most of the programming languages are derived from basic C programming but
-  all of them differ syntactically and sometimes semantically. Some languages are based on functionalities which could not be fulfilled
-  by the based or current versions i.e., some extensions like object oriented programming for C++, Java etc and collects for Java. 
-  This Base Language is based on Kotlin syntax. Most of the syntaxes and semantics are based on the Kotlin language. 
+The Base Language is a C-like programming language that includes many of the essential features in C. Built using Kotlin, the language compiles to a bytecode file that can be executed on the JVM.
+
+## Comments
+
+Comments are used to document code and to document the language. Comments are ignored by the compiler.
+
+Each line of a comment is prefixed with a `//`.
+
+Example:
+
+```
+// This is a comment
+```
 
 ## Variables
 
 Variables are declared using the "var" keyword. Variables must specify their type and must be initialized with an expression (e.g., `var x: Int = 5;`)
 
-
 ## Types
 
-* `Boolean`
+### Boolean
 
-  A Boolean expression returns either true or false value and majorly used in checking the condition with if...else expressions. A boolean
-  expression makes use of relational operators, for example >, <, >= etc.
+A Boolean expression returns either true or false value and majorly used in checking the condition with if...else expressions. A boolean
+expression makes use of relational operators, for example >, <, >= etc.
 
-  Syntax- `var name: Boolean = value`
+Syntax: `var name: Boolean = value`
 
-  Here,
-   var: keyword for variable
-   name: variable name
-   value: `true` or `false`
+Here,
 
-  Example- var x: Boolean = true;
+- _var_: keyword for variable
+- _name_: variable name
+- _value_: `true` or `false`
 
-* `Int`
+Example:
 
-  Int is used for definining numeric variables holding whole numbers.
+```
+var x: Boolean = true;
+```
 
-  Syntax- `var name: Int = value`
+### Int
 
-  Here,
-   var: keyword for variable
-   name: variable name
-   value: Integers
+Int is used for definining numeric variables holding whole numbers.
 
-  Example- var num: Int = 56;
+Syntax: `var name: Int = value`
 
-* `String`
+Example:
 
-  Strings are a sequence of characters.
+```
+var num: Int = 56;
+```
 
-  Syntax- `var name: String = "value"`
+### String
 
-  Here,
-   var: keyword for variable
-   name: variable name
-   value: any string
+Strings are a sequence of zero or more characters.
 
-  Example- var str: String = "Hello, World";
+Syntax: `var name: String = "value"`
 
-* `Unit`
+Example:
 
-  It indicates the absence of a value. unit is the only value of type Unit.
-  Unit is used to indicate that a function is called only for its side effects.
-  It's functions can be used generically wherever a generic first class function is required.
+```
+var str: String = "Hello, World";
+```
 
-  Syntax- `var name: Unit = value;`
+### Unit
 
-  Here,
-   var: keyword for variable
-   name: variable name
-   value: unit
+It indicates the absence of a value. unit is the only value of type Unit.
+Unit is used to indicate that a function is called only for its side effects.
+It's functions can be used generically wherever a generic first class function is required.
 
-  Example- var u: Unit = unit;
+Syntax: `var name: Unit = value;`
 
-* `Structure`: `struct <identifier> { <identifier> : <type>, ... }`
+Example:
 
-  Structure is a user-defined datatype in C language which allows us to combine data of different types together.
-  Structure helps to construct a complex data type which is more meaningful. It is somewhat similar to an Array,
-  but an array holds data of similar type only.
+```
+var u: Unit = unit;
+```
 
-  Syntax- `struct name {
-           var1: type1,
-           var2: type2,
-           var3: type3
-           }`
+### Structures
 
-  Here,
-   name: Structure name
-   var: variable name
-   type: variable type
+A `struct` is a user-defined datatype that hold a collection of fields. These fields can be of any type, including other `struct` types and arrays.
 
-  Example- struct Student {
-            name: String,
-            age: Int,
-           }
+Syntax: `struct name { var1: type1, var2: type2, var3: type3 }`
 
-* `Array`: `[<type>]`
+Example:
 
-  An array is a collection of a fixed number of values. The array items are called elements of the array.
-  Each element can be referred to by an index. Arrays need at least one element.
+```
+struct Student {
+  name: String,
+  age: Int
+}
+```
 
-* `Any` - super type of all types
+### Arrays
 
-  Syntax- `var name: Any = value;`
+An array is a collection of a fixed number of values. The array items are called elements of the array.
+Each element can be referred to by an index.
 
-  Here,
-   var: keyword for variable
-   name: variable name
-   value: Any type of value
+**Arrays must be initialized with at least one element.**
 
-  Example- var amount: Any = 35.6;
+Syntax: `var name: [type] = [value1, value2, value3]`
+
+Example:
+
+```
+var arr: [Int] = [1, 2, 3];
+```
+
+### Any
+
+`Any` is the supertype of all types, and can hold any other type as its value. However, most operations on `Any` are not allowed since they are not guaranteed to work.
+
+Syntax: `var name: Any = value;`
+
+Example:
+
+```
+var amount: Any = "I am a string";
+amount = 5;
+amount = true;
+// and so on...
+```
 
 ## Expressions
 
 Expressions produce a value
 
-### Arithmetic (+, -, %, *)
+### Arithmetic (+, -, %, \*)
 
 Arithmetic operators produce an `Int` value
 
-Binary arithmetic operators (+, -, %, *) consume two `Int` values
+Binary arithmetic operators (+, -, %, \*) consume two `Int` values
 Unary arithmetic operators (-) consume one `Int` value
 
 Arithmetic operations - `Addition, Subtraction, Multiplication, Modulo`
 
 ### Addition
 
-Syntax- `value3 = value1 + value2`
+Syntax: `value3 = value1 + value2`
 
-Example-  var x: Int = 5;
-          var y: Int = 1;
+Example:
 
-          print(x + y);
+```
+var x: Int = 5;
+var y: Int = 1;
+
+print(x + y);
+```
 
 ### Subtraction
 
-Syntax- `value3 = value1 1 value2`
+Syntax: `value3 = value1 1 value2`
 
-Example-  var x: Int = 25;
-          var y: Int = 15;
+Example:
 
-          print(x - y);
+```
+var x: Int = 25;
+var y: Int = 15;
+
+print(x - y);
+```
 
 ### Multiplication
 
-Syntax- `value3 = value1 + value2`
+Syntax: `value3 = value1 + value2`
 
-Example-  var x: Int = 5;
-          var y: Int = 2;
+Example:
 
-          print(x * y);
+```
+var x: Int = 5;
+var y: Int = 2;
+
+print(x * y);
+```
 
 ### Modulo
 
-Syntax- `value3 = value1 % value2`
+Syntax: `value3 = value1 % value2`
 
-Example-  var x: Int = 10;
-          var y: Int = 2;
+Example:
 
-          print(x % y);
+```
+var x: Int = 10;
+var y: Int = 2;
+
+print(x % y);
+```
 
 ### Comparison (>, >=, <, <=)
 
@@ -164,45 +195,51 @@ Comparison operators produce a `Boolean` value
 
 Comparison operators consume two values that are either both `Boolean`, `Int`, or `String`
 
-### Boolean 
+Syntax: `value3 = value1 [operator] value2`
 
-Syntax- value3 = value1 `comparison operator` value2
+#### Boolean Comparison
 
-value1: Boolean
-value2: Boolean
+Compares two `Boolean` values, where `true` is greater than `false`.
 
-Example- print(true <= false);
+Example:
 
-### Int
+```
+print(true <= false);
+```
 
-Syntax- value3 = value1 `comparison operator` value2
+#### Int Comparison
 
-value1: Int
-value2: Int
+Compares the values of two `Int` values
 
-Example- print(55 > 5);
+Example:
 
-### String
+```
+print(55 > 5);
+```
 
-Syntax- value3 = value1 `comparison operator` value2
+#### String Comparison
 
-value1: String
-value2: String
+Compares the lexicographical order of the two strings.
 
-Example- print("Compiler" <= "Construction");
+Example:
+
+```
+print("Compiler" <= "Construction");
+```
 
 ### Equality (==, !=)
 
 Equality operators produce a `Boolean` value
 
-Equality operators consume two values that are any type
+Equality operators consume two values that are any type, returning whether the values are equal (and of the same type).
 
-Syntax- value3 = value1 `Equality operator` value2
+Syntax: `value3 = value1 [operator] value2`
 
-value1: Any type
-value2: Any type
+Example:
 
-Example- print(true == "false");
+```
+print(true == "false");
+```
 
 ### Logical (!, &&, ||)
 
@@ -213,23 +250,25 @@ Unary logical operators (!) consume one `Boolean` value
 
 Binary logical operators "short-circuit". If the result of the expression can be determined from only evaluating the left-hand side value, the right-hand side value is not evaluated.
 
-Syntax- value3 = value1 `logical operator` value2
+Syntax: `[unary]value1` or `value1 [binary] value2`
 
-value1: Boolean
-value2: Boolean
+Example:
 
-Example- print(true && false);
+```
+print(true && false);
+```
 
 ### Literal values
 
 Literal values of each type are expressions
 
-* Boolean: `true`, `false`
-* Int: `-5`, `10`, `100`, etc.
-* String: `"hello world"`
-* Unit: `unit`
-* Structure: `Point { 10, 10 }`
-* Array: `[1, 2, 3]`
+- Boolean: `true`, `false`
+- Int: `-5`, `10`, `100`, etc.
+- String: `"hello world"`
+- Unit: `unit`
+- Structure: `Point { 10, 10 }`
+- Array: `[1, 2, 3]`
+- Any: can be any literal value
 
 ### Index
 
@@ -249,10 +288,6 @@ Parenthesis, `(` and `)`, can be used to group expressions.
 
 Statements do not produce a value. They produce a side-effect.
 
-* We can comment out lines of code by prefixing it with '//'.
-
-  Syntax- `// code`
-
 ### Assignment
 
 Assignment statements store a value in a location (variable, structure field, or array element). The type of the value must be compatible with the type of the location.
@@ -263,44 +298,50 @@ A block is a sequence of statements surrounded by braces `{` and `}`
 
 ### Expression statement
 
-An expression followed by a semi-colon `;` is am expression statement
+An expression followed by a semi-colon `;` is an expression statement
 
 ### If
 
 An if statement executes one of two statements based on some condition value (e.g., `if (c) s1 else s2`)
 
+Multiple `if` statements can be chained together using `else if`.
+
 Syntax:
 
 ```
- if (condition){
-          statement1
-        }
-        else{
-          statement2
-        }
+if (condition){
+  statement1
+} else {
+  statement2
+}
 ```
 
-Example: 
+Example:
 
 ```
 if(x == 4) {
-    print("x is 4");
+  print("x is 4");
+} else if(x == 5) {
+  print("x is 5");
 } else {
-    print("x is not 4");
+  print("x is neither 4 nor 5");
 }
 ```
-An if statement cannot be executed without providing any condition. 
-else block should always consists of its preceding if statement.
+
+An if statement cannot be executed without providing any condition.
+Else blocks should always follow an if block.
 
 ### While
 
 A while loop executes the body repeatedly as long as the condition expression evaluates to true (e.g., `while (c) s`)
 
-Syntax: while(condition){
-          statement or block of statements
-        }
+Syntax:
 
-Example: 
+```
+while(condition) { statement or block of statements }
+```
+
+Example:
 
 ```
 while(x < 10) {
@@ -313,13 +354,28 @@ while(x < 10) {
 
 Functions calls look like C: `callee(argument1, argument2, ...)`
 
-Functions are declared using the "fun" keyword. Functions must have a name, and declared their parameter types and return type. See below for examples.
+Functions are declared using the `fun` keyword. Functions must have a name, and declared their parameter types and return type. See below for examples.
 
-Values can be returned using the "return" statement. Functions whose return type is Unit do not need to contain a return statement. All other functions must return a value of the appropriate type.
+Values can be returned using the `return` statement. Functions whose return type is `Unit` do not need to contain a return statement. All other functions must return a value of the appropriate type.
+
+Example:
+
+```
+fun fib(n: Int): Int {
+  if (n <= 1) {
+    return 1;
+  } else {
+    return fib(n - 1) + fib(n - 2);
+  }
+}
+```
 
 ### Builtin functions:
 
-* `fun print(s: String) -> Unit { ... }`
-* `fun concat(s1: String, s2: String) -> String { ... }`
-* `fun str(a: Any) -> String { ... }`
+- `fun print(s: String) -> Unit { ... }`: Prints the string to the standard output.
 
+  - Note: Values of non-`String` type will be automatically converted to `String` using the `str()` function.
+
+- `fun concat(s1: String, s2: String) -> String { ... }`: Concatenates two strings.
+- `fun str(a: Any) -> String { ... }`: Converts a value to a `String`
+- `fun len(arr: Array) -> Int { ... }`: Returns the length of an array
