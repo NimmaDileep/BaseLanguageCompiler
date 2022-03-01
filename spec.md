@@ -9,16 +9,6 @@
   by the based or current versions i.e., some extensions like object oriented programming for C++, Java etc and collects for Java. 
   This Base Language is based on Kotlin syntax. Most of the syntaxes and semantics are based on the Kotlin language. 
 
-
-print() will call str() on the value before printing on any non-String type
-Document the exact syntax of how a struct works
-Comments syntax
-len() function
-Arrays need at least one element
-You can’t perform most operations on the Any type
-You can assign Any to any other type, but not vice-versa
-String comparison goes character by character to compare (doesn’t check length first)
-
 ## Types
 
 * `Boolean`
