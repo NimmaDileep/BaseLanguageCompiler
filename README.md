@@ -13,7 +13,7 @@
 	./build/install/blc/bin/blc -h
 
 # Unit test
-
+    python3 scripts/blt.py tests/
 
 # Known issues
   * When the last character of the program is a syntax error, the compiler itself gets a runtime error (index out of bounds), instead of printing
@@ -31,6 +31,5 @@
   * Precedence of operators property is followed with || and && operators. 
 
   * Void functions/methods with return type 'unit' doesn’t work.
-  
-  
+
      
