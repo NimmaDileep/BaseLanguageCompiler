@@ -19,12 +19,6 @@ You can’t perform most operations on the Any type
 You can assign Any to any other type, but not vice-versa
 String comparison goes character by character to compare (doesn’t check length first)
 
-## Comments
-
-* We can comment out lines of code by prefixing it with '//'.
-
-  Syntax- `// code`
-
 ## Types
 
 * `Boolean`
@@ -254,11 +248,15 @@ Fields of a structure can be access using a dot (e.g., `p.x`)
 
 Arithmetic, comparison, equality, and logical operators have precedence and associativity that you'd expect coming from C.
 
-Parenthesis, `(` and `)`, can be used to group expressions
+Parenthesis, `(` and `)`, can be used to group expressions.
 
 ## Statements
 
 Statements do not produce a value. They produce a side-effect.
+
+* We can comment out lines of code by prefixing it with '//'.
+
+  Syntax- `// code`
 
 ### Assignment
 
