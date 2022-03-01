@@ -23,13 +23,50 @@ String comparison goes character by character to compare (doesn’t check length
 
 * We can comment out lines of code by prefixing it with '//'.
 
-Syntax- `// code`
+  Syntax- `// code`
 
 ## Types
 
 * `Boolean`
+
+  A Boolean expression returns either true or false value and majorly used in checking the condition with if...else expressions. A boolean
+  expression makes use of relational operators, for example >, <, >= etc.
+
+  Syntax- `var name: Boolean = value`
+
+  Here,
+   var: keyword for variable
+   name: variable name
+   value: `true` or `false`
+
+  Example- var x: Boolean = true;
+
 * `Int`
+
+  Int is used for definining numeric variables holding whole numbers.
+
+  Syntax- `var name: Int = value`
+
+  Here,
+   var: keyword for variable
+   name: variable name
+   value: Integers
+
+  Example- var num: Int = 56;
+
 * `String`
+
+  Strings are a sequence of characters.
+
+  Syntax- `var name: String = "value"`
+
+  Here,
+   var: keyword for variable
+   name: variable name
+   value: any string
+
+  Example- var str: String = "Hello, World";
+
 * `Unit` - indicates the absence of a value. unit is the only value of type Unit
 
 * `Structure`: `struct <identifier> { <identifier> : <type>, ... }`
