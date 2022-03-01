@@ -131,6 +131,36 @@ Arithmetic operators produce an `Int` value
 Binary arithmetic operators (+, -, %, *) consume two `Int` values
 Unary arithmetic operators (-) consume one `Int` value
 
+Arithmetic operations - `Addition, Subtraction, Multiplication, Modulo`
+
+###Addition
+
+Syntax- `value3 = value1 + value2`
+
+Example-  var x: Int = 5;
+          var y: Int = 1;
+
+          print(x + y);
+
+###Subtraction
+
+Syntax- `value3 = value1 1 value2`
+
+Example-  var x: Int = 25;
+          var y: Int = 15;
+
+          print(x - y);
+
+###Multiplication
+
+Syntax- `value3 = value1 + value2`
+
+Example-  var x: Int = 5;
+          var y: Int = 2;
+
+          print(x * y);
+
+
 ### Comparison (>, >=, <, <=)
 
 Comparison operators produce a `Boolean` value
