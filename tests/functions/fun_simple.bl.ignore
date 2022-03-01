@@ -1,0 +1,5 @@
+fun a() -> Unit {
+    print("a was called");
+}
+
+a();

@@ -1,0 +1,17 @@
+var x: Boolean = false;
+var y: Boolean = true;
+
+// booleans
+print(x == y);
+print(x == !y);
+
+// ints
+print(5 == 3);
+print(3 == 3);
+
+// strings
+print("my_string" == " my_string ");
+print("my_string" == "my_string");
+
+print(unit == unit);
+

@@ -1,0 +1,21 @@
+var x: Int = 5;
+
+if(x == 5) {
+    print("x is 5");
+} else {
+    print("x is not 5");
+}
+
+if(x == 4) {
+    print("x is 4");
+} else {
+    print("x is not 4");
+}
+
+if(x == 6) {
+    print("x is 6");
+} else if(x < 6) {
+    print("x is less than 6");
+} else {
+    print("x is greater than 6");
+}

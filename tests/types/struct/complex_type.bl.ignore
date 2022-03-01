@@ -1,0 +1,24 @@
+// Currently fails due to error in array indexing within a struct
+
+struct Message {
+    time: Int,
+    msg: String,
+}
+
+struct Stream {
+    name: String,
+    messages: [Message],
+}
+
+var s: Stream = Stream(
+    "YouTube",
+    [
+        Message(0, "Hello"),
+        Message(301, "World"),
+    ]
+);
+
+print(s.name);
+print(s.messages[0].msg);
+print(s.messages[1].time);
+print(len(s.messages));

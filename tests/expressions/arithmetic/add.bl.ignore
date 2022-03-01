@@ -1,0 +1,10 @@
+// Addition currently not working
+
+var x: Int = 5;
+var y: Int = 1;
+
+print(x + y);
+
+y = -2;
+
+print(x + y);
