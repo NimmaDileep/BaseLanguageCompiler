@@ -48,13 +48,17 @@ class StatementVisitor(
             TODO("Handle closure")
         }
 
-        val symbol = reactor.get<FunctionSymbol>(node, "symbol")
-        val type = reactor.get<FunctionType>(symbol, "type")
-        val descriptor = methodDescriptor(type)
+        val functionSymbol = reactor.get<FunctionSymbol>(node, "symbol")
+        val functionType = reactor.get<FunctionType>(functionSymbol, "type")
+        val descriptor = methodDescriptor(functionType)
+
+        functionSymbol.parameters.forEachIndexed { i, parameterSymbol ->
+            reactor[parameterSymbol, "index"] = i
+        }
 
         clazz.buildMethod(
             access = ACC_PUBLIC or ACC_STATIC,
-            method = Method(symbol.getQualifiedName("_"), descriptor)
+            method = Method(functionSymbol.getQualifiedName("_"), descriptor)
         ) { method ->
             val statementVisitor = StatementVisitor(clazzType, clazz, method, reactor)
             statementVisitor.accept(node.body)

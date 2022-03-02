@@ -17,3 +17,9 @@ print(p1 == p1);
 print(p1 == p2);
 print(p1 == p3);
 
+
+fun add(x: Int, y: Int) -> Int {
+    return x + y;
+}
+
+print(add(1, 3));
