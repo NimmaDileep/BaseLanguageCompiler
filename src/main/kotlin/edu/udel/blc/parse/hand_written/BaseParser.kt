@@ -278,7 +278,7 @@ class BaseParser(
                 check(STAR) -> {
                     val operator = consume(STAR) { "Expect '*'." }
                     val right = factor()
-                    BinaryExpressionNode(operator.range, REMAINDER, expr, right)
+                    BinaryExpressionNode(operator.range, MULTIPLICATION, expr, right)
                 }
                 else -> break
             }
