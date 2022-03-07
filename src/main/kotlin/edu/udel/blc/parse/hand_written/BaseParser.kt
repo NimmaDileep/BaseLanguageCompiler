@@ -252,7 +252,7 @@ class BaseParser(
                     BinaryExpressionNode(operator.range, SUBTRACTION, expr, right)
                 }
                 check(PLUS) -> {
-                    val operator = consume(MINUS) { "Expect '+'." }
+                    val operator = consume(PLUS) { "Expect '+'." }
                     val right = factor()
                     BinaryExpressionNode(operator.range, ADDITION, expr, right)
                 }
