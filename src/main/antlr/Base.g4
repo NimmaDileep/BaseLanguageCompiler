@@ -44,8 +44,8 @@ block
 
 expr
     : <assoc=right> lvalue=expr EQUAL expression=expr                                    # assignment
-    | left=expr DISJ right=expr                                                          # binary
-    | left=expr CONJ right=expr                                                          # binary
+    | left=expr operator=DISJ right=expr                                                 # binary
+    | left=expr operator=CONJ right=expr                                                 # binary
     | left=expr operator=( EQUAL_EQUAL | BANG_EQUAL) right=expr                          # binary
     | left=expr operator=( GREATER | GREATER_EQUAL | LESS | LESS_EQUAL ) right=expr      # binary
     | left=expr operator=( PLUS | MINUS ) right=expr                                     # binary
