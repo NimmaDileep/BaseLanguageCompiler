@@ -1,0 +1,26 @@
+var x: Int = 8 + 2;
+print(x);
+
+var y: Int = 20 - 15;
+print(y);
+
+var z: Int = 10 * 2;
+print(z);
+
+var p: Int = 50 % 5;
+print(p);
+
+var q: Boolean = 10 < 20;
+print(q);
+
+var r: Boolean = 1 > 9;
+print(r);
+
+var s: Boolean = 3 <= -3;
+print(s);
+
+var t: Boolean = 38 >= 28;
+print(t);
+
+var u: Boolean = 5 == 5;
+print(u);
