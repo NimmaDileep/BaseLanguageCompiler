@@ -6,10 +6,9 @@ import edu.udel.blc.ast.UnaryOperator.LOGICAL_COMPLEMENT
 import edu.udel.blc.ast.UnaryOperator.NEGATION
 import edu.udel.blc.parse.SyntaxError
 import edu.udel.blc.parse.hand_written.BaseToken.Kind.*
+import kotlin.collections.buildList
 
-class BaseParser(
-    private val tokens: Iterator<BaseToken>
-) {
+class BaseParser(private val tokens: Iterator<BaseToken>) {
 
     constructor(lexer: BaseLexer) : this(lexer.tokens())
 
@@ -91,7 +90,6 @@ class BaseParser(
         return VariableDeclarationNode(name.range, name.text, type, initializer)
     }
 
-
     fun statement(): StatementNode {
         return when {
             check(IF) -> ifStatement()
@@ -125,19 +123,21 @@ class BaseParser(
         val condition = expression()
         consume(RPAREN) { "Expect ')' after if condition." }
         val thenStatement = statement()
-        val elseStatement = when {
-            match(ELSE) -> statement()
-            else -> null
-        }
+        val elseStatement =
+                when {
+                    match(ELSE) -> statement()
+                    else -> null
+                }
         return IfNode(keyword.range, condition, thenStatement, elseStatement)
     }
 
     fun returnStatement(): StatementNode {
         val keyword = consume(RETURN) { "Expect 'return'." }
-        val value = when {
-            check(SEMICOLON) -> null
-            else -> expression()
-        }
+        val value =
+                when {
+                    check(SEMICOLON) -> null
+                    else -> expression()
+                }
         consume(SEMICOLON) { "Expect ';' after return." }
         return ReturnNode(keyword.range, value)
     }
@@ -150,7 +150,6 @@ class BaseParser(
         val body = statement()
         return WhileNode(keyword.range, condition, body)
     }
-
 
     fun expression(): ExpressionNode {
         return assignment()
@@ -189,19 +188,20 @@ class BaseParser(
     private fun equality(): ExpressionNode {
         var expr = comparison()
         while (true) {
-            expr = when {
-                check(BANG_EQUAL) -> {
-                    val operator = consume(BANG_EQUAL) { "Expect '!='." }
-                    val right = comparison()
-                    BinaryExpressionNode(operator.range, NOT_EQUAL_TO, expr, right)
-                }
-                check(EQUAL_EQUAL) -> {
-                    val operator = consume(EQUAL_EQUAL) { "Expect '=='." }
-                    val right = comparison()
-                    BinaryExpressionNode(operator.range, EQUAL_TO, expr, right)
-                }
-                else -> break
-            }
+            expr =
+                    when {
+                        check(BANG_EQUAL) -> {
+                            val operator = consume(BANG_EQUAL) { "Expect '!='." }
+                            val right = comparison()
+                            BinaryExpressionNode(operator.range, NOT_EQUAL_TO, expr, right)
+                        }
+                        check(EQUAL_EQUAL) -> {
+                            val operator = consume(EQUAL_EQUAL) { "Expect '=='." }
+                            val right = comparison()
+                            BinaryExpressionNode(operator.range, EQUAL_TO, expr, right)
+                        }
+                        else -> break
+                    }
         }
         return expr
     }
@@ -211,33 +211,38 @@ class BaseParser(
         var expr = term()
 
         while (true) {
-            expr = when {
-                check(RANGLE) -> {
-                    val operator = consume(RANGLE) { "Expect '<'." }
-                    val right = term()
-                    BinaryExpressionNode(operator.range, GREATER_THAN, expr, right)
-                }
-                check(RANGLE_EQUAL) -> {
-                    val operator = consume(RANGLE_EQUAL) { "Expect '<='." }
-                    val right = term()
-                    BinaryExpressionNode(operator.range, GREATER_THAN_OR_EQUAL_TO, expr, right)
-                }
-                check(LANGLE) -> {
-                    val operator = consume(LANGLE) { "Expect '<'." }
-                    val right = term()
-                    BinaryExpressionNode(operator.range, LESS_THAN, expr, right)
-                }
-                check(LANGLE_EQUAL) -> {
-                    val operator = consume(LANGLE_EQUAL) { "Expect '<='." }
-                    val right = term()
-                    BinaryExpressionNode(operator.range, LESS_THAN_OR_EQUAL_TO, expr, right)
-                }
-                else -> break
-            }
+            expr =
+                    when {
+                        check(RANGLE) -> {
+                            val operator = consume(RANGLE) { "Expect '<'." }
+                            val right = term()
+                            BinaryExpressionNode(operator.range, GREATER_THAN, expr, right)
+                        }
+                        check(RANGLE_EQUAL) -> {
+                            val operator = consume(RANGLE_EQUAL) { "Expect '<='." }
+                            val right = term()
+                            BinaryExpressionNode(
+                                    operator.range,
+                                    GREATER_THAN_OR_EQUAL_TO,
+                                    expr,
+                                    right
+                            )
+                        }
+                        check(LANGLE) -> {
+                            val operator = consume(LANGLE) { "Expect '<'." }
+                            val right = term()
+                            BinaryExpressionNode(operator.range, LESS_THAN, expr, right)
+                        }
+                        check(LANGLE_EQUAL) -> {
+                            val operator = consume(LANGLE_EQUAL) { "Expect '<='." }
+                            val right = term()
+                            BinaryExpressionNode(operator.range, LESS_THAN_OR_EQUAL_TO, expr, right)
+                        }
+                        else -> break
+                    }
         }
 
         return expr
-
     }
 
     private fun term(): ExpressionNode {
@@ -245,23 +250,23 @@ class BaseParser(
         var expr = factor()
 
         while (true) {
-            expr = when {
-                check(MINUS) -> {
-                    val operator = consume(MINUS) { "Expect '-'." }
-                    val right = factor()
-                    BinaryExpressionNode(operator.range, SUBTRACTION, expr, right)
-                }
-                check(PLUS) -> {
-                    val operator = consume(PLUS) { "Expect '+'." }
-                    val right = factor()
-                    BinaryExpressionNode(operator.range, ADDITION, expr, right)
-                }
-                else -> break
-            }
+            expr =
+                    when {
+                        check(MINUS) -> {
+                            val operator = consume(MINUS) { "Expect '-'." }
+                            val right = factor()
+                            BinaryExpressionNode(operator.range, SUBTRACTION, expr, right)
+                        }
+                        check(PLUS) -> {
+                            val operator = consume(PLUS) { "Expect '+'." }
+                            val right = factor()
+                            BinaryExpressionNode(operator.range, ADDITION, expr, right)
+                        }
+                        else -> break
+                    }
         }
 
         return expr
-
     }
 
     private fun factor(): ExpressionNode {
@@ -269,19 +274,20 @@ class BaseParser(
         var expr = unaryPrefix()
 
         while (true) {
-            expr = when {
-                check(PERCENT) -> {
-                    val operator = consume(PERCENT) { "Expect '%'." }
-                    val right = factor()
-                    BinaryExpressionNode(operator.range, REMAINDER, expr, right)
-                }
-                check(STAR) -> {
-                    val operator = consume(STAR) { "Expect '*'." }
-                    val right = factor()
-                    BinaryExpressionNode(operator.range, MULTIPLICATION, expr, right)
-                }
-                else -> break
-            }
+            expr =
+                    when {
+                        check(PERCENT) -> {
+                            val operator = consume(PERCENT) { "Expect '%'." }
+                            val right = factor()
+                            BinaryExpressionNode(operator.range, REMAINDER, expr, right)
+                        }
+                        check(STAR) -> {
+                            val operator = consume(STAR) { "Expect '*'." }
+                            val right = factor()
+                            BinaryExpressionNode(operator.range, MULTIPLICATION, expr, right)
+                        }
+                        else -> break
+                    }
         }
 
         return expr
@@ -307,26 +313,27 @@ class BaseParser(
         var expr = primary()
 
         while (true) {
-            expr = when {
-                check(LPAREN) -> {
-                    val lparen = consume(LPAREN) { "Expect '('." }
-                    val arguments = list(RPAREN, ::expression)
-                    consume(RPAREN) { "Expect ')' after arguments." }
-                    CallNode(lparen.range, expr, arguments)
-                }
-                check(LBRACKET) -> {
-                    val lbracket = consume(LBRACKET) { "Expect '['." }
-                    val index = expression()
-                    consume(RBRACKET) { "Expect ']' after index." }
-                    IndexNode(lbracket.range, expr, index)
-                }
-                check(DOT) -> {
-                    val dot = consume(DOT) { "Expect '.'." }
-                    val name = consume(IDENTIFIER) { "Expect name" }
-                    FieldSelectNode(dot.range, expr, name.text)
-                }
-                else -> break
-            }
+            expr =
+                    when {
+                        check(LPAREN) -> {
+                            val lparen = consume(LPAREN) { "Expect '('." }
+                            val arguments = list(RPAREN, ::expression)
+                            consume(RPAREN) { "Expect ')' after arguments." }
+                            CallNode(lparen.range, expr, arguments)
+                        }
+                        check(LBRACKET) -> {
+                            val lbracket = consume(LBRACKET) { "Expect '['." }
+                            val index = expression()
+                            consume(RBRACKET) { "Expect ']' after index." }
+                            IndexNode(lbracket.range, expr, index)
+                        }
+                        check(DOT) -> {
+                            val dot = consume(DOT) { "Expect '.'." }
+                            val name = consume(IDENTIFIER) { "Expect name" }
+                            FieldSelectNode(dot.range, expr, name.text)
+                        }
+                        else -> break
+                    }
         }
 
         return expr
@@ -439,5 +446,4 @@ class BaseParser(
     private fun error(message: String): Nothing {
         throw SyntaxError(currentToken.range, "$message $currentToken")
     }
-
 }
