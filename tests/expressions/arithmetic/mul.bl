@@ -1,5 +1,3 @@
-// Multiplication is not working
-
 var x: Int = 5;
 var y: Int = 8;
 
