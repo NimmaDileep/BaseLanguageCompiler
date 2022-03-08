@@ -1,0 +1,11 @@
+var a: [Int] = [500];
+
+print(a);
+print(len(a));
+
+a = [4, 2, 1];
+
+print(a);
+print(len(a));
+
+print(a[1]); // 2
