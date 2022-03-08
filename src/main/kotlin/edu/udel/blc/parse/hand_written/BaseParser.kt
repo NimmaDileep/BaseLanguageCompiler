@@ -171,7 +171,7 @@ class BaseParser(
         while (check(OR)) {
             val operator = consume(OR) { "Expect '||'." }
             val right = conjunction()
-            expr = BinaryExpressionNode(operator.range, LOGICAL_CONJUNCTION, expr, right)
+            expr = BinaryExpressionNode(operator.range, LOGICAL_DISJUNCTION, expr, right)
         }
         return expr
     }
@@ -252,7 +252,7 @@ class BaseParser(
                     BinaryExpressionNode(operator.range, SUBTRACTION, expr, right)
                 }
                 check(PLUS) -> {
-                    val operator = consume(MINUS) { "Expect '+'." }
+                    val operator = consume(PLUS) { "Expect '+'." }
                     val right = factor()
                     BinaryExpressionNode(operator.range, ADDITION, expr, right)
                 }

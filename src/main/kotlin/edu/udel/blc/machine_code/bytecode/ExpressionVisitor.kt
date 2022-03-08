@@ -15,7 +15,6 @@ import edu.udel.blc.semantic_analysis.type.StructType
 import edu.udel.blc.semantic_analysis.type.Type
 import edu.udel.blc.util.uranium.Reactor
 import edu.udel.blc.util.visitor.Visitor
-import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type.*
 import org.objectweb.asm.commons.GeneratorAdapter
 import org.objectweb.asm.commons.GeneratorAdapter.*
@@ -75,7 +74,7 @@ class ExpressionVisitor(
         }
     }
 
-    fun assignment(node: AssignmentNode) {
+    private fun assignment(node: AssignmentNode) {
 
         val type = reactor.get<Type>(node.expression, "type")
         val tmp = method.newLocal(nativeType(type))
@@ -216,12 +215,13 @@ class ExpressionVisitor(
     }
 
     private fun index(node: IndexNode) {
-        val arrayType = reactor.get<Type>(node.expression, "type")
+        val elementType = reactor.get<ArrayType>(node.expression, "type").elementType
         accept(node.expression)
         accept(node.index)
         method.unbox(LONG_TYPE)
         method.cast(LONG_TYPE, INT_TYPE)
-        method.arrayLoad(nativeType(arrayType))
+        method.invokeVirtual(java_util_ArrayList, "Object get(int)")
+        method.checkCast(nativeType(elementType))
     }
 
     private fun call(node: CallNode) {

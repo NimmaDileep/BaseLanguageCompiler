@@ -7,6 +7,7 @@ import edu.udel.blc.semantic_analysis.scope.FunctionSymbol
 import edu.udel.blc.semantic_analysis.scope.Symbol
 import edu.udel.blc.semantic_analysis.type.FunctionType
 import edu.udel.blc.semantic_analysis.type.Type
+import edu.udel.blc.semantic_analysis.type.UnitType
 import edu.udel.blc.util.uranium.Reactor
 import edu.udel.blc.util.visitor.Visitor
 import org.objectweb.asm.ClassWriter
@@ -62,6 +63,12 @@ class StatementVisitor(
         ) { method ->
             val statementVisitor = StatementVisitor(clazzType, clazz, method, reactor)
             statementVisitor.accept(node.body)
+
+            if(functionType.returnType == UnitType && node.body.find<ReturnNode>().isEmpty()) {
+                method.push(null as String?)
+                method.returnValue()
+            }
+
         }
     }
 
