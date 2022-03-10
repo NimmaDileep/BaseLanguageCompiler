@@ -43,6 +43,14 @@ class BLC : CliktCommand() {
     private val output by option("-o", "--output", help = "Location to store binary")
         .file(mustBeWritable = true, mustExist = false)
 
+    private val constantFolding by option("--fold-constants", help = "Optimizes the code by Constant Folding")
+        .flag(default = true, defaultForHelp = "true")
+
+    private val strengthReduction by option("--reduce-strength", help = "Optimize the code by Strength Reduction")
+        .flag(default = true, defaultForHelp = "true")
+
+    private val deadCodeElimination by option("--eliminate-dead-code", help = "Optimize the code by Dead Code Elimination")
+        .flag(default = true, defaultForHelp = "true")
 
     private fun onSuccess(codeGenerationResult: MachineCode) {
         val outFile = output ?: File("${input.nameWithoutExtension}.${target.extension}")
@@ -71,6 +79,7 @@ class BLC : CliktCommand() {
 
             val symboltable = SemanticAnalysis.apply(compilationUnit).bind()
             target.apply(symboltable, compilationUnit).bind()
+            //use optimize the code flag
         }
 
         result
