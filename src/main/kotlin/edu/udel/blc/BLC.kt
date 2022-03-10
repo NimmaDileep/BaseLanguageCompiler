@@ -43,13 +43,13 @@ class BLC : CliktCommand() {
     private val output by option("-o", "--output", help = "Location to store binary")
         .file(mustBeWritable = true, mustExist = false)
 
-    private val constantFolding by option("--fold-constants", help = "Optimizes the code by Constant Folding")
+    private val constantFolding by option("-f", "--fold-constants", help = "Optimizes the code by Constant Folding")
         .flag(default = true, defaultForHelp = "true")
 
-    private val strengthReduction by option("--reduce-strength", help = "Optimize the code by Strength Reduction")
+    private val strengthReduction by option("-r", "--reduce-strength", help = "Optimize the code by Strength Reduction")
         .flag(default = true, defaultForHelp = "true")
 
-    private val deadCodeElimination by option("--eliminate-dead-code", help = "Optimize the code by Dead Code Elimination")
+    private val deadCodeElimination by option("-e", "--eliminate-dead-code", help = "Optimize the code by Dead Code Elimination")
         .flag(default = true, defaultForHelp = "true")
 
     private fun onSuccess(codeGenerationResult: MachineCode) {
