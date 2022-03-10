@@ -1,3 +1,1 @@
 var x: String = "hello";
-
-print(x);

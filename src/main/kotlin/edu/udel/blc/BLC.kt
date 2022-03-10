@@ -9,7 +9,9 @@ import com.github.ajalt.clikt.parameters.groups.groupChoice
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.file
+import edu.udel.blc.ast.CompilationUnitNode
 import edu.udel.blc.ast.Node
+import edu.udel.blc.ast.opt.ExpressionOptimizer
 import edu.udel.blc.machine_code.MachineCode
 import edu.udel.blc.machine_code.bytecode.BytecodeGenerator
 import edu.udel.blc.parse.antlr.AntlrBasedParser
@@ -25,32 +27,44 @@ class BLC : CliktCommand() {
         context { helpFormatter = CliktHelpFormatter(showDefaultValues = true) }
     }
 
-    private val input by argument()
-        .file(mustExist = true, mustBeReadable = true, canBeDir = false)
+    private val input by argument().file(mustExist = true, mustBeReadable = true, canBeDir = false)
 
-    private val parser by option("-p", "--parser").groupChoice(
-        "antlr" to AntlrBasedParser(),
-        "handwritten" to HandWrittenParser()
-    ).defaultByName("handwritten")
+    private val parser by option("-p", "--parser")
+            .groupChoice("antlr" to AntlrBasedParser(), "handwritten" to HandWrittenParser())
+            .defaultByName("handwritten")
 
-    private val target by option("-t", "--target").groupChoice(
-        "bytecode" to BytecodeGenerator(),
-    ).defaultByName("bytecode")
+    private val target by option("-t", "--target")
+            .groupChoice(
+                    "bytecode" to BytecodeGenerator(),
+            )
+            .defaultByName("bytecode")
 
     private val printAst by option("--print-ast", help = "Print the abstract syntax tree")
-        .flag(default = false, defaultForHelp = "false")
+            .flag(default = false, defaultForHelp = "false")
 
     private val output by option("-o", "--output", help = "Location to store binary")
-        .file(mustBeWritable = true, mustExist = false)
+            .file(mustBeWritable = true, mustExist = false)
 
-    private val constantFolding by option("-f", "--fold-constants", help = "Optimizes the code by Constant Folding")
-        .flag(default = true, defaultForHelp = "true")
+    private val constantFolding by option(
+                    "-f",
+                    "--fold-constants",
+                    help = "Optimizes the code by Constant Folding"
+            )
+            .flag("-n", "--no-fold-constants", default = true, defaultForHelp = "true")
 
-    private val strengthReduction by option("-r", "--reduce-strength", help = "Optimize the code by Strength Reduction")
-        .flag(default = true, defaultForHelp = "true")
+    private val strengthReduction by option(
+                    "-r",
+                    "--reduce-strength",
+                    help = "Optimize the code by Strength Reduction"
+            )
+            .flag(default = true, defaultForHelp = "true")
 
-    private val deadCodeElimination by option("-e", "--eliminate-dead-code", help = "Optimize the code by Dead Code Elimination")
-        .flag(default = true, defaultForHelp = "true")
+    private val deadCodeElimination by option(
+                    "-e",
+                    "--eliminate-dead-code",
+                    help = "Optimize the code by Dead Code Elimination"
+            )
+            .flag(default = true, defaultForHelp = "true")
 
     private fun onSuccess(codeGenerationResult: MachineCode) {
         val outFile = output ?: File("${input.nameWithoutExtension}.${target.extension}")
@@ -71,28 +85,23 @@ class BLC : CliktCommand() {
         val source = input.readText()
 
         val result = binding {
-            val compilationUnit = parser.apply(source).bind()
+            var compilationUnit = parser.apply(source).bind()
 
             if (printAst) {
                 TreeFormatter.appendTo(System.out, compilationUnit, Node::class.java)
             }
 
             val symboltable = SemanticAnalysis.apply(compilationUnit).bind()
+
+            if (constantFolding) {
+                compilationUnit = ExpressionOptimizer().apply(compilationUnit) as CompilationUnitNode
+            }
+
             target.apply(symboltable, compilationUnit).bind()
-            //use optimize the code flag
         }
 
-        result
-            .onSuccess(::onSuccess)
-            .onFailure(::reportErrors)
+        result.onSuccess(::onSuccess).onFailure(::reportErrors)
     }
-
 }
 
-
 fun main(args: Array<String>) = BLC().main(args)
-
-
-
-
-
