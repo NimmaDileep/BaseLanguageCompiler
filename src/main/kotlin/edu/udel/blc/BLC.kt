@@ -30,41 +30,41 @@ class BLC : CliktCommand() {
     private val input by argument().file(mustExist = true, mustBeReadable = true, canBeDir = false)
 
     private val parser by option("-p", "--parser")
-            .groupChoice("antlr" to AntlrBasedParser(), "handwritten" to HandWrittenParser())
-            .defaultByName("handwritten")
+        .groupChoice("antlr" to AntlrBasedParser(), "handwritten" to HandWrittenParser())
+        .defaultByName("handwritten")
 
     private val target by option("-t", "--target")
-            .groupChoice(
-                    "bytecode" to BytecodeGenerator(),
-            )
-            .defaultByName("bytecode")
+        .groupChoice(
+            "bytecode" to BytecodeGenerator(),
+        )
+        .defaultByName("bytecode")
 
     private val printAst by option("--print-ast", help = "Print the abstract syntax tree")
-            .flag(default = false, defaultForHelp = "false")
+        .flag(default = false, defaultForHelp = "false")
 
     private val output by option("-o", "--output", help = "Location to store binary")
-            .file(mustBeWritable = true, mustExist = false)
+        .file(mustBeWritable = true, mustExist = false)
 
     private val constantFolding by option(
-                    "-f",
-                    "--fold-constants",
-                    help = "Optimizes the code by Constant Folding"
-            )
-            .flag("-n", "--no-fold-constants", default = true, defaultForHelp = "true")
+        "-f",
+        "--fold-constants",
+        help = "Optimizes the code by Constant Folding"
+    )
+        .flag("-n", "--no-fold-constants", default = true, defaultForHelp = "true")
 
     private val strengthReduction by option(
-                    "-r",
-                    "--reduce-strength",
-                    help = "Optimize the code by Strength Reduction"
-            )
-            .flag(default = true, defaultForHelp = "true")
+        "-r",
+        "--reduce-strength",
+        help = "Optimize the code by Strength Reduction"
+    )
+        .flag(default = true, defaultForHelp = "true")
 
     private val deadCodeElimination by option(
-                    "-e",
-                    "--eliminate-dead-code",
-                    help = "Optimize the code by Dead Code Elimination"
-            )
-            .flag(default = true, defaultForHelp = "true")
+        "-e",
+        "--eliminate-dead-code",
+        help = "Optimize the code by Dead Code Elimination"
+    )
+        .flag(default = true, defaultForHelp = "true")
 
     private fun onSuccess(codeGenerationResult: MachineCode) {
         val outFile = output ?: File("${input.nameWithoutExtension}.${target.extension}")

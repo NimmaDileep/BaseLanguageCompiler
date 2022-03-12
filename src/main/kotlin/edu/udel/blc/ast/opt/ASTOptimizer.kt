@@ -107,10 +107,10 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
     }
 
     private fun variableDeclaration(node: VariableDeclarationNode): VariableDeclarationNode = VariableDeclarationNode(
-        range = node.range,
-        name = node.name,
-        type = node.type,
-        initializer = apply(node.initializer) as ExpressionNode
+        node.range,
+        node.name,
+        node.type,
+        node.initializer
     )
 
     private fun whileStmt(node: WhileNode): WhileNode = WhileNode(
