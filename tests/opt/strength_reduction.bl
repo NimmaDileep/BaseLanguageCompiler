@@ -30,5 +30,12 @@ var j: Int = 15;
 var k: Int = 1 * j;
 print(k);
 
+var m: Int = 5;
+var n : Int = m * 2;
+print(n);
+
+var g: Int = 10;
+var h: Int = 3 * n;
+print(h);
 
 
