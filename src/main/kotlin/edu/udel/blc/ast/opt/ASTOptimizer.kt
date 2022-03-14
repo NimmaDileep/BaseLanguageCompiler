@@ -4,6 +4,7 @@ import edu.udel.blc.ast.*
 import edu.udel.blc.ast.BinaryOperator.*
 import edu.udel.blc.ast.UnaryOperator.*
 import edu.udel.blc.util.visitor.ValuedVisitor
+import jdk.incubator.vector.VectorOperators.Binary
 
 class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
 
@@ -39,13 +40,13 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
         expression = apply(node.expression) as ExpressionNode
     )
 
-    private fun binaryExpression(node: BinaryExpressionNode): BinaryExpressionNode {
+    private fun binaryExpression(node: BinaryExpressionNode): Node {
         return when (node.operator) {
+            ADDITION -> addition(node)
+            SUBTRACTION -> subtraction(node)
+            MULTIPLICATION -> multiplication(node)
+            REMAINDER -> remainder(node)
             else -> node
-//            ADDITION -> TODO()
-//            SUBTRACTION -> TODO()
-//            MULTIPLICATION -> TODO()
-//            REMAINDER -> TODO()
 //            EQUAL_TO -> TODO()
 //            NOT_EQUAL_TO -> TODO()
 //            GREATER_THAN -> TODO()
@@ -56,6 +57,96 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
 //            LOGICAL_DISJUNCTION -> TODO()
         }
     }
+
+    private fun addition(node: BinaryExpressionNode): Node {
+        val left = apply(node.left) as ExpressionNode
+        val right = apply(node.right) as ExpressionNode
+
+        return when {
+            left is IntLiteralNode && right is IntLiteralNode -> {
+                IntLiteralNode(
+                    range = left.range.first..right.range.last,
+                    value = left.value + right.value
+                )
+            }
+            else -> {
+                BinaryExpressionNode(
+                    range = node.range,
+                    operator = node.operator,
+                    left = left,
+                    right = right
+                )
+            }
+        }
+    }
+
+    private fun subtraction(node: BinaryExpressionNode): Node {
+        val left = apply(node.left) as ExpressionNode
+        val right = apply(node.right) as ExpressionNode
+
+        return when {
+            left is IntLiteralNode && right is IntLiteralNode -> {
+                IntLiteralNode(
+                    range = left.range.first..right.range.last,
+                    value = left.value - right.value
+                )
+            }
+            else -> {
+                BinaryExpressionNode(
+                    range = node.range,
+                    operator = node.operator,
+                    left = left,
+                    right = right
+                )
+            }
+        }
+    }
+
+    private fun multiplication(node: BinaryExpressionNode): Node {
+        val left = apply(node.left) as ExpressionNode
+        val right = apply(node.right) as ExpressionNode
+
+        return when {
+            left is IntLiteralNode && right is IntLiteralNode -> {
+                IntLiteralNode(
+                    range = left.range.first..right.range.last,
+                    value = left.value * right.value
+                )
+            }
+            else -> {
+                BinaryExpressionNode(
+                    range = node.range,
+                    operator = node.operator,
+                    left = left,
+                    right = right
+                )
+            }
+        }
+    }
+
+
+    private fun remainder(node: BinaryExpressionNode): Node {
+        val left = apply(node.left) as ExpressionNode
+        val right = apply(node.right) as ExpressionNode
+
+        return when {
+            left is IntLiteralNode && (right is IntLiteralNode && right.value != 0L)-> {
+                IntLiteralNode(
+                    range = left.range.first..right.range.last,
+                    value = left.value % right.value
+                )
+            }
+            else -> {
+                BinaryExpressionNode(
+                    range = node.range,
+                    operator = node.operator,
+                    left = left,
+                    right = right
+                )
+            }
+        }
+    }
+
     private fun block(node: BlockNode): BlockNode = BlockNode (
         range = node.range,
         statements = node.statements.map { apply(it) as StatementNode }
@@ -107,10 +198,10 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
     }
 
     private fun variableDeclaration(node: VariableDeclarationNode): VariableDeclarationNode = VariableDeclarationNode(
-        node.range,
-        node.name,
-        node.type,
-        node.initializer
+        range = node.range,
+        name = node.name,
+        type = node.type,
+        initializer = apply(node.initializer) as ExpressionNode
     )
 
     private fun whileStmt(node: WhileNode): WhileNode = WhileNode(

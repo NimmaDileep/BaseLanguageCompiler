@@ -87,16 +87,16 @@ class BLC : CliktCommand() {
         val result = binding {
             var compilationUnit = parser.apply(source).bind()
 
-            if (printAst) {
-                TreeFormatter.appendTo(System.out, compilationUnit, Node::class.java)
-            }
-
             var symboltable = SemanticAnalysis.apply(compilationUnit).bind()
 
             if (constantFolding) {
                 compilationUnit = ExpressionOptimizer().apply(compilationUnit) as CompilationUnitNode
                 // regenerate symbol table
                 symboltable = SemanticAnalysis.apply(compilationUnit).bind()
+            }
+
+            if (printAst) {
+                TreeFormatter.appendTo(System.out, compilationUnit, Node::class.java)
             }
 
             target.apply(symboltable, compilationUnit).bind()
