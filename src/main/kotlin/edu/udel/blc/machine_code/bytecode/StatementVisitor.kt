@@ -73,7 +73,6 @@ class StatementVisitor(
     }
 
     fun variableDeclaration(node: VariableDeclarationNode) {
-        println("visiting ${node.initializer} ${node.type} ${node.name} ${node.range}")
         val symbol = reactor.get<Symbol>(node, "symbol")
         val type = reactor.get<Type>(symbol, "type")
 
