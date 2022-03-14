@@ -1,0 +1,34 @@
+var x: Int = 10;
+var y: Int = x + 0;
+print(y);
+
+var p: Int = 10;
+var q: Int = 0 + p;
+print(q);
+
+var a: Int = 5;
+var b: Int = a - 0;
+print(b);
+
+var c: Int = 5;
+var d: Int = 0 - c;
+print(d);
+
+var r: Int = 15;
+var s: Int = r * 0;
+print(s);
+
+var t: Int = 15;
+var u: Int = 0 * t;
+print(u);
+
+var e: Int = 15;
+var f: Int = e * 1;
+print(f);
+
+var j: Int = 15;
+var k: Int = 1 * j;
+print(k);
+
+
+
