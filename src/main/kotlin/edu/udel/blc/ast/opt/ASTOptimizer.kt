@@ -4,7 +4,6 @@ import edu.udel.blc.ast.*
 import edu.udel.blc.ast.BinaryOperator.*
 import edu.udel.blc.ast.UnaryOperator.*
 import edu.udel.blc.util.visitor.ValuedVisitor
-import jdk.incubator.vector.VectorOperators.Binary
 
 class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
 
@@ -46,9 +45,9 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
             SUBTRACTION -> subtraction(node)
             MULTIPLICATION -> multiplication(node)
             REMAINDER -> remainder(node)
+            EQUAL_TO -> equality(node )
+            NOT_EQUAL_TO -> equality(node, true)
             else -> node
-//            EQUAL_TO -> TODO()
-//            NOT_EQUAL_TO -> TODO()
 //            GREATER_THAN -> TODO()
 //            GREATER_THAN_OR_EQUAL_TO -> TODO()
 //            LESS_THAN -> TODO()
@@ -65,7 +64,7 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
         return when {
             left is IntLiteralNode && right is IntLiteralNode -> {
                 IntLiteralNode(
-                    range = left.range.first..right.range.last,
+                    range = node.range,
                     value = left.value + right.value
                 )
             }
@@ -87,7 +86,7 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
         return when {
             left is IntLiteralNode && right is IntLiteralNode -> {
                 IntLiteralNode(
-                    range = left.range.first..right.range.last,
+                    range = node.range,
                     value = left.value - right.value
                 )
             }
@@ -109,7 +108,7 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
         return when {
             left is IntLiteralNode && right is IntLiteralNode -> {
                 IntLiteralNode(
-                    range = left.range.first..right.range.last,
+                    range = node.range,
                     value = left.value * right.value
                 )
             }
@@ -130,9 +129,9 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
         val right = apply(node.right) as ExpressionNode
 
         return when {
-            left is IntLiteralNode && (right is IntLiteralNode && right.value != 0L)-> {
+            left is IntLiteralNode && (right is IntLiteralNode && right.value != 0L) -> {
                 IntLiteralNode(
-                    range = left.range.first..right.range.last,
+                    range = node.range,
                     value = left.value % right.value
                 )
             }
@@ -147,16 +146,74 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
         }
     }
 
-    private fun block(node: BlockNode): BlockNode = BlockNode (
+    private fun equality(node: BinaryExpressionNode, negated: Boolean = false): Node {
+        val left = apply(node.left) as ExpressionNode
+        val right = apply(node.right) as ExpressionNode
+
+        return when {
+            left is IntLiteralNode && right is IntLiteralNode -> {
+                val eval = left.value == right.value
+                BooleanLiteralNode(
+                    range = node.range,
+                    value = if(negated) !eval else eval
+                )
+            }
+            left is BooleanLiteralNode && right is BooleanLiteralNode -> {
+                val eval = left.value == right.value
+                BooleanLiteralNode(
+                    range = node.range,
+                    value = if(negated) !eval else eval
+                )
+            }
+            left is StringLiteralNode && right is StringLiteralNode -> {
+                val eval = left.value == right.value
+                BooleanLiteralNode(
+                    range = node.range,
+                    value = if(negated) !eval else eval
+                )
+            }
+            left is UnitLiteralNode && right is UnitLiteralNode -> {
+                BooleanLiteralNode(
+                    range = node.range,
+                    value = !negated
+                )
+            }
+            isOptimizedLiteral(left) && isOptimizedLiteral(right) -> {
+                // Literals of different types are not considered equal
+                BooleanLiteralNode(
+                    range = node.range,
+                    value = negated
+                )
+            }
+            else -> {
+                BinaryExpressionNode(
+                    range = node.range,
+                    operator = node.operator,
+                    left = left,
+                    right = right
+                )
+            }
+        }
+    }
+
+    private fun isOptimizedLiteral(node: Node): Boolean {
+        return (node is IntLiteralNode ||
+                node is BooleanLiteralNode ||
+                node is StringLiteralNode ||
+                node is UnitLiteralNode)
+    }
+
+    private fun block(node: BlockNode): BlockNode = BlockNode(
         range = node.range,
         statements = node.statements.map { apply(it) as StatementNode }
     )
-//    private fun booleanLiteral(node: BooleanLiteralNode): BooleanLiteralNode {}
-    private fun call(node: CallNode): CallNode = CallNode (
+
+    private fun call(node: CallNode): CallNode = CallNode(
         range = node.range,
         callee = apply(node.callee) as ExpressionNode,
         arguments = node.arguments.map { apply(it) as ExpressionNode }
     )
+
     private fun compilationUnit(node: CompilationUnitNode): CompilationUnitNode = CompilationUnitNode(
         range = node.range,
         statements = node.statements.map { apply(it) as StatementNode }
@@ -166,6 +223,7 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
         range = node.range,
         expression = apply(node.expression) as ExpressionNode
     )
+
     private fun functionDeclaration(node: FunctionDeclarationNode): FunctionDeclarationNode = FunctionDeclarationNode(
         range = node.range,
         name = node.name,
@@ -173,27 +231,57 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
         returnType = node.returnType,
         body = apply(node.body) as BlockNode
     )
+
     private fun ifStmt(node: IfNode): IfNode = IfNode(
         range = node.range,
         condition = apply(node.condition) as ExpressionNode,
         thenStatement = apply(node.thenStatement) as StatementNode,
         elseStatement = node.elseStatement?.let { apply(it) } as StatementNode?
     )
-    private fun index(node: IndexNode): IndexNode  = IndexNode(
-        range = node.range,
-        expression = apply(node.expression) as ExpressionNode,
-        index = apply(node.index) as ExpressionNode
-    )
+
+    private fun index(node: IndexNode): Node {
+        val expr = apply(node.expression) as ExpressionNode
+        val index = apply(node.index) as ExpressionNode
+
+        return when {
+            expr is ArrayLiteralNode && index is IntLiteralNode -> {
+                // TODO: Update the range of the selected item
+                expr.elements[index.value.toInt()]
+            }
+            else -> {
+                IndexNode(
+                    range = node.range,
+                    expression = expr,
+                    index = index
+                )
+            }
+        }
+    }
+
     private fun returnStmt(node: ReturnNode): ReturnNode = ReturnNode(
         range = node.range,
         expression = node.expression?.let { apply(it) } as ExpressionNode?
     )
 
-    private fun unaryExpression(node: UnaryExpressionNode): UnaryExpressionNode {
+    private fun unaryExpression(node: UnaryExpressionNode): Node {
         return when (node.operator) {
+            NEGATION -> negation(node)
             else -> node
-//            NEGATION -> TODO()
 //            LOGICAL_COMPLEMENT -> TODO()
+        }
+    }
+
+    private fun negation(node: UnaryExpressionNode): Node {
+        return when (val inner = apply(node.operand) as ExpressionNode) {
+            is IntLiteralNode -> IntLiteralNode(
+                range = node.range,
+                value = -inner.value
+            )
+            else -> UnaryExpressionNode(
+                range = node.range,
+                operator = node.operator,
+                operand = inner
+            )
         }
     }
 
