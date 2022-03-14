@@ -47,13 +47,12 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
             REMAINDER -> remainder(node)
             EQUAL_TO -> equality(node )
             NOT_EQUAL_TO -> equality(node, true)
-            else -> node
-//            GREATER_THAN -> TODO()
-//            GREATER_THAN_OR_EQUAL_TO -> TODO()
-//            LESS_THAN -> TODO()
-//            LESS_THAN_OR_EQUAL_TO -> TODO()
-//            LOGICAL_CONJUNCTION -> TODO()
-//            LOGICAL_DISJUNCTION -> TODO()
+            GREATER_THAN -> comparison(node, GREATER_THAN)
+            GREATER_THAN_OR_EQUAL_TO -> comparison(node, GREATER_THAN_OR_EQUAL_TO)
+            LESS_THAN -> comparison(node, LESS_THAN)
+            LESS_THAN_OR_EQUAL_TO -> comparison(node, LESS_THAN_OR_EQUAL_TO)
+            LOGICAL_CONJUNCTION -> logical(node, LOGICAL_CONJUNCTION)
+            LOGICAL_DISJUNCTION -> logical(node, LOGICAL_DISJUNCTION)
         }
     }
 
@@ -179,7 +178,7 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
                 )
             }
             isOptimizedLiteral(left) && isOptimizedLiteral(right) -> {
-                // Literals of different types are not considered equal
+                // Literals of different types are considered not equal
                 BooleanLiteralNode(
                     range = node.range,
                     value = negated
@@ -201,6 +200,76 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
                 node is BooleanLiteralNode ||
                 node is StringLiteralNode ||
                 node is UnitLiteralNode)
+    }
+
+    private fun comparison(node: BinaryExpressionNode, operator: BinaryOperator): Node {
+        val left = apply(node.left) as ExpressionNode
+        val right = apply(node.right) as ExpressionNode
+
+        return when {
+            left is IntLiteralNode && right is IntLiteralNode -> {
+                BooleanLiteralNode(
+                    range = node.range,
+                    value = compare(left.value, right.value, operator)
+                )
+            }
+            left is StringLiteralNode && right is StringLiteralNode -> {
+                BooleanLiteralNode(
+                    range = node.range,
+                    value = compare(left.value, right.value, operator)
+                )
+            }
+            left is BooleanLiteralNode && right is BooleanLiteralNode -> {
+                BooleanLiteralNode(
+                    range = node.range,
+                    value = compare(left.value, right.value, operator)
+                )
+            }
+            else -> {
+                BinaryExpressionNode(
+                    range = node.range,
+                    operator = node.operator,
+                    left = left,
+                    right = right
+                )
+            }
+        }
+    }
+
+    private fun <T: Comparable<T>> compare(a: T, b: T, operator: BinaryOperator): Boolean {
+        return when (operator) {
+            GREATER_THAN -> (a > b)
+            GREATER_THAN_OR_EQUAL_TO -> (a >= b)
+            LESS_THAN -> (a < b)
+            LESS_THAN_OR_EQUAL_TO -> (a <= b)
+            else -> throw IllegalArgumentException("Invalid comparison operator provided")
+        }
+    }
+
+    private fun logical(node: BinaryExpressionNode, operator: BinaryOperator): Node {
+        val left = apply(node.left) as ExpressionNode
+        val right = apply(node.right) as ExpressionNode
+
+        val isAnd = operator == LOGICAL_CONJUNCTION
+        // ensure we have used the OR/AND only
+        assert(isAnd || operator == LOGICAL_DISJUNCTION)
+
+        return when {
+            left is BooleanLiteralNode && right is BooleanLiteralNode -> {
+                BooleanLiteralNode(
+                    range = node.range,
+                    value = if(isAnd) left.value && right.value else left.value || right.value
+                )
+            }
+            else -> {
+                BinaryExpressionNode(
+                    range = node.range,
+                    operator = node.operator,
+                    left = left,
+                    right = right
+                )
+            }
+        }
     }
 
     private fun block(node: BlockNode): BlockNode = BlockNode(
@@ -266,8 +335,7 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
     private fun unaryExpression(node: UnaryExpressionNode): Node {
         return when (node.operator) {
             NEGATION -> negation(node)
-            else -> node
-//            LOGICAL_COMPLEMENT -> TODO()
+            LOGICAL_COMPLEMENT -> logicalComplement(node)
         }
     }
 
@@ -276,6 +344,20 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
             is IntLiteralNode -> IntLiteralNode(
                 range = node.range,
                 value = -inner.value
+            )
+            else -> UnaryExpressionNode(
+                range = node.range,
+                operator = node.operator,
+                operand = inner
+            )
+        }
+    }
+
+    private fun logicalComplement(node: UnaryExpressionNode): Node {
+        return when(val inner = apply(node.operand) as ExpressionNode) {
+            is BooleanLiteralNode -> BooleanLiteralNode(
+                range = node.range,
+                value = !inner.value
             )
             else -> UnaryExpressionNode(
                 range = node.range,

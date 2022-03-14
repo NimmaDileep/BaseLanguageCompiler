@@ -25,5 +25,8 @@ print(t);
 var u: Boolean = 5 == 5;
 print(u);
 
-var v: Int = [1, 2, z][1];
+var v: Boolean = true || false;
 print(v);
+
+var w: Boolean = true && true;
+print(w);

@@ -1,0 +1,7 @@
+var x: Int = 5;
+var y: Boolean = false;
+var z: String = "hello";
+
+var c: Any = [x, y, z][2];
+
+print(c);

@@ -1,0 +1,9 @@
+var x: Boolean = false;
+x = 1 > 2;
+print(x);
+x = "Hello" < "World";
+print(x);
+x = false >= true;
+print(x);
+x = false <= false;
+print(x);
