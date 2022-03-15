@@ -11,6 +11,7 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.file
 import edu.udel.blc.ast.CompilationUnitNode
 import edu.udel.blc.ast.Node
+import edu.udel.blc.ast.opt.ASTClone
 import edu.udel.blc.ast.opt.DeadCodeOptimizer
 import edu.udel.blc.ast.opt.ExpressionOptimizer
 import edu.udel.blc.machine_code.MachineCode

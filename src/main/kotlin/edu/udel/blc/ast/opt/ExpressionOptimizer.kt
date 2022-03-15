@@ -70,11 +70,11 @@ class ExpressionOptimizer(
                     value = left.value + right.value
                 )
             }
-            strengthReduction && (left is IntLiteralNode && left.value == 0L) || (right is IntLiteralNode && right.value == 0L) -> {
-                IntLiteralNode(
-                    range = node.range,
-                    value = 0L
-                )
+            strengthReduction && (left is IntLiteralNode && left.value == 0L) -> {
+                right
+            }
+            strengthReduction && (right is IntLiteralNode && right.value == 0L) -> {
+                left
             }
             else -> {
                 BinaryExpressionNode(

@@ -20,19 +20,17 @@ class DeadCodeOptimizer : ValuedVisitor<Node, Node>() {
         CompilationUnitNode(range = node.range, statements = node.statements.map { apply(it) as StatementNode })
 
     private fun block(node: BlockNode): Node {
-        var lastNode = 0;
-        for (i in node.statements.indices) {
-            val stmt = apply(node.statements[i]) as StatementNode
-            lastNode = i
-
-            // code after a return will not be executed
-            if (stmt is ReturnNode) {
-                break
-            }
-        }
+        var foundReturn = false
 
         return BlockNode(
-            range = node.range, statements = node.statements.slice(0..lastNode)
+            range = node.range,
+            statements = node.statements.map {
+                apply(it) as StatementNode
+            }.takeWhile {
+                val hadReturn = foundReturn
+                if(it is ReturnNode) foundReturn = true
+                !hadReturn
+            }
         )
     }
 
