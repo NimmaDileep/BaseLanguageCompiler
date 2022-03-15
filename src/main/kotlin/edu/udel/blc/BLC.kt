@@ -52,21 +52,21 @@ class BLC : CliktCommand() {
         "--fold-constants",
         help = "Optimizes the code by Constant Folding"
     )
-        .flag("-n", "--no-fold-constants", default = true, defaultForHelp = "true")
+        .flag("--no-fold-constants", default = true, defaultForHelp = "true")
 
     private val strengthReduction by option(
         "-r",
         "--reduce-strength",
         help = "Optimize the code by Strength Reduction"
     )
-        .flag(default = true, defaultForHelp = "true")
+        .flag("--no-reduce-strength", default = true, defaultForHelp = "true")
 
     private val deadCodeElimination by option(
         "-e",
-        "--eliminate-dead-code",
+        "--elim-dead-code",
         help = "Optimize the code by Dead Code Elimination"
     )
-        .flag(default = true, defaultForHelp = "true")
+        .flag("--no-elim-dead-code", default = true, defaultForHelp = "true")
 
     private fun onSuccess(codeGenerationResult: MachineCode) {
         val outFile = output ?: File("${input.nameWithoutExtension}.${target.extension}")
