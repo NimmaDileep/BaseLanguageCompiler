@@ -35,7 +35,7 @@ var n : Int = m * 2;
 print(n);
 
 var g: Int = 10;
-var h: Int = 3 * n;
+var h: Int = 2 * n;
 print(h);
 
 

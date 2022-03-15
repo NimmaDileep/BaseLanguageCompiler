@@ -61,14 +61,7 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
     private fun addition(node: BinaryExpressionNode): Node {
         val left = apply(node.left) as ExpressionNode
         val right = apply(node.right) as ExpressionNode
-
         return when {
-            left is IntLiteralNode && right is IntLiteralNode -> {
-                IntLiteralNode(
-                    range = left.range.first..right.range.last,
-                    value = left.value + right.value
-                )
-            }
             left is IntLiteralNode && (right is IntLiteralNode && right.value == 0L)-> {
                 IntLiteralNode(
                     range = left.range.first..right.range.last,
@@ -79,6 +72,12 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
                 IntLiteralNode(
                     range = left.range.first..right.range.last,
                     value = right.value
+                )
+            }
+            left is IntLiteralNode && right is IntLiteralNode -> {
+                IntLiteralNode(
+                    range = left.range.first..right.range.last,
+                    value = left.value + right.value
                 )
             }
             else -> {
@@ -97,16 +96,16 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
         val right = apply(node.right) as ExpressionNode
 
         return when {
-            left is IntLiteralNode && right is IntLiteralNode -> {
-                IntLiteralNode(
-                    range = left.range.first..right.range.last,
-                    value = left.value - right.value
-                )
-            }
             left is IntLiteralNode && (right is IntLiteralNode && right.value == 0L)-> {
                 IntLiteralNode(
                     range = left.range.first..right.range.last,
                     value = left.value
+                )
+            }
+            left is IntLiteralNode && right is IntLiteralNode -> {
+                IntLiteralNode(
+                    range = left.range.first..right.range.last,
+                    value = left.value - right.value
                 )
             }
             else -> {
@@ -125,12 +124,6 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
         val right = apply(node.right) as ExpressionNode
 
         return when {
-            left is IntLiteralNode && right is IntLiteralNode -> {
-                IntLiteralNode(
-                    range = left.range.first..right.range.last,
-                    value = left.value * right.value
-                )
-            }
             left is IntLiteralNode && (right is IntLiteralNode && right.value == 0L)-> {
                 IntLiteralNode(
                     range = left.range.first..right.range.last,
@@ -143,7 +136,7 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
                     value = 0
                 )
             }
-            left is IntLiteralNode && (right is IntLiteralNode && right.value == 1L)-> {
+            left is IntLiteralNode && (right is IntLiteralNode && right.value.toInt() == 1)-> {
                 IntLiteralNode(
                     range = left.range.first..right.range.last,
                     value = left.value
@@ -153,6 +146,24 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
                 IntLiteralNode(
                     range = left.range.first..right.range.last,
                     value = right.value
+                )
+            }
+            (left is IntLiteralNode && left.value == 2L) && right is IntLiteralNode -> {
+                IntLiteralNode(
+                    range = left.range.first..right.range.last,
+                    value = right.value + right.value
+                )
+            }
+            left is IntLiteralNode && (right is IntLiteralNode && right.value.toInt() == 2)-> {
+                IntLiteralNode(
+                    range = left.range.first..right.range.last,
+                    value = left.value + left.value
+                )
+            }
+            left is IntLiteralNode && right is IntLiteralNode -> {
+                IntLiteralNode(
+                    range = left.range.first..right.range.last,
+                    value = left.value * right.value
                 )
             }
             else -> {
