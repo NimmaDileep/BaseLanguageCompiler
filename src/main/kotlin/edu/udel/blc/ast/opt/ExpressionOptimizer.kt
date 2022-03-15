@@ -4,10 +4,11 @@ import edu.udel.blc.ast.*
 import edu.udel.blc.ast.BinaryOperator.*
 import edu.udel.blc.ast.UnaryOperator.*
 import edu.udel.blc.util.visitor.ValuedVisitor
+import jdk.incubator.vector.VectorOperators.Binary
 
 class ExpressionOptimizer(
-    val constantFolding: Boolean,
-    val strengthReduction: Boolean
+    private val constantFolding: Boolean,
+    private val strengthReduction: Boolean
 ) : ValuedVisitor<Node, Node>() {
 
     init {
@@ -126,7 +127,28 @@ class ExpressionOptimizer(
             )
             strengthReduction && left is IntLiteralNode && left.value == 1L -> right
             strengthReduction && right is IntLiteralNode && right.value == 1L -> left
-            // TODO: Add a * 2 strength reduction
+            strengthReduction && left is IntLiteralNode && left.value == 2L -> {
+                val copyA = ASTClone().apply(right) as ExpressionNode
+                val copyB = ASTClone().apply(right) as ExpressionNode
+
+                BinaryExpressionNode(
+                    range = node.range,
+                    operator = ADDITION,
+                    left = copyA,
+                    right = copyB
+                )
+            }
+            strengthReduction && right is IntLiteralNode && right.value == 2L -> {
+                val copyA = ASTClone().apply(left) as ExpressionNode
+                val copyB = ASTClone().apply(left) as ExpressionNode
+
+                BinaryExpressionNode(
+                    range = node.range,
+                    operator = ADDITION,
+                    left = copyA,
+                    right = copyB
+                )
+            }
             else -> {
                 BinaryExpressionNode(
                     range = node.range,
