@@ -24,3 +24,9 @@ print(t);
 
 var u: Boolean = 5 == 5;
 print(u);
+
+var v: Boolean = true || false;
+print(v);
+
+var w: Boolean = true && true;
+print(w);

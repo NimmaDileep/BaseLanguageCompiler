@@ -1,0 +1,4 @@
+while(false) {
+    // this code will never be run
+    print("Hello!");
+}

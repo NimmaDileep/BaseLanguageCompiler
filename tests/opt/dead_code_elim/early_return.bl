@@ -1,0 +1,7 @@
+fun foo() -> Int {
+    print("Hello World");
+    return 5;
+    print("Goodbye World");
+}
+
+print(foo());
