@@ -11,6 +11,7 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.file
 import edu.udel.blc.ast.CompilationUnitNode
 import edu.udel.blc.ast.Node
+import edu.udel.blc.ast.opt.DeadCodeOptimizer
 import edu.udel.blc.ast.opt.ExpressionOptimizer
 import edu.udel.blc.machine_code.MachineCode
 import edu.udel.blc.machine_code.bytecode.BytecodeGenerator
@@ -90,15 +91,21 @@ class BLC : CliktCommand() {
             var symboltable = SemanticAnalysis.apply(compilationUnit).bind()
 
             if (constantFolding) {
-                compilationUnit = ExpressionOptimizer().apply(compilationUnit) as CompilationUnitNode
-                // regenerate symbol table
-                symboltable = SemanticAnalysis.apply(compilationUnit).bind()
+                val opt = ExpressionOptimizer()
+                compilationUnit = opt.apply(compilationUnit) as CompilationUnitNode
+            }
+
+            if (deadCodeElimination) {
+                val opt = DeadCodeOptimizer()
+                compilationUnit = opt.apply(compilationUnit) as CompilationUnitNode
             }
 
             if (printAst) {
                 TreeFormatter.appendTo(System.out, compilationUnit, Node::class.java)
             }
 
+            // regenerate symbol table
+            symboltable = SemanticAnalysis.apply(compilationUnit).bind()
             target.apply(symboltable, compilationUnit).bind()
         }
 
