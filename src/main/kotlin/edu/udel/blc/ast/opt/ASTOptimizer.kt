@@ -148,10 +148,9 @@ class ExpressionOptimizer : ValuedVisitor<Node, Node>() {
                     value = right.value
                 )
             }
-            (left is IntLiteralNode && left.value == 2L) && right is IntLiteralNode -> {
-                IntLiteralNode(
-                    range = left.range.first..right.range.last,
-                    value = right.value + right.value
+            (left is IntLiteralNode && left.value == 2L) && right is ExpressionNode -> {
+                ExpressionNode(
+                    range = node.right
                 )
             }
             left is IntLiteralNode && (right is IntLiteralNode && right.value.toInt() == 2)-> {
