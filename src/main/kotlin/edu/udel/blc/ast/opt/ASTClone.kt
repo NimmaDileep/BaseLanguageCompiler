@@ -123,23 +123,49 @@ class ASTClone: ValuedVisitor<Node, Node>() {
         value = node.value
     )
 
-    private fun field(node: FieldNode): FieldNode = FieldNode()
+    private fun field(node: FieldNode): FieldNode = FieldNode(
+        range = node.range,
+        name = node.name,
+        type = apply(node.type)
+    )
 
-    private fun fieldSelect(node: FieldSelectNode): FieldSelectNode = FieldSelectNode()
+    private fun fieldSelect(node: FieldSelectNode): FieldSelectNode = FieldSelectNode(
+        range =  node.range,
+        name = node.name,
+        expression = apply(node.expression) as ExpressionNode
+    )
 
     private fun intLiteral(node: IntLiteralNode): IntLiteralNode = IntLiteralNode(
         range = node.range,
         value = node.value
     )
 
-    private fun parameter(node: ParameterNode): ParameterNode = ParameterNode()
+    private fun parameter(node: ParameterNode): ParameterNode = ParameterNode(
+        range = node.range,
+        name = node.name,
+        type = apply(node.type)
+    )
 
-    private fun reference(node: ReferenceNode): ReferenceNode = ReferenceNode()
+    private fun reference(node: ReferenceNode): ReferenceNode = ReferenceNode(
+        range = node.range,
+        name = node.name
+    )
 
-    private fun returnStmt(node: ReturnNode): ReturnNode = ReturnNode()
+    private fun returnStmt(node: ReturnNode): ReturnNode = ReturnNode(
+        range = node.range,
+        expression = node.expression?.let { apply(node.expression) } as ExpressionNode?
+    )
 
-    private fun structDeclaration(node: StructDeclarationNode): StructDeclarationNode = StructDeclarationNode()
+    private fun structDeclaration(node: StructDeclarationNode): StructDeclarationNode = StructDeclarationNode(
+        range = node.range,
+        name = node.name,
+        fields = node.fields.map { apply(it) as FieldNode }
+    )
 
-    private fun unaryExpression(node: UnaryExpressionNode): UnaryExpressionNode = UnaryExpressionNode()
+    private fun unaryExpression(node: UnaryExpressionNode): UnaryExpressionNode = UnaryExpressionNode(
+        range = node.range,
+        operator = node.operator,
+        operand = apply(node.operand) as ExpressionNode
+    )
 
 }
