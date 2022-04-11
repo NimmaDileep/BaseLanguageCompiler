@@ -1,0 +1,3 @@
+var x: Int = 20;
+
+print(x / 0)

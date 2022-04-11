@@ -1,0 +1,11 @@
+var x: Int = 20;
+var y: Int = 5;
+
+print(x / y);
+
+y = 3;
+print(x / y);
+
+y = -4;
+print(x / y);
+
