@@ -192,7 +192,7 @@ class ResolveTypes(
 
     private fun binaryExpression(node: BinaryExpressionNode) {
         reactor[node, "type"] = when (node.operator) {
-            ADDITION, SUBTRACTION, MULTIPLICATION, REMAINDER -> IntType
+            ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, REMAINDER -> IntType
             EQUAL_TO, NOT_EQUAL_TO,
             GREATER_THAN, GREATER_THAN_OR_EQUAL_TO, LESS_THAN, LESS_THAN_OR_EQUAL_TO,
             LOGICAL_CONJUNCTION, LOGICAL_DISJUNCTION -> BooleanType

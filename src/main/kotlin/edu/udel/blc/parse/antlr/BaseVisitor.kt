@@ -109,6 +109,7 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
             BaseLexer.STAR -> MULTIPLICATION
             BaseLexer.PLUS -> ADDITION
             BaseLexer.MINUS -> SUBTRACTION
+            BaseLexer.SLASH -> DIVISION
             else -> error("Unknown binary operator: ${ctx.operator.text}")
         }
         return BinaryExpressionNode(ctx.range, operator, left, right)

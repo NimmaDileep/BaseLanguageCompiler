@@ -49,7 +49,7 @@ expr
     | left=expr operator=( EQUAL_EQUAL | BANG_EQUAL) right=expr                          # binary
     | left=expr operator=( GREATER | GREATER_EQUAL | LESS | LESS_EQUAL ) right=expr      # binary
     | left=expr operator=( PLUS | MINUS ) right=expr                                     # binary
-    | left=expr operator=( PERCENT | STAR ) right=expr                                   # binary
+    | left=expr operator=( PERCENT | STAR | SLASH ) right=expr                           # binary
     | operator=( BANG | MINUS ) operand=expr                                             # unaryPrefix
     | callee=expr LPAREN ( arguments+=expr ( COMMA arguments+=expr )* COMMA? )? RPAREN   # call
     | expression=expr LBRACE index=expr RBRACE                                           # index

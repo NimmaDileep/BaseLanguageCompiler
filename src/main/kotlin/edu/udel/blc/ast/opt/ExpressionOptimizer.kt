@@ -44,20 +44,22 @@ class ExpressionOptimizer(
     )
 
     private fun binaryExpression(node: BinaryExpressionNode): Node {
-        return when (node.operator) {
-            ADDITION -> addition(node)
-            SUBTRACTION -> subtraction(node)
-            MULTIPLICATION -> multiplication(node)
-            REMAINDER -> remainder(node)
-            EQUAL_TO -> equality(node)
-            NOT_EQUAL_TO -> equality(node, true)
-            GREATER_THAN -> comparison(node, GREATER_THAN)
-            GREATER_THAN_OR_EQUAL_TO -> comparison(node, GREATER_THAN_OR_EQUAL_TO)
-            LESS_THAN -> comparison(node, LESS_THAN)
-            LESS_THAN_OR_EQUAL_TO -> comparison(node, LESS_THAN_OR_EQUAL_TO)
-            LOGICAL_CONJUNCTION -> logicalAnd(node)
-            LOGICAL_DISJUNCTION -> logicalOr(node)
-        }
+        // TODO: Reintroduce constant folding with division added
+//        return when (node.operator) {
+//            ADDITION -> addition(node)
+//            SUBTRACTION -> subtraction(node)
+//            MULTIPLICATION -> multiplication(node)
+//            REMAINDER -> remainder(node)
+//            EQUAL_TO -> equality(node)
+//            NOT_EQUAL_TO -> equality(node, true)
+//            GREATER_THAN -> comparison(node, GREATER_THAN)
+//            GREATER_THAN_OR_EQUAL_TO -> comparison(node, GREATER_THAN_OR_EQUAL_TO)
+//            LESS_THAN -> comparison(node, LESS_THAN)
+//            LESS_THAN_OR_EQUAL_TO -> comparison(node, LESS_THAN_OR_EQUAL_TO)
+//            LOGICAL_CONJUNCTION -> logicalAnd(node)
+//            LOGICAL_DISJUNCTION -> logicalOr(node)
+//        }
+        return node;
     }
 
     private fun addition(node: BinaryExpressionNode): Node {
