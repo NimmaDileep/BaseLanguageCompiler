@@ -49,6 +49,7 @@ class ExpressionOptimizer(
 //            ADDITION -> addition(node)
 //            SUBTRACTION -> subtraction(node)
 //            MULTIPLICATION -> multiplication(node)
+//            DIVISION -> division(node)
 //            REMAINDER -> remainder(node)
 //            EQUAL_TO -> equality(node)
 //            NOT_EQUAL_TO -> equality(node, true)
@@ -162,6 +163,31 @@ class ExpressionOptimizer(
         }
     }
 
+    private fun division(node: BinaryExpressionNode): Node {
+        val left = apply(node.left) as ExpressionNode
+        val right = apply(node.right) as ExpressionNode
+
+        return when {
+            constantFolding && left is IntLiteralNode && right is IntLiteralNode -> {
+                IntLiteralNode(
+                    range = node.range,
+                    value = left.value / right.value
+                )
+            }
+            strengthReduction && (left is IntLiteralNode && left.value == 0L) -> IntLiteralNode(
+                range = node.range, value = 0L
+            )
+            strengthReduction && right is IntLiteralNode && right.value == 1L -> left
+            else -> {
+                BinaryExpressionNode(
+                    range = node.range,
+                    operator = node.operator,
+                    left = left,
+                    right = right
+                )
+            }
+        }
+    }
 
     private fun remainder(node: BinaryExpressionNode): Node {
         val left = apply(node.left) as ExpressionNode
