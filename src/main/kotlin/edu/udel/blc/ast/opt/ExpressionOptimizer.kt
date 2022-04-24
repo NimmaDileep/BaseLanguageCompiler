@@ -174,7 +174,7 @@ class ExpressionOptimizer(
                     value = left.value / right.value
                 )
             }
-            strengthReduction && (left is IntLiteralNode && left.value == 0L) -> IntLiteralNode(
+            strengthReduction && (left is IntLiteralNode && left.value == 0L && right is IntLiteralNode && right.value != 0L)-> IntLiteralNode(
                 range = node.range, value = 0L
             )
             strengthReduction && right is IntLiteralNode && right.value == 1L -> left
