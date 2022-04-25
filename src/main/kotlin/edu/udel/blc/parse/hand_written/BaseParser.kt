@@ -286,6 +286,11 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
                             val right = factor()
                             BinaryExpressionNode(operator.range, MULTIPLICATION, expr, right)
                         }
+                        check(SLASH) -> {
+                            val operator = consume(SLASH) { "Expect '/'."}
+                            val right = factor()
+                            BinaryExpressionNode(operator.range, DIVISION, expr, right)
+                        }
                         else -> break
                     }
         }
