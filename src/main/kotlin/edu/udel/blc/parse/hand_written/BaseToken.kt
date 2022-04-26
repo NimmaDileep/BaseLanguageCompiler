@@ -46,6 +46,7 @@ data class BaseToken(
 
         VAR,
         WHILE,
+        FOR,
 
         STRUCT,
 

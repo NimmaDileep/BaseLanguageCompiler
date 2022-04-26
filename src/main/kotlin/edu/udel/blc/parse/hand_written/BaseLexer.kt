@@ -180,6 +180,7 @@ class BaseLexer(
             "else" to ELSE,
             "return" to RETURN,
             "while" to WHILE,
+            "for" to FOR,
 
             "true" to TRUE,
             "false" to FALSE,

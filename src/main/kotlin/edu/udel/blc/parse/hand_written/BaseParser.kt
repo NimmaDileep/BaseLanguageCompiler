@@ -79,14 +79,14 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
         return FieldNode(name.range, name.text, type)
     }
 
-    fun variableDeclaration(): StatementNode {
+    fun variableDeclaration(requireSemicolon: Boolean = true): StatementNode {
         val keyword = consume(VAR) { "Expect 'var'." }
         val name = consume(IDENTIFIER) { "Expect variable name." }
         consume(COLON) { "Expect ':' after variable name." }
         val type = type()
         consume(EQUAL) { "Expect '=' before initializer." }
         val initializer = expression()
-        consume(SEMICOLON) { "Expect ';' after variable declaration." }
+        if(requireSemicolon) consume(SEMICOLON) { "Expect ';' after variable declaration." }
         return VariableDeclarationNode(name.range, name.text, type, initializer)
     }
 
@@ -96,6 +96,7 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
             check(RETURN) -> returnStatement()
             check(WHILE) -> whileStatement()
             check(LBRACE) -> block()
+            check(FOR) -> forStatement()
             else -> expressionStatement()
         }
     }
@@ -149,6 +150,51 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
         consume(RPAREN) { "Expect ')' after condition." }
         val body = statement()
         return WhileNode(keyword.range, condition, body)
+    }
+
+    fun forStatement(): StatementNode {
+        val keyword = consume(FOR) { "Expect 'for'. " }
+        consume(LPAREN) { "Expect '(' after 'for'." }
+        val initializer = forInitializer();
+        consume(SEMICOLON) { "Expect ';' after initializer. "}
+        val condition = expression()
+        consume(SEMICOLON) { "Expect ';' after condition. "}
+        val updateExpr = expression();
+        val update = ExpressionStatementNode(
+            range = updateExpr.range,
+            expression = updateExpr
+        )
+        consume(RPAREN) { "Expect ')' after 'for' update." }
+        val body = statement()
+
+        // 'for' loops are syntactic sugar over the traditional 'while'
+        return BlockNode(
+            range = keyword.range,
+            statements = listOfNotNull(
+                initializer,
+                WhileNode(
+                    range = keyword.range,
+                    condition = condition,
+                    body = BlockNode(
+                        range = body.range,
+                        statements = listOfNotNull(
+                            body,
+                            update
+                        )
+                    )
+                )
+            )
+        )
+    }
+
+    private fun forInitializer(): StatementNode {
+        if(check(VAR)) return variableDeclaration(requireSemicolon = false)
+
+        val expr = expression()
+        return ExpressionStatementNode(
+            range = expr.range,
+            expression = expr
+        )
     }
 
     fun expression(): ExpressionNode {
