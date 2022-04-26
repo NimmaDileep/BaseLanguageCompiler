@@ -94,9 +94,12 @@ def run_test(path, compiler):
 
     # run the program and get the stdout and stderr
     process = subprocess.Popen(
-        [compiler, path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = process.communicate()
-    stdout, stderr = stdout.decode("utf-8"), stderr.decode("utf-8")
+        [compiler, path, "--parser", "antlr"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    try:
+        stdout, stderr = process.communicate(timeout=2)
+        stdout, stderr = stdout.decode("utf-8"), stderr.decode("utf-8")
+    except subprocess.TimeoutExpired:
+        stdout, stderr = "", "Timeout"
 
     return stdout, stderr
 

@@ -159,7 +159,8 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
     }
 
     override fun visitStringLiteral(ctx: BaseParser.StringLiteralContext): StringLiteralNode {
-        return StringLiteralNode(ctx.range, ctx.value.text)
+        val text = ctx.value.text.substring(1, ctx.value.text.length - 1)
+        return StringLiteralNode(ctx.range, text)
     }
 
     override fun visitUnitLiteral(ctx: BaseParser.UnitLiteralContext): UnitLiteralNode {
