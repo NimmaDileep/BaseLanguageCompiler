@@ -47,6 +47,12 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
         return FieldNode(ctx.range, name, type)
     }
 
+    override fun visitClassDeclaration(ctx: BaseParser.ClassDeclarationContext): ClassDeclarationNode {
+        val name = ctx.name.text
+
+        return ClassDeclarationNode(ctx.range, name, emptyList());
+    }
+
     override fun visitVariableDeclaration(ctx: BaseParser.VariableDeclarationContext): VariableDeclarationNode {
         val name = ctx.name.text
         val type = ctx.type.accept(this) as Node

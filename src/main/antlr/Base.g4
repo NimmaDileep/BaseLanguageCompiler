@@ -19,6 +19,10 @@ declaration
         ( fields+=field ( COMMA fields+=field )* COMMA? )?
         RBRACKET                                                                         # structDeclaration
     | VAR name=IDENTIFIER COLON type=typeExpression EQUAL initializer=expr SEMICOLON     # variableDeclaration
+    | CLASS
+        name=IDENTIFIER
+        LBRACKET
+        RBRACKET                                                                         # classDeclaration
     | stmt                                                                               # statementAsDeclaration
     ;
 
@@ -116,6 +120,7 @@ STRUCT: 'struct';
 WHILE: 'while';
 RETURN: 'return';
 VAR: 'var';
+CLASS: 'class';
 
 LESS: '<';
 LESS_EQUAL: '<=';
