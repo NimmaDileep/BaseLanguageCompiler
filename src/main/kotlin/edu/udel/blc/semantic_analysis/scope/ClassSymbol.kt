@@ -18,10 +18,6 @@ class ClassSymbol(
         return super.declare(symbol) as MemberSymbol
     }
 
-    override fun lookup(name: String): MemberSymbol? {
-        return super.lookup(name) as? MemberSymbol
-    }
-
     fun resolveField(name: String): FieldSymbol? {
         return lookup(name) as? FieldSymbol
     }
