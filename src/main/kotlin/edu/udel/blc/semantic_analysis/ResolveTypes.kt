@@ -4,10 +4,7 @@ import edu.udel.blc.ast.*
 import edu.udel.blc.ast.BinaryOperator.*
 import edu.udel.blc.ast.UnaryOperator.LOGICAL_COMPLEMENT
 import edu.udel.blc.ast.UnaryOperator.NEGATION
-import edu.udel.blc.semantic_analysis.scope.FunctionSymbol
-import edu.udel.blc.semantic_analysis.scope.StructSymbol
-import edu.udel.blc.semantic_analysis.scope.Symbol
-import edu.udel.blc.semantic_analysis.scope.VariableSymbol
+import edu.udel.blc.semantic_analysis.scope.*
 import edu.udel.blc.semantic_analysis.type.*
 import edu.udel.blc.util.uranium.Attribute
 import edu.udel.blc.util.uranium.Reactor
@@ -26,6 +23,7 @@ class ResolveTypes(
         register(ParameterNode::class.java, PRE_VISIT, ::parameterDeclaration)
         register(VariableDeclarationNode::class.java, PRE_VISIT, ::variableDeclaration)
         register(StructDeclarationNode::class.java, PRE_VISIT, ::structDeclaration)
+        register(ClassDeclarationNode::class.java, PRE_VISIT, ::classDeclaration)
         register(FieldNode::class.java, PRE_VISIT, ::fieldDeclaration)
 
         register(ReferenceNode::class.java, PRE_VISIT, ::reference)
@@ -132,6 +130,29 @@ class ResolveTypes(
                         .map { it.name }
                         .zip(fieldTypes)
                         .toMap(LinkedHashMap())
+                )
+            }
+        }
+    }
+
+    private fun classDeclaration(node: ClassDeclarationNode) {
+        reactor.on(
+            name = "type class declaration symbol",
+            attribute = Attribute(node, "symbol")
+        ) {
+            symbol: ClassSymbol ->
+            reactor.flatMap(
+                name = "type class declaration symbol",
+                from = symbol.fields.map { Attribute(it, "type") },
+                to = Attribute(node, "type"),
+            ) {
+                fieldTypes: List<Type> ->
+                ClassType(
+                    name = symbol.getQualifiedName("_"),
+                    fieldTypes = symbol.fields.map { it.name }
+                        .zip(fieldTypes)
+                        .toMap(LinkedHashMap()),
+                    superClass = null // TODO: add support for super class type
                 )
             }
         }

@@ -29,6 +29,10 @@ class ResolveReferences(
 
         register(StructDeclarationNode::class.java, PRE_VISIT, ::enterStructDeclaration)
         register(StructDeclarationNode::class.java, POST_VISIT, ::exitStructDeclaration)
+
+        register(ClassDeclarationNode::class.java, PRE_VISIT, ::enterClassDeclaration)
+        register(ClassDeclarationNode::class.java, POST_VISIT, ::exitClassDeclaration)
+
         register(FieldNode::class.java, PRE_VISIT, ::field)
 
         register(BlockNode::class.java, PRE_VISIT, ::enterBlock)
@@ -111,6 +115,24 @@ class ResolveReferences(
     }
 
     private fun exitStructDeclaration(node: StructDeclarationNode) {
+        scope = scope.containingScope!!
+    }
+
+    private fun enterClassDeclaration(node: ClassDeclarationNode) {
+        reactor[node, "scope"] = scope
+
+        // TODO: Update to include superclass in class symbol
+        val classSymbol = ClassSymbol(
+            node.name,
+            null,
+            scope
+        )
+        scope.declare(classSymbol)
+        reactor[node, "symbol"] = classSymbol
+        scope = classSymbol
+    }
+
+    private fun exitClassDeclaration(node: ClassDeclarationNode) {
         scope = scope.containingScope!!
     }
 

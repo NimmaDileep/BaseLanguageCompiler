@@ -1,3 +1,10 @@
-class Dog {}
+class Dog {
+    var name: String;
+    var age: Int;
+}
 
-print("hello world");
+// var x: Dog = Dog(5, "Fido");
+
+// print(x);
+// print(x.age);
+// print(x.name);

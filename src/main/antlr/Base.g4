@@ -18,12 +18,17 @@ declaration
         LBRACKET
         ( fields+=field ( COMMA fields+=field )* COMMA? )?
         RBRACKET                                                                         # structDeclaration
-    | VAR name=IDENTIFIER COLON type=typeExpression EQUAL initializer=expr SEMICOLON     # variableDeclaration
+    | variable EQUAL initializer=expr SEMICOLON                                          # variableDeclaration
     | CLASS
         name=IDENTIFIER
         LBRACKET
+        ( fields+=variable ( SEMICOLON fields+=variable )* SEMICOLON )?
         RBRACKET                                                                         # classDeclaration
     | stmt                                                                               # statementAsDeclaration
+    ;
+
+variable
+    : VAR name=IDENTIFIER COLON type=typeExpression
     ;
 
 parameter
