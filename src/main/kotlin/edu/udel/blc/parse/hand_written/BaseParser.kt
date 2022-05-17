@@ -40,6 +40,7 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
             check(FUN) -> functionDeclaration()
             check(STRUCT) -> structDeclaration()
             check(VAR) -> variableDeclaration()
+            check(CLASS) -> classDeclaration()
             else -> statement()
         }
     }
@@ -72,6 +73,15 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
         return StructDeclarationNode(name.range, name.text, fields)
     }
 
+    fun classDeclaration(): ClassDeclarationNode {
+        val keyword = consume(CLASS) { "Expect 'class'." }
+        val name = consume(IDENTIFIER) { "Expect class name." }
+        consume(LBRACE) { "Expect '{' before class definition." }
+        val fields = list(RBRACE, ::classField, useDelim = false)
+        consume(RBRACE) { "Expect '}' after class definition." }
+        return ClassDeclarationNode(name.range, name.text, fields)
+    }
+
     fun field(): FieldNode {
         val name = consume(IDENTIFIER) { "Expect field name." }
         consume(COLON) { "Expect ':' after field name" }
@@ -79,7 +89,16 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
         return FieldNode(name.range, name.text, type)
     }
 
-    fun variableDeclaration(requireSemicolon: Boolean = true): StatementNode {
+    fun classField(): FieldNode {
+        val keyword = consume(VAR) { "Expect 'var'." }
+        val name = consume(IDENTIFIER) { "Expect field name." }
+        consume(COLON) { "Expect ':' after variable name." }
+        val type = type()
+        consume(SEMICOLON) { "Expect ';' after variable declaration." }
+        return FieldNode(name.range, name.text, type)
+    }
+
+    fun variableDeclaration(requireSemicolon: Boolean = true, requireInitializer: Boolean = true): StatementNode {
         val keyword = consume(VAR) { "Expect 'var'." }
         val name = consume(IDENTIFIER) { "Expect variable name." }
         consume(COLON) { "Expect ':' after variable name." }
@@ -467,14 +486,14 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
         return ArrayTypeNode(lbrace.range, elementType)
     }
 
-    fun <T> list(kind: BaseToken.Kind, element: () -> T): List<T> = buildList {
+    fun <T> list(kind: BaseToken.Kind, element: () -> T, useDelim: Boolean = true): List<T> = buildList {
         if (!check(kind)) {
             do {
                 when {
                     check(kind) -> break
                     else -> add(element())
                 }
-            } while (match(COMMA))
+            } while (if(useDelim) match(COMMA) else true)
         }
     }
 
