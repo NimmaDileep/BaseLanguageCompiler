@@ -276,9 +276,9 @@ class ExpressionVisitor(
 
     private fun fieldSelect(node: FieldSelectNode) {
         accept(node.expression)
-        val structType = reactor.get<Type>(node.expression, "type")
+        val classType = reactor.get<Type>(node.expression, "type")
         val fieldType = reactor.get<Type>(node, "type")
-        method.getField(nativeType(structType), node.name, nativeType(fieldType))
+        method.getField(nativeType(classType), node.name, nativeType(fieldType))
     }
 
 }

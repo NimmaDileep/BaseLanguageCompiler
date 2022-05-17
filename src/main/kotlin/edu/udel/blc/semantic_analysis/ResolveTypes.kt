@@ -251,6 +251,12 @@ class ResolveTypes(
                         else -> fieldType
                     }
                 }
+                is ClassType -> {
+                    when (val fieldType = expressionType.fieldTypes[node.name]) {
+                        null -> SemanticError(node, "unknown field ${node.name} in ${expressionType.name}")
+                        else -> fieldType
+                    }
+                }
                 else -> SemanticError(node, "expression must be Struct, not $expressionType")
             }
 

@@ -5,6 +5,8 @@ class Dog {
 
 var x: Dog = Dog("hello", 5);
 
+print(x.name);
+
 // print(x);
 // print(x.age);
 // print(x.name);
