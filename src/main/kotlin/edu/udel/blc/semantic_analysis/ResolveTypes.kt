@@ -144,7 +144,7 @@ class ResolveTypes(
             reactor.flatMap(
                 name = "type class declaration symbol",
                 from = symbol.fields.map { Attribute(it, "type") },
-                to = Attribute(node, "type"),
+                to = Attribute(symbol, "type"),
             ) {
                 fieldTypes: List<Type> ->
                 ClassType(
@@ -230,6 +230,7 @@ class ResolveTypes(
             when (calleeType) {
                 is FunctionType -> calleeType.returnType
                 is StructType -> calleeType
+                is ClassType -> calleeType
                 else -> SemanticError(node, "expression is not callable")
             }
 

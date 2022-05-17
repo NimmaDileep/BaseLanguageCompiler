@@ -3,7 +3,7 @@ class Dog {
     var age: Int;
 }
 
-// var x: Dog = Dog(5, "Fido");
+var x: Dog = Dog("hello", 5);
 
 // print(x);
 // print(x.age);

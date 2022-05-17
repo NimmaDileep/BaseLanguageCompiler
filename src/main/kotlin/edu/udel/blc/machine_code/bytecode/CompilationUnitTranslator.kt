@@ -19,6 +19,9 @@ class CompilationUnitTranslator(
     override fun apply(node: CompilationUnitNode): Bytecode {
 
         val structs = StructTranslator(reactor).apply(node)
+        val classes = ClassTranslator(reactor).apply(node)
+
+        val addedClasses = structs + classes
 
         val mainclass = buildClass(
             access = ACC_PUBLIC,
@@ -39,7 +42,7 @@ class CompilationUnitTranslator(
 
         }
 
-        return Bytecode(mainclass, structs)
+        return Bytecode(mainclass, addedClasses)
     }
 
     private fun generateBuiltins(clazz: ClassWriter) {

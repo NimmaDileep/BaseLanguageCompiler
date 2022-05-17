@@ -158,7 +158,6 @@ class ResolveReferences(
                 from = Attribute(node, "scope"),
                 to = Attribute(node, "symbol")
             ) { scope: Scope ->
-
                 when (val symbol = scope.lookup(node.name)) {
                     // if the symbol is null or a variable symbol, report an error
                     // if we can find a variable now, but not before this means that the variable is used
@@ -167,7 +166,9 @@ class ResolveReferences(
                     else -> symbol
                 }
             }
-            else -> reactor[node, "symbol"] = symbol
+            else -> {
+                reactor[node, "symbol"] = symbol
+            }
         }
     }
 
