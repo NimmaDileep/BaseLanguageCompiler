@@ -70,7 +70,7 @@ class ResolveTypes(
         reactor.on(
             name = "load function declaration symbol",
             attribute = Attribute(node, "symbol")
-        ) { symbol: FunctionSymbol ->
+        ) { symbol: CallableSymbol ->
 
             val symbolTypeAttribute = Attribute(symbol, "type")
 

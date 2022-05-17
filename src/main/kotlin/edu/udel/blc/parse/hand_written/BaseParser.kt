@@ -79,7 +79,7 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
         consume(LBRACE) { "Expect '{' before class definition." }
         val fields = list(RBRACE, ::classField, useDelim = false)
         consume(RBRACE) { "Expect '}' after class definition." }
-        return ClassDeclarationNode(name.range, name.text, fields)
+        return ClassDeclarationNode(name.range, name.text, fields, emptyList())
     }
 
     fun field(): FieldNode {

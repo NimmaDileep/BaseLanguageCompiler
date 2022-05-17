@@ -1,6 +1,10 @@
 class Dog {
     var name: String;
     var age: Int;
+
+    fun bark() -> Unit {
+        print("Woof");
+    }
 }
 
 var x: Dog = Dog("hello", 5);

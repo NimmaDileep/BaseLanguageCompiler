@@ -64,7 +64,12 @@ class ResolveReferences(
     private fun enterFunctionDeclaration(node: FunctionDeclarationNode) {
         reactor[node, "scope"] = scope
 
-        val functionScope = FunctionSymbol(node.name, scope)
+        val functionScope = if (scope is ClassSymbol) {
+            MethodSymbol(node.name, scope)
+        } else {
+            FunctionSymbol(node.name, scope)
+        }
+
         scope.declare(functionScope)
 
         reactor[node, "symbol"] = functionScope

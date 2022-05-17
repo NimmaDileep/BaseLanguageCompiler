@@ -1,6 +1,7 @@
 package edu.udel.blc.semantic_analysis
 
 import edu.udel.blc.ast.*
+import edu.udel.blc.semantic_analysis.scope.CallableSymbol
 import edu.udel.blc.semantic_analysis.scope.FunctionSymbol
 import edu.udel.blc.semantic_analysis.type.FunctionType
 import edu.udel.blc.semantic_analysis.type.UnitType
@@ -31,7 +32,7 @@ class CheckReturns(
         reactor.on(
             name = "load function declaration symbol",
             attribute = Attribute(node, "symbol"),
-        ) { symbol: FunctionSymbol ->
+        ) { symbol: CallableSymbol ->
 
             val symbolTypeAttribute = Attribute(symbol, "type")
             val bodyReturnsAttribute = Attribute(node.body, "returns")

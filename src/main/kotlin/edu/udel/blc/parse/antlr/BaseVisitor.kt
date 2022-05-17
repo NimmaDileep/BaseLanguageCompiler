@@ -55,9 +55,19 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
 
     override fun visitClassDeclaration(ctx: BaseParser.ClassDeclarationContext): ClassDeclarationNode {
         val name = ctx.name.text
-        val fields = ctx.fields.map { it.accept(this) as FieldNode }
+        val members = ctx.members.map { it.accept(this) as Node }
 
-        return ClassDeclarationNode(ctx.range, name, fields);
+        val fields = members.filterIsInstance<FieldNode>()
+        val methods = members.filterIsInstance<FunctionDeclarationNode>()
+
+        return ClassDeclarationNode(ctx.range, name, fields, methods);
+    }
+
+    override fun visitFieldMember(ctx: BaseParser.FieldMemberContext): FieldNode {
+        val name = ctx.variable().name.text
+        val type = ctx.variable().type.accept(this) as Node
+
+        return FieldNode(ctx.range, name, type)
     }
 
     override fun visitVariableDeclaration(ctx: BaseParser.VariableDeclarationContext): VariableDeclarationNode {

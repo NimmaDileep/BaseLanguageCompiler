@@ -5,14 +5,7 @@ compilatonUnit
      ;
 
 declaration
-    : FUN
-        name=IDENTIFIER
-        LPAREN
-        ( parameters+=parameter (',' parameters+=parameter )* (',')? )?
-        RPAREN
-        ARROW
-        returnType=typeExpression
-        body=block                                                                       # functionDeclaration
+    : functionDeclaration                                                               # functionDeclarationStmt
     | STRUCT
         name=IDENTIFIER
         LBRACKET
@@ -22,13 +15,29 @@ declaration
     | CLASS
         name=IDENTIFIER
         LBRACKET
-        ( fields+=variable ( SEMICOLON fields+=variable )* SEMICOLON )?
+        ( members+=member )*
         RBRACKET                                                                         # classDeclaration
     | stmt                                                                               # statementAsDeclaration
     ;
 
+member
+    : variable SEMICOLON                                                                 # fieldMember
+    | functionDeclaration                                                                # methodMember
+    ;
+
 variable
     : VAR name=IDENTIFIER COLON type=typeExpression
+    ;
+
+functionDeclaration
+    :  FUN
+        name=IDENTIFIER
+        LPAREN
+        ( parameters+=parameter (',' parameters+=parameter )* (',')? )?
+        RPAREN
+        ARROW
+        returnType=typeExpression
+        body=block
     ;
 
 parameter
