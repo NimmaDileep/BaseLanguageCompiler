@@ -89,6 +89,10 @@ class BLC : CliktCommand() {
         val result = binding {
             var compilationUnit = parser.apply(source).bind()
 
+            if (printAst) {
+                TreeFormatter.appendTo(System.out, compilationUnit, Node::class.java)
+            }
+
             var symboltable = SemanticAnalysis.apply(compilationUnit).bind()
 
             if (constantFolding || strengthReduction) {
@@ -99,10 +103,6 @@ class BLC : CliktCommand() {
             if (deadCodeElimination) {
                 val opt = DeadCodeOptimizer()
                 compilationUnit = opt.apply(compilationUnit) as CompilationUnitNode
-            }
-
-            if (printAst) {
-                TreeFormatter.appendTo(System.out, compilationUnit, Node::class.java)
             }
 
             // regenerate symbol table

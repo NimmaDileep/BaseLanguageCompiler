@@ -148,10 +148,18 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
         return UnaryExpressionNode(ctx.range, operator, operand)
     }
 
-    override fun visitCall(ctx: BaseParser.CallContext): CallNode {
+    override fun visitFunctionCall(ctx: BaseParser.FunctionCallContext): CallNode {
         val callee = ctx.callee.accept(this) as ExpressionNode
         val arguments = ctx.arguments.map { it.accept(this) as ExpressionNode }
         return CallNode(ctx.range, callee, arguments)
+    }
+
+    override fun visitMethodCall(ctx: BaseParser.MethodCallContext): MethodCallNode {
+        val callee = ctx.callee.text
+        val arguments = ctx.arguments.map { it.accept(this) as ExpressionNode }
+        val receiver = ctx.receiver.accept(this) as ExpressionNode
+
+        return MethodCallNode(ctx.range, callee, arguments, receiver)
     }
 
     override fun visitIndex(ctx: BaseParser.IndexContext): IndexNode {

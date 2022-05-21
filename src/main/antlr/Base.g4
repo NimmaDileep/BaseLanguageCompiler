@@ -69,7 +69,11 @@ expr
     | left=expr operator=( PLUS | MINUS ) right=expr                                     # binary
     | left=expr operator=( PERCENT | STAR | SLASH ) right=expr                           # binary
     | operator=( BANG | MINUS ) operand=expr                                             # unaryPrefix
-    | callee=expr LPAREN ( arguments+=expr ( COMMA arguments+=expr )* COMMA? )? RPAREN   # call
+    | receiver=expr DOT callee=expr
+        LPAREN
+        ( arguments+=expr ( COMMA arguments+=expr )* COMMA? )?
+        RPAREN                                                                           # methodCall
+    | callee=expr LPAREN ( arguments+=expr ( COMMA arguments+=expr )* COMMA? )? RPAREN   # functionCall
     | expression=expr LBRACE index=expr RBRACE                                           # index
     | expression=expr DOT name=IDENTIFIER                                                # fieldSelect
     | LPAREN expression=expr RPAREN                                                      # parenthesized

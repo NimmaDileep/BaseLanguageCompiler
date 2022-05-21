@@ -9,6 +9,7 @@ class Dog {
 
 var x: Dog = Dog("hello", 5);
 
+x.bark();
 print(x.name);
 
 // print(x);

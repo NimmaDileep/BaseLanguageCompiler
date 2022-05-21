@@ -31,6 +31,7 @@ class ExpressionVisitor(
         register(AssignmentNode::class.java, ::assignment)
         register(BinaryExpressionNode::class.java, ::binaryExpression)
         register(CallNode::class.java, ::call)
+        register(MethodCallNode::class.java, ::methodCall)
         register(FieldSelectNode::class.java, ::fieldSelect)
         register(IndexNode::class.java, ::index)
         register(ReferenceNode::class.java, ::reference)
@@ -259,6 +260,10 @@ class ExpressionVisitor(
             }
             else -> TODO("generate call to $callee")
         }
+    }
+
+    private fun methodCall(node: MethodCallNode) {
+        method.push(5)
     }
 
     private fun reference(node: ReferenceNode) {

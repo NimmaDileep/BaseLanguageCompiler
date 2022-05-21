@@ -28,6 +28,7 @@ class ResolveTypes(
 
         register(ReferenceNode::class.java, PRE_VISIT, ::reference)
         register(CallNode::class.java, PRE_VISIT, ::call)
+        register(MethodCallNode::class.java, PRE_VISIT, ::methodCall)
 
         register(AssignmentNode::class.java, PRE_VISIT, ::assignment)
         register(IndexNode::class.java, PRE_VISIT, ::index)
@@ -139,21 +140,32 @@ class ResolveTypes(
         reactor.on(
             name = "type class declaration symbol",
             attribute = Attribute(node, "symbol")
-        ) {
-            symbol: ClassSymbol ->
-            reactor.flatMap(
-                name = "type class declaration symbol",
-                from = symbol.fields.map { Attribute(it, "type") },
-                to = Attribute(symbol, "type"),
-            ) {
-                fieldTypes: List<Type> ->
-                ClassType(
-                    name = symbol.getQualifiedName("_"),
-                    fieldTypes = symbol.fields.map { it.name }
-                        .zip(fieldTypes)
-                        .toMap(LinkedHashMap()),
-                    superClass = null // TODO: add support for super class type
-                )
+        ) { symbol: ClassSymbol ->
+
+            val symbolTypeAttribute = Attribute(symbol, "type")
+            val fieldTypes = symbol.fields.associateTo(LinkedHashMap()) {
+                it.name to Attribute(it, "type")
+            }
+            val methodTypes = symbol.methods.associateTo(LinkedHashMap()) {
+                it.name to Attribute(it, "type")
+            }
+
+            reactor.rule("type class declaration symbol") {
+                exports(symbolTypeAttribute)
+                using(fieldTypes.values)
+                using(methodTypes.values)
+                by { r ->
+                    r[symbolTypeAttribute] = ClassType(
+                        name = symbol.getQualifiedName("_"),
+                        fieldTypes = fieldTypes.mapValuesTo(LinkedHashMap()) { (_, fieldTypeAttribute) ->
+                            r[fieldTypeAttribute]
+                        },
+                        methodTypes = methodTypes.mapValuesTo(LinkedHashMap()) { (_, methodTypeAttribute) ->
+                            r[methodTypeAttribute]
+                        },
+                        superClass = null
+                    )
+                }
             }
         }
     }
@@ -234,6 +246,28 @@ class ResolveTypes(
                 else -> SemanticError(node, "expression is not callable")
             }
 
+        }
+    }
+
+    private fun methodCall(node: MethodCallNode) {
+        reactor.map(
+            name = "type method call",
+            from = Attribute(node.receiver, "type"),
+            to = Attribute(node, "type")
+        ) { expressionType: Type ->
+            when (expressionType) {
+                is ClassType -> {
+                    when (val methodType = expressionType.methodTypes[node.callee]) {
+                        null -> SemanticError(node, "unknown method ${node.callee} in ${expressionType.name}")
+                        is FunctionType -> methodType.returnType
+                        else -> SemanticError(
+                            node,
+                            "${node.callee} is not a callable function in ${expressionType.name}"
+                        )
+                    }
+                }
+                else -> SemanticError(node, "expression must be Class, not $expressionType")
+            }
         }
     }
 
