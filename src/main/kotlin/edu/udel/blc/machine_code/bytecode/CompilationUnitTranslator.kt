@@ -20,10 +20,9 @@ class CompilationUnitTranslator(
 
         val structs = StructTranslator(reactor).apply(node)
         val classes = ClassTranslator(reactor).apply(node)
-
         val addedClasses = structs + classes
 
-        val mainclass = buildClass(
+        val mainClass = buildClass(
             access = ACC_PUBLIC,
             name = compilationUnitName
         ) { clazz ->
@@ -42,7 +41,7 @@ class CompilationUnitTranslator(
 
         }
 
-        return Bytecode(mainclass, addedClasses)
+        return Bytecode(mainClass, addedClasses)
     }
 
     private fun generateBuiltins(clazz: ClassWriter) {

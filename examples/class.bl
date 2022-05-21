@@ -7,6 +7,10 @@ class Dog {
     }
 }
 
+fun foo() -> Unit {
+    print("bowow");
+}
+
 var x: Dog = Dog("hello", 5);
 
 x.bark();

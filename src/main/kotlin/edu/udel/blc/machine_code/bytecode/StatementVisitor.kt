@@ -43,7 +43,6 @@ class StatementVisitor(
     }
 
     fun functionDeclaration(node: FunctionDeclarationNode) {
-
         val implicitArguments = ImplicitArgumentGatherer.apply(reactor, node)
         if (implicitArguments.isNotEmpty()) {
             TODO("Handle closure")

@@ -2,14 +2,21 @@ package edu.udel.blc.machine_code.bytecode
 
 import edu.udel.blc.ast.ClassDeclarationNode
 import edu.udel.blc.ast.CompilationUnitNode
+import edu.udel.blc.ast.FunctionDeclarationNode
+import edu.udel.blc.ast.ReturnNode
 import edu.udel.blc.machine_code.bytecode.TypeUtils.methodDescriptor
 import edu.udel.blc.semantic_analysis.scope.ClassSymbol
 import edu.udel.blc.semantic_analysis.type.ClassType
 import edu.udel.blc.util.uranium.Reactor
 import java.util.function.Function
 import edu.udel.blc.machine_code.bytecode.TypeUtils.nativeType
+import edu.udel.blc.semantic_analysis.scope.FunctionSymbol
+import edu.udel.blc.semantic_analysis.scope.MethodSymbol
+import edu.udel.blc.semantic_analysis.type.FunctionType
+import edu.udel.blc.semantic_analysis.type.UnitType
 import org.objectweb.asm.Opcodes.ACC_PUBLIC
 import org.objectweb.asm.Type.VOID_TYPE
+import org.objectweb.asm.commons.Method
 
 class ClassTranslator(
     private val reactor: Reactor
@@ -51,6 +58,34 @@ class ClassTranslator(
 
                 method.returnValue()
             }
+
+            node.find<FunctionDeclarationNode>().forEach {
+                methodNode ->
+                // TODO: Add ImplicitArgumentGatherer to method translation
+
+                val methodSymbol = reactor.get<MethodSymbol>(methodNode, "symbol")
+                val methodType = reactor.get<FunctionType>(methodSymbol, "type")
+                val descriptor = methodDescriptor(methodType)
+
+                methodSymbol.parameters.forEachIndexed { i, parameterSymbol ->
+                    reactor[parameterSymbol, "index"] = i
+                }
+
+                clazz.buildMethod(
+                    access = ACC_PUBLIC,
+                    method = Method(methodSymbol.getQualifiedName("_"), descriptor)
+                ) {
+                    method ->
+                    val statementVisitor = StatementVisitor(clazzType, clazz, method, reactor)
+                    statementVisitor.accept(methodNode.body)
+
+                    if(methodType.returnType == UnitType && methodNode.body.find<ReturnNode>().isEmpty()) {
+                        method.push(null as String?)
+                        method.returnValue()
+                    }
+                }
+            }
+
         }
     }
 }
