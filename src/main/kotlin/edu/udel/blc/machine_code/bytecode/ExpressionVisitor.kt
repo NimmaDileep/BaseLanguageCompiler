@@ -275,12 +275,14 @@ class ExpressionVisitor(
         node.arguments.forEach { accept(it) }
 
         val symbol = reactor.get<MethodSymbol>(node, "symbol")
+        val overridden = symbol.overrides ?: symbol
+
         val classType = reactor.get<ClassType>(node.receiver, "type")
         val methodType = reactor.get<FunctionType>(symbol, "type")
 
         method.invokeVirtual(
             nativeType(classType),
-            Method(symbol.getQualifiedName("_"), methodDescriptor(methodType))
+            Method(overridden.getQualifiedName("_"), methodDescriptor(methodType))
         )
     }
 

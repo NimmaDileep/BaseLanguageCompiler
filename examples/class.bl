@@ -15,16 +15,18 @@ class Pet: Animal {
 
 class Dog: Pet {
     var breed: String;
+
+    fun greet() -> Unit {
+        print("Dogs can't talk! Woof woof!");
+    }
 }
 
-var p: Dog = Pet(true, 5, "Billy");
-p.greet();
+var pets: [Pet] = [
+    Dog(true, 5, "Fido", "Dachshund"),
+    Pet(true, 3, "Pip"),
+];
 
-p = Dog(true, 10, "Fido", "Corgi");
-p.greet();
-
-var d: Dog = Dog(true, 10, "Spot", "Corgi");
-
-d.greet();
-
-print("DONE");
+for(var i: Int = 0; i < len(pets); i = i + 1) {
+    var p: Pet = pets[i];
+    p.greet();
+}

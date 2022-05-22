@@ -66,10 +66,31 @@ class ResolveReferences(
     private fun enterFunctionDeclaration(node: FunctionDeclarationNode) {
         reactor[node, "scope"] = scope
 
-        val functionScope = if (scope is ClassSymbol) {
-            MethodSymbol(node.name, scope)
-        } else {
-            FunctionSymbol(node.name, scope)
+        val functionScope = when (scope) {
+            is ClassSymbol -> {
+                var overrides: MethodSymbol? = null
+                var superScope = (scope as ClassSymbol).superClassScope
+
+                while (superScope != null) {
+                    when (val superMethod = superScope.lookup(node.name)) {
+                        is MethodSymbol -> overrides = superMethod
+                        null -> break // the method was not found in this class or any superclass
+                        else -> {
+                            reactor.error(
+                                SemanticError(
+                                    node,
+                                    "cannot override non-method ${node.name} in ${superScope.name}"
+                                )
+                            )
+                        }
+                    }
+
+                    superScope = superScope.superClassScope
+                }
+
+                MethodSymbol(node.name, scope, overrides)
+            }
+            else -> FunctionSymbol(node.name, scope)
         }
 
         scope.declare(functionScope)

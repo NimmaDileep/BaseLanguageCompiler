@@ -89,7 +89,7 @@ class ClassTranslator(
             node.find<FunctionDeclarationNode>().forEach { methodNode ->
                 // TODO: Add ImplicitArgumentGatherer to method translation
 
-                val methodSymbol = reactor.get<CallableSymbol>(methodNode, "symbol")
+                val methodSymbol = reactor.get<MethodSymbol>(methodNode, "symbol")
                 val methodType = reactor.get<FunctionType>(methodSymbol, "type")
                 val descriptor = methodDescriptor(methodType)
 
@@ -97,9 +97,11 @@ class ClassTranslator(
                     reactor[parameterSymbol, "index"] = i
                 }
 
+                val overrideSymbol = methodSymbol.overrides ?: methodSymbol
+
                 clazz.buildMethod(
                     access = ACC_PUBLIC,
-                    method = Method(methodSymbol.getQualifiedName("_"), descriptor)
+                    method = Method(overrideSymbol.getQualifiedName("_"), descriptor)
                 ) { method ->
                     val statementVisitor = StatementVisitor(clazzType, mainClazzType, clazz, method, reactor)
                     statementVisitor.accept(methodNode.body)
