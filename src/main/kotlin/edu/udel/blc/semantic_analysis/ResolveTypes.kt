@@ -269,6 +269,46 @@ class ResolveTypes(
                 else -> SemanticError(node, "expression must be Class, not $expressionType")
             }
         }
+
+        // Also, we can resolve the symbol that a methodCall refers to after the type is known
+        val classType = Attribute(node.receiver, "type")
+        val referenceScope = Attribute(node.receiver, "scope")
+        val methodCallSymbol = Attribute(node, "symbol")
+
+        reactor.rule(
+            name = "resolve symbol for method call"
+        ) {
+            exports(methodCallSymbol)
+            using(classType)
+            using(referenceScope)
+            by { r ->
+                val scope = r.get<Scope>(referenceScope)
+                val className = r.get<ClassType>(classType).name
+                when (val classSymbol = scope.lookup(className)) {
+                    is ClassSymbol -> {
+                        when (val methodSymbol = classSymbol.resolveMethod(node.callee)) {
+                            is MethodSymbol -> {
+                                println("set the symbol")
+                                r[methodCallSymbol] = methodSymbol
+                            }
+                            else -> {
+                                println("couldn't find the method symbol")
+                                reactor.error(
+                                    SemanticError(
+                                        node,
+                                        "unable to resolve method ${node.callee} in ${classType.name}"
+                                    )
+                                )
+                            }
+                        }
+                    }
+                    else -> {
+                        println("can't find the class!")
+                        reactor.error(SemanticError(node, "unable to resolve class ${classType.name}"))
+                    }
+                }
+            }
+        }
     }
 
     private fun fieldSelect(node: FieldSelectNode) {

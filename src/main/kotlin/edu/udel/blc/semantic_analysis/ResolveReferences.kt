@@ -128,9 +128,7 @@ class ResolveReferences(
 
         // TODO: Update to include superclass in class symbol
         val classSymbol = ClassSymbol(
-            node.name,
-            containingScope = scope,
-            superClassName = null
+            node.name, containingScope = scope, superClassName = null
         )
         scope.declare(classSymbol)
         reactor[node, "symbol"] = classSymbol
@@ -160,8 +158,7 @@ class ResolveReferences(
         when (val symbol = scope.lookup(node.name)) {
             // if it's not found, add a rule to try again after traversal is complete
             null -> reactor.map(
-                from = Attribute(node, "scope"),
-                to = Attribute(node, "symbol")
+                from = Attribute(node, "scope"), to = Attribute(node, "symbol")
             ) { scope: Scope ->
                 when (val symbol = scope.lookup(node.name)) {
                     // if the symbol is null or a variable symbol, report an error
@@ -186,11 +183,11 @@ class ResolveReferences(
         }
     }
 
-    private fun containingFunction(start: Scope): FunctionSymbol? {
+    private fun containingFunction(start: Scope): CallableSymbol? {
         var scope: Scope? = start
 
         while (scope != null) {
-            if (scope is FunctionSymbol) return scope
+            if (scope is CallableSymbol) return scope
             scope = scope.containingScope
         }
 

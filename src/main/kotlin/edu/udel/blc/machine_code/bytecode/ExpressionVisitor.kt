@@ -263,7 +263,21 @@ class ExpressionVisitor(
     }
 
     private fun methodCall(node: MethodCallNode) {
-        method.push(5)
+        accept(node.receiver)
+        node.arguments.forEach { accept(it) }
+
+        val symbol = reactor.get<MethodSymbol>(node, "symbol")
+        println(symbol)
+        val classType = reactor.get<ClassType>(node.receiver, "type")
+        println(classType)
+        val methodType = reactor.get<FunctionType>(symbol, "type")
+
+        println(methodType)
+
+        method.invokeVirtual(
+            nativeType(classType),
+            Method(symbol.getQualifiedName("_"), methodDescriptor(methodType))
+        )
     }
 
     private fun reference(node: ReferenceNode) {

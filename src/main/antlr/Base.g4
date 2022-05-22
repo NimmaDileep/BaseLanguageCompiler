@@ -82,6 +82,7 @@ expr
     | value=STRING_LITERAL                                                               # stringLiteral
     | UNIT                                                                               # unitLiteral
     | LBRACE elements+=expr ( COMMA elements+=expr )* COMMA? RBRACE                      # arrayLiteral
+    | SELF                                                                               # self
     | reference                                                                          # referenceAsExpression
     ;
 
@@ -139,6 +140,7 @@ WHILE: 'while';
 RETURN: 'return';
 VAR: 'var';
 CLASS: 'class';
+SELF: 'self';
 
 LESS: '<';
 LESS_EQUAL: '<=';

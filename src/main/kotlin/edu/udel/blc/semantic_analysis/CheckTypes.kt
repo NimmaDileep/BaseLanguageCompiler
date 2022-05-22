@@ -3,6 +3,7 @@ package edu.udel.blc.semantic_analysis
 import edu.udel.blc.ast.*
 import edu.udel.blc.ast.UnaryOperator.LOGICAL_COMPLEMENT
 import edu.udel.blc.ast.UnaryOperator.NEGATION
+import edu.udel.blc.semantic_analysis.scope.CallableSymbol
 import edu.udel.blc.semantic_analysis.scope.FunctionSymbol
 import edu.udel.blc.semantic_analysis.scope.Symbol
 import edu.udel.blc.semantic_analysis.type.*
@@ -209,7 +210,7 @@ class CheckTypes(
         reactor.on(
             name = "check return",
             attribute = Attribute(node, "containingFunction")
-        ) { containingFunction: FunctionSymbol ->
+        ) { containingFunction: CallableSymbol ->
 
             reactor.on(
                 name = "check return type",

@@ -2,7 +2,6 @@ package edu.udel.blc.semantic_analysis
 
 import edu.udel.blc.ast.*
 import edu.udel.blc.semantic_analysis.scope.CallableSymbol
-import edu.udel.blc.semantic_analysis.scope.FunctionSymbol
 import edu.udel.blc.semantic_analysis.type.FunctionType
 import edu.udel.blc.semantic_analysis.type.UnitType
 import edu.udel.blc.util.uranium.Attribute
