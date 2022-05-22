@@ -2,8 +2,12 @@ class Dog {
     var name: String;
     var age: Int;
 
-    fun bark() -> Int {
-        return 5;
+    fun bow() -> String {
+        return self.bark();
+    }
+
+    fun bark() -> String {
+        return self.name;
     }
 }
 
@@ -11,10 +15,9 @@ fun foo() -> Unit {
     print("bowow");
 }
 
-var x: Dog = Dog("hello", 5);
+var x: Dog = Dog("fido", 5);
 
-print(x.bark());
-print(x.name);
+print(x.bow());
 foo();
 
 // print(x);

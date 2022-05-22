@@ -27,6 +27,7 @@ class ResolveTypes(
         register(FieldNode::class.java, PRE_VISIT, ::fieldDeclaration)
 
         register(ReferenceNode::class.java, PRE_VISIT, ::reference)
+        register(SelfNode::class.java, PRE_VISIT, ::self)
         register(CallNode::class.java, PRE_VISIT, ::call)
         register(MethodCallNode::class.java, PRE_VISIT, ::methodCall)
 
@@ -288,11 +289,9 @@ class ResolveTypes(
                     is ClassSymbol -> {
                         when (val methodSymbol = classSymbol.resolveMethod(node.callee)) {
                             is MethodSymbol -> {
-                                println("set the symbol")
                                 r[methodCallSymbol] = methodSymbol
                             }
                             else -> {
-                                println("couldn't find the method symbol")
                                 reactor.error(
                                     SemanticError(
                                         node,
@@ -303,7 +302,6 @@ class ResolveTypes(
                         }
                     }
                     else -> {
-                        println("can't find the class!")
                         reactor.error(SemanticError(node, "unable to resolve class ${classType.name}"))
                     }
                 }
@@ -341,6 +339,20 @@ class ResolveTypes(
         reactor[node, "type"] = when (node.operator) {
             LOGICAL_COMPLEMENT -> BooleanType
             NEGATION -> IntType
+        }
+    }
+
+    private fun self(node: SelfNode) {
+        reactor.on(
+            name = "type self reference",
+            attribute = Attribute(node, "containingClass")
+        ) {
+            clazz: ClassSymbol ->
+            reactor.copy(
+                name = "type self reference",
+                from = Attribute(clazz, "type"),
+                to = Attribute(node, "type")
+            )
         }
     }
 

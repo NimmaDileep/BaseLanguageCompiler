@@ -36,6 +36,7 @@ class ExpressionVisitor(
         register(IndexNode::class.java, ::index)
         register(ReferenceNode::class.java, ::reference)
         register(UnaryExpressionNode::class.java, ::unaryExpression)
+        register(SelfNode::class.java, ::self)
     }
 
     private fun booleanLiteral(node: BooleanLiteralNode) {
@@ -267,12 +268,8 @@ class ExpressionVisitor(
         node.arguments.forEach { accept(it) }
 
         val symbol = reactor.get<MethodSymbol>(node, "symbol")
-        println(symbol)
         val classType = reactor.get<ClassType>(node.receiver, "type")
-        println(classType)
         val methodType = reactor.get<FunctionType>(symbol, "type")
-
-        println(methodType)
 
         method.invokeVirtual(
             nativeType(classType),
@@ -298,6 +295,10 @@ class ExpressionVisitor(
         val classType = reactor.get<Type>(node.expression, "type")
         val fieldType = reactor.get<Type>(node, "type")
         method.getField(nativeType(classType), node.name, nativeType(fieldType))
+    }
+
+    private fun self(node: SelfNode) {
+        method.loadThis()
     }
 
 }

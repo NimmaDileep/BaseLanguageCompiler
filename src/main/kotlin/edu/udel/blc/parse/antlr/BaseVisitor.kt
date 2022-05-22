@@ -198,6 +198,10 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
         return UnitLiteralNode(ctx.range)
     }
 
+    override fun visitSelf(ctx: BaseParser.SelfContext): SelfNode {
+        return SelfNode(ctx.range)
+    }
+
     // type
 
     override fun visitArrayType(ctx: BaseParser.ArrayTypeContext): ArrayTypeNode {

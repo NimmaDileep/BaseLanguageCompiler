@@ -42,6 +42,8 @@ class ResolveReferences(
 
         register(ReturnNode::class.java, PRE_VISIT, ::returnStmt)
 
+        register(SelfNode::class.java, PRE_VISIT, ::self)
+
         registerFallback(PRE_VISIT, ::enterNode)
     }
 
@@ -183,11 +185,31 @@ class ResolveReferences(
         }
     }
 
+    private fun self(node: SelfNode) {
+        reactor[node, "scope"] = scope
+
+        when (val clazz = containingClass(scope)) {
+            null -> reactor.error(SemanticError(node, "cannot use self outside of class"))
+            else -> reactor[node, "containingClass"] = clazz
+        }
+    }
+
     private fun containingFunction(start: Scope): CallableSymbol? {
         var scope: Scope? = start
 
         while (scope != null) {
             if (scope is CallableSymbol) return scope
+            scope = scope.containingScope
+        }
+
+        return null
+    }
+
+    private fun containingClass(start: Scope): ClassSymbol? {
+        var scope: Scope? = start
+
+        while (scope != null) {
+            if (scope is ClassSymbol) return scope
             scope = scope.containingScope
         }
 
