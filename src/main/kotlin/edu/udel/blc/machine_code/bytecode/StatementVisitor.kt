@@ -21,12 +21,13 @@ import org.objectweb.asm.commons.Method
 
 class StatementVisitor(
     val clazzType: org.objectweb.asm.Type,
+    val staticClazzType: org.objectweb.asm.Type,
     val clazz: ClassWriter,
     val method: GeneratorAdapter,
     private val reactor: Reactor,
 ) : Visitor<StatementNode>() {
 
-    private val expressionVisitor = ExpressionVisitor(clazzType, method, reactor)
+    private val expressionVisitor = ExpressionVisitor(clazzType, staticClazzType, method, reactor)
 
     init {
 
@@ -60,10 +61,10 @@ class StatementVisitor(
             access = ACC_PUBLIC or ACC_STATIC,
             method = Method(functionSymbol.getQualifiedName("_"), descriptor)
         ) { method ->
-            val statementVisitor = StatementVisitor(clazzType, clazz, method, reactor)
+            val statementVisitor = StatementVisitor(clazzType, staticClazzType, clazz, method, reactor)
             statementVisitor.accept(node.body)
 
-            if(functionType.returnType == UnitType && node.body.find<ReturnNode>().isEmpty()) {
+            if (functionType.returnType == UnitType && node.body.find<ReturnNode>().isEmpty()) {
                 method.push(null as String?)
                 method.returnValue()
             }

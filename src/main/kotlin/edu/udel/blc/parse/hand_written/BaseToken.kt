@@ -57,6 +57,7 @@ data class BaseToken(
         WHITESPACE,
 
         UNIT,
+        SELF,
 
         UNKNOWN,
     }

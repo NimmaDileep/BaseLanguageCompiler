@@ -5,6 +5,7 @@ import edu.udel.blc.ast.UnaryOperator.LOGICAL_COMPLEMENT
 import edu.udel.blc.ast.UnaryOperator.NEGATION
 import edu.udel.blc.machine_code.bytecode.TypeUtils.methodDescriptor
 import edu.udel.blc.machine_code.bytecode.TypeUtils.nativeType
+import edu.udel.blc.semantic_analysis.SemanticError
 import edu.udel.blc.semantic_analysis.scope.*
 import edu.udel.blc.semantic_analysis.type.*
 import edu.udel.blc.util.uranium.Reactor
@@ -17,6 +18,7 @@ import org.objectweb.asm.commons.Method
 
 class ExpressionVisitor(
     private val clazzType: org.objectweb.asm.Type,
+    private val staticClazzType: org.objectweb.asm.Type,
     private val method: GeneratorAdapter,
     private val reactor: Reactor,
 ) : Visitor<ExpressionNode>() {
@@ -103,9 +105,14 @@ class ExpressionVisitor(
                 accept(node.expression)
                 method.dup()
                 method.storeLocal(tmp)
-                val structType = reactor.get<StructType>(lvalue.expression, "type")
-                val fieldType = structType.fieldTypes[lvalue.name]!!
-                method.putField(nativeType(structType), lvalue.name, nativeType(fieldType))
+
+                val storeType = reactor.get<Type>(lvalue.expression, "type")
+                val fieldType = when (storeType) {
+                    is StructType -> storeType.fieldTypes[lvalue.name]!!
+                    is ClassType -> storeType.fieldTypes[lvalue.name]!!
+                    else -> throw SemanticError(node, "cannot assign to field on $storeType")
+                }
+                method.putField(nativeType(storeType), lvalue.name, nativeType(fieldType))
             }
             else -> TODO("Generate assignment to: $lvalue")
         }
@@ -229,7 +236,7 @@ class ExpressionVisitor(
                         val functionType = reactor.get<FunctionType>(symbol, "type")
                         node.arguments.forEach { accept(it) }
                         method.invokeStatic(
-                            clazzType,
+                            staticClazzType,
                             Method(symbol.getQualifiedName("_"), methodDescriptor(functionType))
                         )
                     }

@@ -18,10 +18,6 @@ class CompilationUnitTranslator(
 
     override fun apply(node: CompilationUnitNode): Bytecode {
 
-        val structs = StructTranslator(reactor).apply(node)
-        val classes = ClassTranslator(reactor).apply(node)
-        val addedClasses = structs + classes
-
         val mainClass = buildClass(
             access = ACC_PUBLIC,
             name = compilationUnitName
@@ -34,12 +30,17 @@ class CompilationUnitTranslator(
                 access = ACC_PUBLIC or ACC_STATIC,
                 method = "void main(String[])",
             ) { method ->
-                val visitor = StatementVisitor(clazzType, clazz, method, reactor)
+                val visitor = StatementVisitor(clazzType, clazzType, clazz, method, reactor)
                 node.statements.forEach { visitor.accept(it) }
                 method.returnValue()
             }
 
         }
+
+        val structs = StructTranslator(reactor).apply(node)
+        val classes = ClassTranslator(reactor, clazzType).apply(node)
+        val addedClasses = structs + classes
+
 
         return Bytecode(mainClass, addedClasses)
     }

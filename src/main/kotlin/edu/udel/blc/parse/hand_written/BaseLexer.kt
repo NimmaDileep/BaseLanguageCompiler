@@ -182,6 +182,7 @@ class BaseLexer(
             "return" to RETURN,
             "while" to WHILE,
             "for" to FOR,
+            "self" to SELF,
 
             "true" to TRUE,
             "false" to FALSE,
