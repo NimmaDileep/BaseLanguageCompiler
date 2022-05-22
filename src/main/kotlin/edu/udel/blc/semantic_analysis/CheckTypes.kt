@@ -169,7 +169,7 @@ class CheckTypes(
 
                 if (!expressionType.isAssignableTo(variableType)) {
                     reactor.error(
-                        SemanticError(from, "invalid type $expressionType, expected $variableType")
+                        SemanticError(from, "cannot assign $expressionType to $variableType")
                     )
                 }
             }

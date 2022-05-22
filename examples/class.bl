@@ -1,31 +1,30 @@
-class Dog {
-    var name: String;
-    var age: Int;
-
-    fun isYoung(thresh: Int) -> Boolean {
-        print(thresh);
-        if(self.age < thresh) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    fun bark() -> Unit {
-        print(concat(self.name, " says woof"));
-    }
-
-    var isCool: Boolean;
+class Animal {
+    var isAnimal: Boolean;
 }
 
-var x: Dog = Dog("Fido", 5, false);
+class Pet: Animal {
+    var age: Int;
+    var name: String;
 
-print(x.isYoung(4));
-print(x.isYoung(6));
+    fun greet() -> Unit {
+        var start: String = concat(self.name, " is ");
+        var end: String = concat(str(self.age), " years old.");
+        print(concat(start, end));
+    }
+}
 
-print(x.isCool);
-x.bark();
+class Dog: Pet {
+    var breed: String;
+}
 
-var y: Dog = x;
-x.name = "Bobby";
-y.bark();
+var p: Dog = Pet(true, 5, "Billy");
+p.greet();
+
+p = Dog(true, 10, "Fido", "Corgi");
+p.greet();
+
+var d: Dog = Dog(true, 10, "Spot", "Corgi");
+
+d.greet();
+
+print("DONE");

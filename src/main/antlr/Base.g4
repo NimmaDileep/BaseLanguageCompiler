@@ -14,6 +14,7 @@ declaration
     | variable EQUAL initializer=expr SEMICOLON                                          # variableDeclaration
     | CLASS
         name=IDENTIFIER
+        ( COLON superclass=IDENTIFIER )?
         LBRACKET
         ( members+=member )*
         RBRACKET                                                                         # classDeclaration

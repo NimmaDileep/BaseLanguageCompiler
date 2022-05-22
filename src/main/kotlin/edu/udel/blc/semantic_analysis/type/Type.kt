@@ -9,10 +9,22 @@ sealed interface Type {
         val result = when {
             this == other -> true
             other is AnyType -> true
-            this is ArrayType && other is ArrayType -> this.elementType isAssignableTo  other.elementType
+            this is ClassType && other is ClassType -> isSubClass(this, other)
+            this is ArrayType && other is ArrayType -> this.elementType isAssignableTo other.elementType
             else -> false
         }
         return result
+    }
+
+    fun isSubClass(subClass: ClassType, superClass: ClassType): Boolean {
+        var testClass: ClassType? = subClass
+
+        while(testClass != null) {
+            if(testClass == superClass) return true
+            testClass = testClass.superClass
+        }
+
+        return false
     }
 
     fun commonSupertype(other: Type): Type {

@@ -128,9 +128,8 @@ class ResolveReferences(
     private fun enterClassDeclaration(node: ClassDeclarationNode) {
         reactor[node, "scope"] = scope
 
-        // TODO: Update to include superclass in class symbol
         val classSymbol = ClassSymbol(
-            node.name, containingScope = scope, superClassName = null
+            node.name, containingScope = scope, superClassName = node.superClass
         )
         scope.declare(classSymbol)
         reactor[node, "symbol"] = classSymbol

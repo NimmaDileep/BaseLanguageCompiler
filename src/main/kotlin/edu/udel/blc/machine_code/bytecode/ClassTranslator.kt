@@ -30,11 +30,19 @@ class ClassTranslator(
     private fun translate(node: ClassDeclarationNode): ClassFileObject {
         val classSymbol = reactor.get<ClassSymbol>(node, "symbol")
         val classType = reactor.get<ClassType>(classSymbol, "type")
+        val superClassType = when (val superSymbol = classSymbol.superClassScope) {
+            is ClassSymbol -> reactor.get<ClassType>(superSymbol, "type")
+            else -> null
+        }
+        val superClassNativeType = superClassType?.let { nativeType(it) } ?: java_lang_Object
 
         val clazzType = nativeType(classType)
 
-        return buildClass(access = ACC_PUBLIC, name = classType.name) { clazz ->
-
+        return buildClass(
+            access = ACC_PUBLIC,
+            name = classType.name,
+            superType = superClassNativeType
+        ) { clazz ->
             classType.fieldTypes.entries.forEach { (name, type) ->
                 clazz.visitField(
                     ACC_PUBLIC,
@@ -52,7 +60,23 @@ class ClassTranslator(
                 )
             ) { method ->
                 method.loadThis()
-                method.invokeConstructor(java_lang_Object, "void <init>()")
+
+                // invoke constructor of superclass
+                when (superClassType) {
+                    null -> method.invokeConstructor(java_lang_Object, "void <init>()")
+                    else -> {
+                        superClassType.fieldTypes.entries.forEachIndexed { index, _ ->
+                            method.loadArg(index)
+                        }
+
+                        val descriptor = methodDescriptor(
+                            VOID_TYPE,
+                            superClassType.fieldTypes.map { nativeType(it.value) }
+                        )
+                        method.invokeConstructor(superClassNativeType, Method("<init>", descriptor))
+                    }
+                }
+
                 classType.fieldTypes.entries.forEachIndexed { index, (name, type) ->
                     method.loadThis()
                     method.loadArg(index)
@@ -62,8 +86,7 @@ class ClassTranslator(
                 method.returnValue()
             }
 
-            node.find<FunctionDeclarationNode>().forEach {
-                methodNode ->
+            node.find<FunctionDeclarationNode>().forEach { methodNode ->
                 // TODO: Add ImplicitArgumentGatherer to method translation
 
                 val methodSymbol = reactor.get<CallableSymbol>(methodNode, "symbol")
@@ -77,12 +100,11 @@ class ClassTranslator(
                 clazz.buildMethod(
                     access = ACC_PUBLIC,
                     method = Method(methodSymbol.getQualifiedName("_"), descriptor)
-                ) {
-                    method ->
+                ) { method ->
                     val statementVisitor = StatementVisitor(clazzType, mainClazzType, clazz, method, reactor)
                     statementVisitor.accept(methodNode.body)
 
-                    if(methodType.returnType == UnitType && methodNode.body.find<ReturnNode>().isEmpty()) {
+                    if (methodType.returnType == UnitType && methodNode.body.find<ReturnNode>().isEmpty()) {
                         method.push(null as String?)
                         method.returnValue()
                     }

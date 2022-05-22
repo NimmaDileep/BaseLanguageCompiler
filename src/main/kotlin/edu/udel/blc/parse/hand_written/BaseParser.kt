@@ -76,6 +76,12 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
     fun classDeclaration(): ClassDeclarationNode {
         val keyword = consume(CLASS) { "Expect 'class'." }
         val name = consume(IDENTIFIER) { "Expect class name." }
+
+        val superClass = if(check(COLON)) {
+            val colon = consume(COLON) { "Expect ':' for before superclass name." }
+            consume(IDENTIFIER) { "Expect superclass name." }
+        } else null
+
         consume(LBRACE) { "Expect '{' before class definition." }
         val members = list(RBRACE, ::classMember, useDelim = false)
         consume(RBRACE) { "Expect '}' after class definition." }
@@ -87,7 +93,7 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
             error("Found non-member declaration in class")
         }
 
-        return ClassDeclarationNode(name.range, name.text, fields, methods)
+        return ClassDeclarationNode(name.range, name.text, fields, methods, superClass?.text)
     }
 
     fun field(): FieldNode {

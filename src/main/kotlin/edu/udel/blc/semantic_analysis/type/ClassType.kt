@@ -5,4 +5,9 @@ class ClassType(
     val fieldTypes: LinkedHashMap<String, Type>,
     val methodTypes: LinkedHashMap<String, Type>,
     val superClass: ClassType?
-) : Type
+) : Type {
+    override fun toString(): String = buildString {
+        append(name)
+        (fieldTypes + methodTypes).entries.joinTo(this, prefix = "{", postfix = "}") { (name, type) -> "$name : $type"}
+    }
+}

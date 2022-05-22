@@ -18,6 +18,11 @@ class ClassSymbol(
         return super.declare(symbol) as MemberSymbol
     }
 
+    override fun lookup(name: String): Symbol? {
+        // Find it either in the current class, one of the super classes, or the containing scope
+        return declarations[name] ?: superClassScope?.lookup(name) ?: containingScope.lookup(name)
+    }
+
     fun resolveField(name: String): FieldSymbol? {
         return lookup(name) as? FieldSymbol
     }

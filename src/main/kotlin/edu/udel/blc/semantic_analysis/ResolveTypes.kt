@@ -150,11 +150,13 @@ class ResolveTypes(
             val methodTypes = symbol.methods.associateTo(LinkedHashMap()) {
                 it.name to Attribute(it, "type")
             }
+            val superClassTypeAttribute = symbol.superClassScope?.let { Attribute(it, "type") }
 
             reactor.rule("type class declaration symbol") {
                 exports(symbolTypeAttribute)
                 using(fieldTypes.values)
                 using(methodTypes.values)
+                if(superClassTypeAttribute != null) using(superClassTypeAttribute)
                 by { r ->
                     r[symbolTypeAttribute] = ClassType(
                         name = symbol.getQualifiedName("_"),
@@ -164,7 +166,7 @@ class ResolveTypes(
                         methodTypes = methodTypes.mapValuesTo(LinkedHashMap()) { (_, methodTypeAttribute) ->
                             r[methodTypeAttribute]
                         },
-                        superClass = null
+                        superClass = superClassTypeAttribute?.let { r[it] }
                     )
                 }
             }
@@ -280,34 +282,26 @@ class ResolveTypes(
         val referenceScope = Attribute(node.receiver, "scope")
         val methodCallSymbol = Attribute(node, "symbol")
 
-        reactor.rule(
-            name = "resolve symbol for method call"
-        ) {
-            exports(methodCallSymbol)
-            using(classType)
-            using(referenceScope)
-            by { r ->
-                val scope = r.get<Scope>(referenceScope)
-                val className = r.get<ClassType>(classType).name
-                when (val classSymbol = scope.lookup(className)) {
+        reactor.on(
+            name = "resolve symbol for method call",
+            attribute = Attribute(node.receiver, "type")
+        ) { classType: ClassType ->
+            reactor.map(
+                name = "resolve symbol for method call",
+                from = Attribute(node.receiver, "scope"),
+                to = Attribute(node, "symbol")
+            ) { referenceScope: Scope ->
+                when (val classSymbol = referenceScope.lookup(classType.name)) {
                     is ClassSymbol -> {
                         when (val methodSymbol = classSymbol.resolveMethod(node.callee)) {
-                            is MethodSymbol -> {
-                                r[methodCallSymbol] = methodSymbol
-                            }
-                            else -> {
-                                reactor.error(
-                                    SemanticError(
-                                        node,
-                                        "unable to resolve method ${node.callee} in ${classType.name}"
-                                    )
-                                )
-                            }
+                            is MethodSymbol -> methodSymbol
+                            else -> SemanticError(
+                                node,
+                                "unable to resolve method ${node.callee} in ${classType.name}"
+                            )
                         }
                     }
-                    else -> {
-                        reactor.error(SemanticError(node, "unable to resolve class ${classType.name}"))
-                    }
+                    else -> SemanticError(node, "unable to resolve class ${classType.name}")
                 }
             }
         }
@@ -350,8 +344,7 @@ class ResolveTypes(
         reactor.on(
             name = "type self reference",
             attribute = Attribute(node, "containingClass")
-        ) {
-            clazz: ClassSymbol ->
+        ) { clazz: ClassSymbol ->
             reactor.copy(
                 name = "type self reference",
                 from = Attribute(clazz, "type"),
