@@ -244,7 +244,11 @@ class ResolveTypes(
                 is FunctionType -> calleeType.returnType
                 is StructType -> calleeType
                 is ClassType -> calleeType
-                else -> SemanticError(node, "expression is not callable")
+                else -> {
+                    println(calleeType)
+                    println(node)
+                    SemanticError(node, "expression is not callable")
+                }
             }
 
         }
