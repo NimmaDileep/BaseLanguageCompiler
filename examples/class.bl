@@ -2,6 +2,14 @@ class Animal {
     var isAnimal: Boolean;
 }
 
+class Dog: Pet {
+    var breed: String;
+
+    fun greet() -> Unit {
+        print("Dogs can't talk! Woof woof!");
+    }
+}
+
 class Pet: Animal {
     var age: Int;
     var name: String;
@@ -13,19 +21,14 @@ class Pet: Animal {
     }
 }
 
-class Dog: Pet {
-    var breed: String;
 
-    fun greet() -> Unit {
-        print("Dogs can't talk! Woof woof!");
-    }
-}
 
 var pets: [Pet] = [
     Dog(true, 5, "Fido", "Dachshund"),
     Pet(true, 3, "Pip"),
 ];
 
+print("say hello!");
 for(var i: Int = 0; i < len(pets); i = i + 1) {
     var p: Pet = pets[i];
     p.greet();

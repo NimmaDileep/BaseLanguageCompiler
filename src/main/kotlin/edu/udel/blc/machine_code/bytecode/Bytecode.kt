@@ -10,11 +10,11 @@ import java.util.jar.Manifest
 
 class Bytecode(
     val main: ClassFileObject,
-    val structs: List<ClassFileObject>
+    val addedClasses: List<ClassFileObject>
 ) : MachineCode {
 
     fun run() {
-        structs.forEach { it.load() }
+        addedClasses.forEach { it.load() }
         val mainClass: Class<*> = main.load()
         val main = mainClass.getMethod("main", Array<String>::class.java)
         main.invoke(null, arrayOf<String>())
@@ -30,7 +30,7 @@ class Bytecode(
                 jar.putNextEntry(JarEntry("${main.slashBinaryName}.class"))
                 jar.write(main.bytes)
                 jar.closeEntry()
-                for (struct in structs) {
+                for (struct in addedClasses) {
                     jar.putNextEntry(JarEntry("${struct.slashBinaryName}.class"))
                     jar.write(struct.bytes)
                     jar.closeEntry()

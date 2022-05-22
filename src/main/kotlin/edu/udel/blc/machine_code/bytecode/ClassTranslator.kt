@@ -24,8 +24,35 @@ class ClassTranslator(
     private val reactor: Reactor,
     private val mainClazzType: Type
 ) : Function<CompilationUnitNode, List<ClassFileObject>> {
-    override fun apply(compilationUnit: CompilationUnitNode): List<ClassFileObject> =
-        compilationUnit.find<ClassDeclarationNode>().map { translate(it) }
+    override fun apply(compilationUnit: CompilationUnitNode): List<ClassFileObject> {
+        val classNodes = compilationUnit.find<ClassDeclarationNode>()
+        return topoSortClasses(classNodes).map { translate(it) }
+    }
+
+    /**
+     * Sorts the class based on inheritance relationships so that superclasses are compiled before subclasses
+     */
+    private fun topoSortClasses(classes: List<ClassDeclarationNode>): List<ClassDeclarationNode> {
+        val classSymbols = classes.associateBy { reactor.get<ClassSymbol>(it, "symbol") }
+        val compileOrder = mutableListOf<ClassSymbol>()
+        val visitedClasses = mutableSetOf<ClassSymbol>()
+
+        fun visitClass(symbol: ClassSymbol) {
+            if (visitedClasses.contains(symbol)) return
+            visitedClasses.add(symbol)
+
+            val superSymbol = symbol.superClassScope
+            if (superSymbol != null) visitClass(superSymbol)
+
+            compileOrder.add(symbol)
+        }
+
+        classSymbols.keys.forEach { visitClass(it) }
+
+        require(compileOrder.size == classes.size) { "Not all classes are covered in the topological sort" }
+
+        return compileOrder.map { classSymbols[it]!! }
+    }
 
     private fun translate(node: ClassDeclarationNode): ClassFileObject {
         val classSymbol = reactor.get<ClassSymbol>(node, "symbol")
@@ -34,6 +61,7 @@ class ClassTranslator(
             is ClassSymbol -> reactor.get<ClassType>(superSymbol, "type")
             else -> null
         }
+
         val superClassNativeType = superClassType?.let { nativeType(it) } ?: java_lang_Object
 
         val clazzType = nativeType(classType)
@@ -90,6 +118,7 @@ class ClassTranslator(
                 // TODO: Add ImplicitArgumentGatherer to method translation
 
                 val methodSymbol = reactor.get<MethodSymbol>(methodNode, "symbol")
+                val overrides = reactor.get<MethodSymbol?>(methodSymbol, "overrides")
                 val methodType = reactor.get<FunctionType>(methodSymbol, "type")
                 val descriptor = methodDescriptor(methodType)
 
@@ -97,11 +126,11 @@ class ClassTranslator(
                     reactor[parameterSymbol, "index"] = i
                 }
 
-                val overrideSymbol = methodSymbol.overrides ?: methodSymbol
+                val finalSymbol = overrides ?: methodSymbol
 
                 clazz.buildMethod(
                     access = ACC_PUBLIC,
-                    method = Method(overrideSymbol.getQualifiedName("_"), descriptor)
+                    method = Method(finalSymbol.getQualifiedName("_"), descriptor)
                 ) { method ->
                     val statementVisitor = StatementVisitor(clazzType, mainClazzType, clazz, method, reactor)
                     statementVisitor.accept(methodNode.body)

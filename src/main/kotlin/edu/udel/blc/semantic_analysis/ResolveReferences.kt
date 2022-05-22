@@ -68,27 +68,44 @@ class ResolveReferences(
 
         val functionScope = when (scope) {
             is ClassSymbol -> {
-                var overrides: MethodSymbol? = null
-                var superScope = (scope as ClassSymbol).superClassScope
+                val symbol = MethodSymbol(node.name, scope)
 
-                while (superScope != null) {
-                    when (val superMethod = superScope.lookup(node.name)) {
-                        is MethodSymbol -> overrides = superMethod
-                        null -> break // the method was not found in this class or any superclass
-                        else -> {
-                            reactor.error(
-                                SemanticError(
-                                    node,
-                                    "cannot override non-method ${node.name} in ${superScope.name}"
-                                )
-                            )
+                if ((scope as ClassSymbol).superClassName != null) {
+                    reactor.on(
+                        name = "resolve override for method",
+                        attribute = Attribute(node, "scope")
+                    ) { scope: ClassSymbol ->
+
+                        reactor.map(
+                            name = "resolve override for method",
+                            from = Attribute(node, "symbol"),
+                            to = Attribute(symbol, "overrides")
+                        ) { _: MethodSymbol ->
+                            var overrides: MethodSymbol? = null
+                            var superSymbol = scope.superClassScope
+
+                            while (superSymbol != null) {
+                                when (val superMethod = superSymbol.lookup(node.name)) {
+                                    is MethodSymbol -> overrides = superMethod
+                                    null -> {}
+                                    else -> return@map SemanticError(
+                                        node,
+                                        "unable to override non-method ${superMethod.name} in ${superSymbol.name}"
+                                    )
+                                }
+
+                                superSymbol = superSymbol.superClassScope
+                            }
+
+                            when (overrides) {
+                                null -> symbol
+                                else -> overrides
+                            }
                         }
                     }
-
-                    superScope = superScope.superClassScope
                 }
 
-                MethodSymbol(node.name, scope, overrides)
+                symbol
             }
             else -> FunctionSymbol(node.name, scope)
         }
@@ -152,6 +169,7 @@ class ResolveReferences(
         val classSymbol = ClassSymbol(
             node.name, containingScope = scope, superClassName = node.superClass
         )
+
         scope.declare(classSymbol)
         reactor[node, "symbol"] = classSymbol
         scope = classSymbol

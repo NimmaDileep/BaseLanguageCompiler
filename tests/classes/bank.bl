@@ -1,0 +1,45 @@
+struct Transaction {
+    balance: Int,
+    successful: Boolean
+}
+
+class BankAccount {
+    var balance: Int;
+    var name: String;
+
+    // deposits amount into the bank
+    fun deposit(amount: Int) -> Transaction {
+        self.balance = self.balance + amount;
+        return Transaction(self.balance, true);
+    }
+
+    // withdraws some amount from the bank
+    fun withdraw(amount: Int) -> Transaction {
+        if(self.balance < amount) return Transaction(self.balance, false);
+        self.balance = self.balance - amount;
+        return Transaction(self.balance, true);
+    }
+
+    fun isEmpty() -> Boolean {
+        return self.balance == 0;
+    }
+
+    fun holder() -> String {
+        return self.name;
+    }
+}
+
+var b: BankAccount = BankAccount(0, "University of Delaware");
+
+print(b.holder());
+print(b.isEmpty());
+var t: Transaction = b.deposit(50);
+print(t.balance);
+print(b.isEmpty());
+t = b.withdraw(60);
+print(b.isEmpty());
+t = b.deposit(10);
+t = b.withdraw(60);
+print(b.isEmpty());
+
+

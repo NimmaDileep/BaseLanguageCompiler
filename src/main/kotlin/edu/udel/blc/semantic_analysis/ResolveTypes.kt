@@ -212,6 +212,7 @@ class ResolveTypes(
     }
 
     private fun index(node: IndexNode) {
+        // a         [             i              ]
         reactor.map(
             name = "type array access",
             from = Attribute(node.expression, "type"),
@@ -247,8 +248,6 @@ class ResolveTypes(
                 is StructType -> calleeType
                 is ClassType -> calleeType
                 else -> {
-                    println(calleeType)
-                    println(node)
                     SemanticError(node, "expression is not callable")
                 }
             }
