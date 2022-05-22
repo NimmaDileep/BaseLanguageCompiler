@@ -21,7 +21,9 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
         return CompilationUnitNode(ctx.range, statements)
     }
 
-    override fun visitFunctionDeclaration(ctx: BaseParser.FunctionDeclarationContext): FunctionDeclarationNode {
+    override fun visitFunctionDeclaration(
+            ctx: BaseParser.FunctionDeclarationContext
+    ): FunctionDeclarationNode {
         val name = ctx.name.text
         val params = ctx.parameters.map { it.accept(this) as ParameterNode }
         val returnType = ctx.returnType.accept(this) as Node
@@ -35,7 +37,9 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
         return ParameterNode(ctx.range, name, type)
     }
 
-    override fun visitStructDeclaration(ctx: BaseParser.StructDeclarationContext): StructDeclarationNode {
+    override fun visitStructDeclaration(
+            ctx: BaseParser.StructDeclarationContext
+    ): StructDeclarationNode {
         val name = ctx.name.text
         val fields = ctx.fields.map { it.accept(this) as FieldNode }
         return StructDeclarationNode(ctx.range, name, fields)
@@ -53,14 +57,16 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
         return FieldNode(ctx.range, name, type)
     }
 
-    override fun visitClassDeclaration(ctx: BaseParser.ClassDeclarationContext): ClassDeclarationNode {
+    override fun visitClassDeclaration(
+            ctx: BaseParser.ClassDeclarationContext
+    ): ClassDeclarationNode {
         val name = ctx.name.text
         val members = ctx.members.map { it.accept(this) as Node }
 
         val fields = members.filterIsInstance<FieldNode>()
         val methods = members.filterIsInstance<FunctionDeclarationNode>()
 
-        return ClassDeclarationNode(ctx.range, name, fields, methods);
+        return ClassDeclarationNode(ctx.range, name, fields, methods)
     }
 
     override fun visitFieldMember(ctx: BaseParser.FieldMemberContext): FieldNode {
@@ -70,7 +76,9 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
         return FieldNode(ctx.range, name, type)
     }
 
-    override fun visitVariableDeclaration(ctx: BaseParser.VariableDeclarationContext): VariableDeclarationNode {
+    override fun visitVariableDeclaration(
+            ctx: BaseParser.VariableDeclarationContext
+    ): VariableDeclarationNode {
         val name = ctx.variable().name.text
         val type = ctx.variable().type.accept(this) as Node
         val initializer = ctx.initializer.accept(this) as ExpressionNode
@@ -84,7 +92,9 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
         return BlockNode(ctx.range, declarations)
     }
 
-    override fun visitExpressionStmt(ctx: BaseParser.ExpressionStmtContext): ExpressionStatementNode {
+    override fun visitExpressionStmt(
+            ctx: BaseParser.ExpressionStmtContext
+    ): ExpressionStatementNode {
         val expr = ctx.expression.accept(this) as ExpressionNode
         return ExpressionStatementNode(ctx.range, expr)
     }
@@ -107,7 +117,6 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
         return WhileNode(ctx.range, condition, body)
     }
 
-
     // expr
 
     override fun visitAssignment(ctx: BaseParser.AssignmentContext): AssignmentNode {
@@ -119,37 +128,39 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
     override fun visitBinary(ctx: BaseParser.BinaryContext): BinaryExpressionNode {
         val left = ctx.left.accept(this) as ExpressionNode
         val right = ctx.right.accept(this) as ExpressionNode
-        val operator = when (ctx.operator.type) {
-            BaseLexer.CONJ -> LOGICAL_CONJUNCTION
-            BaseLexer.DISJ -> LOGICAL_DISJUNCTION
-            BaseLexer.EQUAL_EQUAL -> EQUAL_TO
-            BaseLexer.BANG_EQUAL -> NOT_EQUAL_TO
-            BaseLexer.LESS -> LESS_THAN
-            BaseLexer.LESS_EQUAL -> LESS_THAN_OR_EQUAL_TO
-            BaseLexer.GREATER -> GREATER_THAN
-            BaseLexer.GREATER_EQUAL -> GREATER_THAN_OR_EQUAL_TO
-            BaseLexer.PERCENT -> REMAINDER
-            BaseLexer.STAR -> MULTIPLICATION
-            BaseLexer.PLUS -> ADDITION
-            BaseLexer.MINUS -> SUBTRACTION
-            BaseLexer.SLASH -> DIVISION
-            else -> error("Unknown binary operator: ${ctx.operator.text}")
-        }
+        val operator =
+                when (ctx.operator.type) {
+                    BaseLexer.CONJ -> LOGICAL_CONJUNCTION
+                    BaseLexer.DISJ -> LOGICAL_DISJUNCTION
+                    BaseLexer.EQUAL_EQUAL -> EQUAL_TO
+                    BaseLexer.BANG_EQUAL -> NOT_EQUAL_TO
+                    BaseLexer.LESS -> LESS_THAN
+                    BaseLexer.LESS_EQUAL -> LESS_THAN_OR_EQUAL_TO
+                    BaseLexer.GREATER -> GREATER_THAN
+                    BaseLexer.GREATER_EQUAL -> GREATER_THAN_OR_EQUAL_TO
+                    BaseLexer.PERCENT -> REMAINDER
+                    BaseLexer.STAR -> MULTIPLICATION
+                    BaseLexer.PLUS -> ADDITION
+                    BaseLexer.MINUS -> SUBTRACTION
+                    BaseLexer.SLASH -> DIVISION
+                    else -> error("Unknown binary operator: ${ctx.operator.text}")
+                }
         return BinaryExpressionNode(ctx.range, operator, left, right)
     }
 
     override fun visitUnaryPrefix(ctx: BaseParser.UnaryPrefixContext): UnaryExpressionNode {
         val operand = ctx.operand.accept(this) as ExpressionNode
-        val operator = when (ctx.operator.type) {
-            BaseLexer.BANG -> LOGICAL_COMPLEMENT
-            BaseLexer.MINUS -> NEGATION
-            else -> error("Unknown unary operator: ${ctx.operator.text}")
-        }
+        val operator =
+                when (ctx.operator.type) {
+                    BaseLexer.BANG -> LOGICAL_COMPLEMENT
+                    BaseLexer.MINUS -> NEGATION
+                    else -> error("Unknown unary operator: ${ctx.operator.text}")
+                }
         return UnaryExpressionNode(ctx.range, operator, operand)
     }
 
     override fun visitFunctionCall(ctx: BaseParser.FunctionCallContext): CallNode {
-        val callee = ctx.callee.accept(this) as ExpressionNode
+        val callee = ReferenceNode(ctx.range, ctx.callee.text)
         val arguments = ctx.arguments.map { it.accept(this) as ExpressionNode }
         return CallNode(ctx.range, callee, arguments)
     }
@@ -215,6 +226,4 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
         val name = ctx.name.text
         return ReferenceNode(ctx.range, name)
     }
-
-
 }

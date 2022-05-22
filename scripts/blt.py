@@ -28,7 +28,7 @@ def main():
     print("Found {} tests (running {}, ignoring {})".format(
         len(tests) + ignored, len(tests), ignored))
     for test in tests:
-        output, error = run_test(test, args.compiler)
+        output, error = run_test(test, args.compiler, args.parser)
         passed, expected = check_test_output(test, output, error)
 
         if not passed:
@@ -62,6 +62,8 @@ def parse_args():
     parser.add_argument("path", help="The file or folder to test")
     parser.add_argument("--compiler", "-c", default="build/install/blc/bin/blc",
                         help="The path to the compiler")
+    parser.add_argument(
+        "--parser", "-p", choices=["handwritten", "antlr"], default="handwritten")
     return parser.parse_args()
 
 
@@ -86,7 +88,7 @@ def get_test_files(path):
     return tests, ignored
 
 
-def run_test(path, compiler):
+def run_test(path, compiler, parser):
     # check if compiler is executable
     if not os.path.isfile(compiler):
         print("Compiler not found: {}".format(compiler))
@@ -94,7 +96,7 @@ def run_test(path, compiler):
 
     # run the program and get the stdout and stderr
     process = subprocess.Popen(
-        [compiler, path, "--parser", "antlr"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        [compiler, path, "--parser", parser], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:
         stdout, stderr = process.communicate(timeout=2)
         stdout, stderr = stdout.decode("utf-8"), stderr.decode("utf-8")

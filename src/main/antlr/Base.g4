@@ -62,7 +62,7 @@ block
     ;
 
 expr
-    : <assoc=right> lvalue=expr EQUAL expression=expr                                    # assignment
+    :<assoc=right> lvalue=expr EQUAL expression=expr                                    # assignment
     | left=expr operator=DISJ right=expr                                                 # binary
     | left=expr operator=CONJ right=expr                                                 # binary
     | left=expr operator=( EQUAL_EQUAL | BANG_EQUAL) right=expr                          # binary

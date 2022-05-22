@@ -1,1 +1,8 @@
-var x: String = "hello";
+struct A {
+    b: Int,
+}
+
+var a: A = A(5);
+
+a.b = 5 + 5;
+print(a.b);
