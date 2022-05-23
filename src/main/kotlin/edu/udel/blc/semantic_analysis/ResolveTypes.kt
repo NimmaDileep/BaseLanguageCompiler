@@ -59,11 +59,20 @@ class ResolveTypes(
             name = "load variable declaration symbol",
             attribute = Attribute(node, "symbol")
         ) { symbol: VariableSymbol ->
-            reactor.copy(
-                name = "type variable declaration symbol",
-                to = Attribute(symbol, "type"),
-                from = Attribute(node.type, "type")
-            )
+            if (node.type != null) {
+                reactor.copy(
+                    name = "type variable declaration symbol",
+                    to = Attribute(symbol, "type"),
+                    from = Attribute(node.type, "type")
+                )
+            }
+            else{
+                reactor.copy(
+                    name = "type variable declaration symbol",
+                    to = Attribute(symbol, "type"),
+                    from = Attribute(node.initializer, "type")
+                )
+            }
         }
     }
 
@@ -81,7 +90,7 @@ class ResolveTypes(
                     parameterSymbol.name to Attribute(parameterSymbol, "type")
                 }
 
-            val returnTypeAttribute = Attribute(node.returnType, "type")
+            val returnTypeAttribute = if(node.returnType != null) Attribute(node.returnType, "type") else Attribute(node.body, "type")
 
             reactor.rule("type function declaration symbol") {
                 exports(symbolTypeAttribute)
