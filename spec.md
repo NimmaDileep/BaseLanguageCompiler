@@ -15,7 +15,7 @@ Comments are used to document code and to document the language. Comments are ig
 
 Comments begin with the `//` prefix and continue to the end of the line.
 
-```
+```kotlin
 // This is a comment
 ```
 
@@ -23,7 +23,7 @@ Comments begin with the `//` prefix and continue to the end of the line.
 
 Variables hold values that can be reused and manipulated throughout the program. Before a variable is used in expressions, it must be declared with the `var` keyword.
 
-```
+```kotlin
 var x: Int = 5;
 var y = true; // the type of y is inferred to be Boolean
 ```
@@ -34,7 +34,7 @@ var y = true; // the type of y is inferred to be Boolean
 
 Booleans hold either `true` or `false` values. They can be used in places where conditional expressions are required such as `if`, `while`, and `for` statements. Their type keyword is `Boolean`.
 
-```
+```kotlin
 // Boolean
 var b: Boolean = true;
 ```
@@ -43,7 +43,7 @@ var b: Boolean = true;
 
 Integers are used to represent signed whole numbers. They are used for numeric calculations and for indexing arrays. Their type keyword is `Int`. `Int` values are equivalent to the Java `Long` type.
 
-```
+```kotlin
 // Int
 var i: Int = 12;
 ```
@@ -52,7 +52,7 @@ var i: Int = 12;
 
 Strings can represent text of arbitrary length. They can be used to print to the console and can be manipulated through some helper functions described later. Their type keyword is `String`.
 
-```
+```kotlin
 // String
 var s: String = "Hello World!";
 ```
@@ -61,7 +61,7 @@ var s: String = "Hello World!";
 
 Unit is a type that represents the absence of a value. `Unit` is not to be confused with `null`, but instead used as a "void" type. It is primarily used in functions that do not return a value. Its type keyword is `Unit`. Unit has only one literal value `unit`.
 
-```
+```kotlin
 // Unit
 var u: Unit = unit;
 ```
@@ -70,7 +70,7 @@ var u: Unit = unit;
 
 Structs form a composition of several "fields" that each have their own name and type. Structs are useful when you want to store many values in a single variable. Their type keyword is determined by the name of the struct. Structs must be declared inside a `struct` block if they are to be used in the program. The only way to create a struct is to use a default constructor that takes the values of the fields.
 
-```
+```kotlin
 // Struct Declaration
 struct Point {
   x: Int,
@@ -87,7 +87,7 @@ Arrays hold a list of values of the same type. Array elements can be accessed by
 
 In some cases, arrays are required to have at least 1 element for type deduction, but most of the time, the type can be inferred.
 
-```
+```kotlin
 // Array of Int
 var a: [Int] = [1, 2, 3];
 ```
@@ -96,7 +96,7 @@ var a: [Int] = [1, 2, 3];
 
 The `Any` type can hold any value, with little to no restrictions. All types can be assigned to the `Any` type.
 
-```
+```kotlin
 // Any
 var a: Any = 1;
 a = "Hello World!";
@@ -115,13 +115,13 @@ Expressions can be used as statements or as values in expressions. Expressions a
 
 Assignment updates the value of a variable or field in a class or struct.
 
-```
+```kotlin
 // Assignment
 var x: Int = 5;
 x = 10;
 ```
 
-```
+```kotlin
 // Field Assignment
 struct Point {
   x: Int,
@@ -142,7 +142,7 @@ The following binary arithmetic operators are supported on both `Int` and `Float
 - `/`: division (integer division for `Int` types)
 - `%`: modulus (float remainder for `Float` types)
 
-```
+```kotlin
 var x: Int = 5;
 var y: Int = 2;
 
@@ -153,7 +153,7 @@ print(x / y); // 2
 print(x % y); // 1
 ```
 
-```
+```kotlin
 var x: Float = 5.0;
 var y: Float = 2.0;
 
@@ -166,8 +166,7 @@ print(x % y); // 1.0
 
 In cases where the left and right operands are of the same type, the result is of that type. In cases where the left and right operands are of different types (`Int` and `Float`), the result is of type `Float`.
 
-```
-
+```kotlin
 var x: Int = 5;
 var y: Float = 5.0;
 
@@ -180,7 +179,7 @@ print(x % y); // prints 0.0
 
 Numerical types can also be negated using the `-` operator.
 
-```
+```kotlin
 var x: Int = 5;
 var y: Float = 4.2;
 
@@ -194,7 +193,7 @@ Functions can be used to perform actions and return values. Functions are define
 
 All parameters to a typed, but the return type can often be inferred.
 
-```
+```kotlin
 
 fun add(x: Int, y: Int) -> Int { // the "-> Int" is optional in this case
   return x + y;
@@ -204,7 +203,7 @@ fun add(x: Int, y: Int) -> Int { // the "-> Int" is optional in this case
 
 Functions can be used in places where expressions are required using the function call syntax, similar to other languages.
 
-```
+```kotlin
 
 var result = add(1, 2);
 
