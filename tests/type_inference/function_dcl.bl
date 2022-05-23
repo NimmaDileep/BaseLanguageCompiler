@@ -1,6 +1,6 @@
-fun x(){
+fun x() {
     return 1;
 }
 
-var p = x();
+var p: Int = x();
 print(p);

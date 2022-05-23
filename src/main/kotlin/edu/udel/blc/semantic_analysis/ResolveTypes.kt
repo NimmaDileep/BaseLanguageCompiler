@@ -104,7 +104,8 @@ class ResolveTypes(
                     parameterSymbol.name to Attribute(parameterSymbol, "type")
                 }
 
-            val returnTypeAttribute = if(node.returnType != null) Attribute(node.returnType, "type") else Attribute(node.body, "type")
+            val returnTypeAttribute = if (node.returnType != null) Attribute(node.returnType, "type") else
+                Attribute(node.body, "returnType")
 
             reactor.rule("type function declaration symbol") {
                 exports(symbolTypeAttribute)
