@@ -3,3 +3,8 @@ var y: Int = 8;
 
 print(x * y);
 print(y * x);
+
+var p: Float = 1.5;
+var q: Float = 3.7;
+print(p * q);
+print(x * q);

@@ -26,6 +26,7 @@ data class BaseToken(
 
         IDENTIFIER,
         NUMBER,
+        FLOAT,
 
         QUOTE_OPEN,
         QUOTE_CLOSE,

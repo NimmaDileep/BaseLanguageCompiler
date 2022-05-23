@@ -62,7 +62,7 @@ block
     ;
 
 expr
-    :<assoc=right> lvalue=expr EQUAL expression=expr                                    # assignment
+    :<assoc=right> lvalue=expr EQUAL expression=expr                                     # assignment
     | left=expr operator=DISJ right=expr                                                 # binary
     | left=expr operator=CONJ right=expr                                                 # binary
     | left=expr operator=( EQUAL_EQUAL | BANG_EQUAL) right=expr                          # binary
@@ -80,6 +80,7 @@ expr
     | LPAREN expression=expr RPAREN                                                      # parenthesized
     | value=( TRUE | FALSE )                                                             # booleanLiteral
     | value=INT_LITERAL                                                                  # intLiteral
+    | value=FLOAT_LITERAL                                                                # floatLiteral
     | value=STRING_LITERAL                                                               # stringLiteral
     | UNIT                                                                               # unitLiteral
     | LBRACE elements+=expr ( COMMA elements+=expr )* COMMA? RBRACE                      # arrayLiteral
@@ -159,6 +160,10 @@ IDENTIFIER
 
 INT_LITERAL
     : '-'? DIGIT+
+    ;
+
+FLOAT_LITERAL
+    : '-'? DIGIT+ '.' DIGIT+
     ;
 
 STRING_LITERAL

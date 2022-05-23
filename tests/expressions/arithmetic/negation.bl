@@ -1,0 +1,7 @@
+var y: Int = -1;
+var x: Float = -3.5;
+
+print(y);
+print(-y);
+print(x);
+print(-x);

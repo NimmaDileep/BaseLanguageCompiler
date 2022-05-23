@@ -29,6 +29,7 @@ class ExpressionVisitor(
         register(IntLiteralNode::class.java, ::intLiteral)
         register(StringLiteralNode::class.java, ::stringLiteral)
         register(UnitLiteralNode::class.java, ::unitLiteral)
+        register(FloatLiteralNode::class.java, ::floatLiteral)
 
         register(AssignmentNode::class.java, ::assignment)
         register(BinaryExpressionNode::class.java, ::binaryExpression)
@@ -49,6 +50,11 @@ class ExpressionVisitor(
     private fun intLiteral(node: IntLiteralNode) {
         method.push(node.value)
         method.box(LONG_TYPE)
+    }
+
+    private fun floatLiteral(node: FloatLiteralNode){
+        method.push(node.value)
+        method.box(FLOAT_TYPE)
     }
 
     private fun stringLiteral(node: StringLiteralNode) {
@@ -139,12 +145,16 @@ class ExpressionVisitor(
     }
 
     private fun binaryMath(node: BinaryExpressionNode, operator: Int) {
+        val returnType = when(reactor.get<Type>(node,"type")){
+            is FloatType -> FLOAT_TYPE
+            else -> LONG_TYPE
+        }
         accept(node.left)
-        method.unbox(LONG_TYPE)
+        method.unbox(returnType)
         accept(node.right)
-        method.unbox(LONG_TYPE)
-        method.math(operator, LONG_TYPE)
-        method.box(LONG_TYPE)
+        method.unbox(returnType)
+        method.math(operator, returnType)
+        method.box(returnType)
     }
 
     private fun equality(node: BinaryExpressionNode, mode: Int) {
@@ -212,10 +222,14 @@ class ExpressionVisitor(
     }
 
     private fun unaryMath(node: UnaryExpressionNode, operator: Int) {
+        val returnType = when(reactor.get<Type>(node,"type")){
+            is FloatType -> FLOAT_TYPE
+            else -> LONG_TYPE
+        }
         accept(node.operand)
-        method.unbox(LONG_TYPE)
-        method.math(operator, LONG_TYPE)
-        method.box(LONG_TYPE)
+        method.unbox(returnType)
+        method.math(operator, returnType)
+        method.box(returnType)
     }
 
     private fun index(node: IndexNode) {

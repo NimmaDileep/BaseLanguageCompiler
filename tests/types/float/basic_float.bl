@@ -1,0 +1,9 @@
+var x: Float = 0.0;
+
+var y: Float = -1.5;
+
+var z: Float = 10.5;
+
+print(x);
+print(y);
+print(z);

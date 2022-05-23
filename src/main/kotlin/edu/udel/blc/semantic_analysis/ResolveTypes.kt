@@ -10,6 +10,7 @@ import edu.udel.blc.util.uranium.Attribute
 import edu.udel.blc.util.uranium.Reactor
 import edu.udel.blc.util.visitor.ReflectiveAccessorWalker
 import edu.udel.blc.util.visitor.WalkVisitType.PRE_VISIT
+import org.w3c.dom.Attr
 import java.util.function.Consumer
 
 
@@ -40,6 +41,7 @@ class ResolveTypes(
         register(ArrayLiteralNode::class.java, PRE_VISIT, ::arrayLiteral)
         register(BooleanLiteralNode::class.java, PRE_VISIT, ::booleanLiteral)
         register(IntLiteralNode::class.java, PRE_VISIT, ::intLiteral)
+        register(FloatLiteralNode::class.java, PRE_VISIT, ::floatLiteral)
         register(StringLiteralNode::class.java, PRE_VISIT, ::stringLiteral)
         register(UnitLiteralNode::class.java, PRE_VISIT, ::unitLiteral)
 
@@ -228,11 +230,26 @@ class ResolveTypes(
     }
 
     private fun binaryExpression(node: BinaryExpressionNode) {
-        reactor[node, "type"] = when (node.operator) {
-            ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, REMAINDER -> IntType
+        when (node.operator) {
+            ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, REMAINDER -> {
+                reactor.flatMap(
+                    name = "type binary expression",
+                    from = listOf(Attribute(node.left, "type"), Attribute(node.right, "type")),
+                    to = Attribute(node, "type")
+                ) {operandTypes: List<Type> ->
+                    when {
+                        operandTypes.all{type -> type is IntType} -> IntType
+                        operandTypes.all{type -> type is FloatType} -> FloatType
+                        operandTypes.all{type -> type is IntType || type is FloatType} -> FloatType
+                        else -> {
+                            SemanticError(node, "binary expression is not supported for given types")
+                        }
+                    }
+                }
+            }
             EQUAL_TO, NOT_EQUAL_TO,
             GREATER_THAN, GREATER_THAN_OR_EQUAL_TO, LESS_THAN, LESS_THAN_OR_EQUAL_TO,
-            LOGICAL_CONJUNCTION, LOGICAL_DISJUNCTION -> BooleanType
+            LOGICAL_CONJUNCTION, LOGICAL_DISJUNCTION -> reactor[node, "type"] = BooleanType
         }
     }
 
@@ -333,9 +350,23 @@ class ResolveTypes(
     }
 
     private fun unaryExpression(node: UnaryExpressionNode) {
-        reactor[node, "type"] = when (node.operator) {
-            LOGICAL_COMPLEMENT -> BooleanType
-            NEGATION -> IntType
+        when (node.operator) {
+            LOGICAL_COMPLEMENT -> reactor[node, "type"] = BooleanType
+            NEGATION ->  {
+                reactor.map(
+                    name = "type unary expression",
+                    from = Attribute(node.operand, "type"),
+                    to = Attribute(node, "type")
+                ) {unaryType: Type ->
+                    when(unaryType){
+                        is IntType -> IntType
+                        is FloatType -> FloatType
+                        else -> {
+                            SemanticError(node, "unary expression is not supported")
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -378,6 +409,10 @@ class ResolveTypes(
 
     private fun intLiteral(node: IntLiteralNode) {
         reactor[node, "type"] = IntType
+    }
+
+    private fun floatLiteral(node: FloatLiteralNode) {
+        reactor[node, "type"] = FloatType
     }
 
     private fun stringLiteral(node: StringLiteralNode) {
