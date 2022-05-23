@@ -1,0 +1,22 @@
+var x = 5;
+print(x);
+
+var s = false;
+print(s);
+
+var u = [1];
+print(u);
+
+struct Dog {
+    age: Int,
+    name: String,
+    isHappy: Boolean
+}
+
+print(Dog(5, "Fido", true));
+
+var dog = Dog(3, "Spot", false);
+
+print(dog.age);
+print(dog.name);
+print(dog.isHappy);

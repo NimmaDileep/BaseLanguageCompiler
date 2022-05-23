@@ -27,7 +27,7 @@ member
     ;
 
 variable
-    : VAR name=IDENTIFIER COLON type=typeExpression
+    : VAR name=IDENTIFIER (COLON type=typeExpression)?
     ;
 
 functionDeclaration
@@ -36,8 +36,7 @@ functionDeclaration
         LPAREN
         ( parameters+=parameter (',' parameters+=parameter )* (',')? )?
         RPAREN
-        ARROW
-        returnType=typeExpression
+        (ARROW returnType=typeExpression)?
         body=block
     ;
 
