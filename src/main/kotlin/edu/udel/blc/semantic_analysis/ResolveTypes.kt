@@ -4,6 +4,7 @@ import edu.udel.blc.ast.*
 import edu.udel.blc.ast.BinaryOperator.*
 import edu.udel.blc.ast.UnaryOperator.LOGICAL_COMPLEMENT
 import edu.udel.blc.ast.UnaryOperator.NEGATION
+import edu.udel.blc.machine_code.bytecode.find
 import edu.udel.blc.semantic_analysis.scope.*
 import edu.udel.blc.semantic_analysis.type.*
 import edu.udel.blc.util.uranium.Attribute
@@ -95,6 +96,7 @@ class ResolveTypes(
     }
 
     private fun functionDeclaration(node: FunctionDeclarationNode) {
+        if(node.body.find<ReturnNode>().isEmpty()) reactor[node.body, "returnType"] = UnitType
 
         reactor.on(
             name = "load function declaration symbol",
@@ -285,7 +287,6 @@ class ResolveTypes(
             from = Attribute(node.callee, "type"),
             to = Attribute(node, "type"),
         ) { calleeType: Type ->
-
             when (calleeType) {
                 is FunctionType -> calleeType.returnType
                 is StructType -> calleeType
@@ -294,7 +295,6 @@ class ResolveTypes(
                     SemanticError(node, "expression is not callable")
                 }
             }
-
         }
     }
 
@@ -464,12 +464,13 @@ class ResolveTypes(
             .filter { isReturnContainer(it) }
             .map { Attribute(it, "returnType") }
 
+
         reactor.flatMap(
             name = "infer block return type",
             from = childrenReturnTypeAttributes,
             to = Attribute(node, "returnType")
         ) {
-            branchReturnTypes: List<Type> ->
+                branchReturnTypes: List<Type> ->
             val knownTypes = branchReturnTypes.filterNot { it is UnknownType }
 
             if(knownTypes.isEmpty()) UnknownType
