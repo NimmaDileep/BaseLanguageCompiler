@@ -5,8 +5,9 @@ The Base Language is a C-style programming language that implements many of the 
 Table of Contents
 
 - [Variables](#variables)
-- [Functions](#functions)
 - [Expressions](#expressions)
+- [Statements](#statements)
+- [Functions](#functions)
 - [Classes And Objects](#classes-and-objects)
 
 ## Comments
@@ -265,6 +266,105 @@ print(p.y); // prints 2
 ```
 
 The type of a field access is the type of the field being accessed.
+
+
+## Statements
+
+Statements are at the core of the language, with a program being a sequence of statements.
+
+### Block
+
+Blocks are simply a sequence of statements that introduces a scope. Blocks are surrounded by curly braces `{}`.
+
+```kotlin
+{ // begin block
+  var x: Int = 5;
+  var y: Int = 10;
+  print(x + y); // prints 15
+}
+// print(x) // error: x is not defined
+```
+
+### If
+
+If statements are used to execute a block of code if a condition is true.
+
+```kotlin
+if (true) {
+  print("Hello World!"); // this will be printed
+}
+```
+
+When the condition is false, the programmer can specify an optional else block to execute. Note: this introduces the ability to chain if statements with `else if`.
+
+```kotlin
+var x: Int = 0;
+
+if(x > 0) {
+  print("x is positive");
+} else if(x < 0) {
+  print("x is negative");
+} else {
+  print("x is zero"); // this will be printed
+}
+```
+
+### For
+
+For loops are used to iterate until a condition is no longer true. The main benefit of for loops is that they can call an initializer and an update rule, making them perfect for looping over arrays.
+
+First, the initializer is executed. Then, the condition is checked. If the condition is true, the body is executed. Finally, the update rule is executed and the loop is repeated (without the initializer).
+
+For loop syntax is defined as:
+```
+for(initializer; condition; update) {
+  statements
+}
+```
+
+The condition must be of type `Boolean`.
+
+```kotlin
+var x: [Int] = [1, 2, 3];
+
+for (var i: Int = 0; i < len(x); i = i + 1) {
+  print(x[i]);
+} // prints 1 2 3 on separate lines
+```
+
+### While
+
+`while` loops are a simpler way to loop until a condition is no longer true. The condition must be of type `Boolean`, and the syntax is defined as:
+
+```
+while(condition) {
+  statements
+}
+```
+
+```kotlin
+var x: Int = 0;
+while(x < 10) {
+  print(x);
+  x = x + 1;
+}
+```
+
+### Expression Statement
+
+Expressions can be used as statements when they are followed by a semicolon.
+
+```kotlin
+var x: Int = 5;
+
+x = x + 1; // x is now 6
+x;
+5;
+```
+
+### Structs, Classes, and Functions
+
+The declarations for structs, classes, and functions are all statements, and can be used where a statement is valid.
 
 ## Functions
 
