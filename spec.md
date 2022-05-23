@@ -132,6 +132,22 @@ var p: Point = Point(1, 2);
 p.x = 10;
 ```
 
+### Equality
+
+Equality is tested using the `==` operator. with `!=` being the negation of `==`. Equality is supported between any two types, and the `==` operator returns true if the two values share the same type and are equal. Equality produces a `Boolean` value.
+
+```kotlin
+var x: Int = 5;
+var y: Int = 5;
+
+print(x == y); // prints true
+
+var z: String = "Hello World!";
+
+print(x == z); // prints false
+```
+
+
 ### Arithmetic
 
 The following binary arithmetic operators are supported on both `Int` and `Float` types:
@@ -187,6 +203,69 @@ print(-x); // -5
 print(-y); // -4.2
 ```
 
+### Comparison
+
+Comparison of two values is supported on values of `Boolean`, `Int`, and `Float` types as long as the values are of the same type. The following comparison operators are supported:
+
+  - `<`: less than
+  - `<=`: less than or equal to
+  - `>`: greater than
+  - `>=`: greater than or equal to
+  
+### Logical
+
+The following logical operators are supported between `Boolean` values:
+
+  - `&&`: logical and
+  - `||`: logical or
+  - `!`: logical not
+
+These operators behave as they are defined in mathematical logic.
+
+```kotlin
+print(true && true); // prints true
+print(true && false); // prints false
+
+print(true || true); // prints true
+print(true || false); // prints true
+print(false || false); // prints false
+
+print(!true); // prints false
+print(!false); // prints true
+```
+
+### Literals
+
+The types of `Int`, `Float`, `String`, `Boolean`, `Unit`, and arrays can be used as literals. For example, the following are all valid expressions:
+
+```kotlin
+var x: Int = -5;
+var y: Float = 5.0;
+var z: String = "Hello World!";
+var a: Boolean = true;
+var b: Unit = unit;
+var c: [Int] = [1, 2, 3];
+```
+
+**Note**: In order for the type to be inferred for arrays, the array must have at least 1 element.
+
+### Field Access
+
+The fields of a class or struct can be accessed using the `.` operator.
+
+```kotlin
+struct Point { // also works on classes
+  x: Int,
+  y: Int
+}
+
+var p: Point = Point(1, 2);
+print(p.x); // prints 1
+print(p.y); // prints 2
+```
+
+The type of a field access is the type of the field being accessed.
+
 ## Functions
 
 Functions can be used to perform actions and return values. Functions are defined by the `fun` keyword. Values must be returned in all functions that don't return `Unit` by the `return` keyword.
@@ -194,19 +273,15 @@ Functions can be used to perform actions and return values. Functions are define
 All parameters to a typed, but the return type can often be inferred.
 
 ```kotlin
-
 fun add(x: Int, y: Int) -> Int { // the "-> Int" is optional in this case
   return x + y;
 }
-
 ```
 
 Functions can be used in places where expressions are required using the function call syntax, similar to other languages.
 
 ```kotlin
-
 var result = add(1, 2);
-
 ```
 
 ### Built-in Functions
@@ -251,8 +326,7 @@ class Dog {
 
 Currently, there is only one constructor for a class. The constructor requires the values of the fields of the class and all of its superclasses, in the order they are defined (super classes first).
 
-```
-
+```kotlin
 class A {
   var a: String;
 }
@@ -262,7 +336,6 @@ class B: A {
 }
 
 var b = B("Test", 2); // b.a = "Test", b.b = 2
-
 ```
 
 ### Members (Fields and Methods)
@@ -271,8 +344,7 @@ All members of a class are public. Fields can be accessed through the `self` key
 
 Methods are functions that are defined inside a class. Methods can be called on `self` or an instance of the class through the method call syntax
 
-```
-
+```kotlin
 class Foo {
   var a: String;
 
@@ -293,8 +365,7 @@ Classes can optionally have other classes as a "superclass" and inherit all of t
 
 Declaring a superclass allows the object to be used in places where the superclass is expected. Additionally, subclasses can override the superclass's methods to allow for specialization.
 
-```
-
+```kotlin
 class Vehicle {
   var speed: Float;
 
