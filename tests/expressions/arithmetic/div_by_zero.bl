@@ -2,6 +2,6 @@ var x: Int = 20;
 
 print(x / 0);
 
-var y: Int = 5.8
+var y: Float = 5.8
 
 print(y / 0);

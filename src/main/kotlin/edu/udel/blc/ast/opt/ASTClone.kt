@@ -20,6 +20,7 @@ class ASTClone: ValuedVisitor<Node, Node>() {
         register(IfNode::class.java, ::ifStmt)
         register(IndexNode::class.java, ::index)
         register(IntLiteralNode::class.java, ::intLiteral)
+        register(FloatLiteralNode::class.java, ::floatLiteral)
         register(ParameterNode::class.java, ::parameter)
         register(ReferenceNode::class.java, ::reference)
         register(ReturnNode::class.java, ::returnStmt)
@@ -136,6 +137,11 @@ class ASTClone: ValuedVisitor<Node, Node>() {
     )
 
     private fun intLiteral(node: IntLiteralNode): IntLiteralNode = IntLiteralNode(
+        range = node.range,
+        value = node.value
+    )
+
+    private fun floatLiteral(node: FloatLiteralNode): FloatLiteralNode = FloatLiteralNode(
         range = node.range,
         value = node.value
     )

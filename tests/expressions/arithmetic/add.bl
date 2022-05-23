@@ -14,3 +14,6 @@ var q: Float = 2.7;
 print(p + q);
 print(x + q);
 
+var u: Float = -2.6;
+print(u);
+print(-u);

@@ -350,12 +350,12 @@ class ResolveTypes(
     }
 
     private fun unaryExpression(node: UnaryExpressionNode) {
-        reactor[node, "type"] = when (node.operator) {
-            LOGICAL_COMPLEMENT -> BooleanType
+        when (node.operator) {
+            LOGICAL_COMPLEMENT -> reactor[node, "type"] = BooleanType
             NEGATION ->  {
                 reactor.map(
                     name = "type unary expression",
-                    from = Attribute(node, "type"),
+                    from = Attribute(node.operand, "type"),
                     to = Attribute(node, "type")
                 ) {unaryType: Type ->
                     when(unaryType){
