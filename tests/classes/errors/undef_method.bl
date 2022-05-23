@@ -1,0 +1,7 @@
+class Foo {
+    fun bar() -> Unit {}
+}
+
+var f: Foo = Foo()
+
+f.baz();

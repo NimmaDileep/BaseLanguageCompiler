@@ -1,0 +1,9 @@
+class Foo {
+    fun bar(x: Int) -> Int {
+        return x + 5;
+    }
+}
+
+var f: Foo = Foo();
+
+f.bar();

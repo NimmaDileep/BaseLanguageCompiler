@@ -1,0 +1,17 @@
+class Person {
+    var name: String;
+    var age: Int;
+
+    fun describe() -> Unit {
+        var desc: String = self.getDescription();
+        print(desc);
+    }
+
+    fun getDescription() -> String {
+        return concat(self.name, concat(" is ", str(self.age)));
+    }
+}
+
+var p: Person = Person("John", 30);
+
+p.describe();

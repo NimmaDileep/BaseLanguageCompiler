@@ -1,0 +1,7 @@
+class A {
+    var foo: Int;
+}
+
+var a: A = A(5);
+
+print(a.bar);

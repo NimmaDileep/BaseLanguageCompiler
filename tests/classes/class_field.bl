@@ -1,0 +1,9 @@
+class Point {
+    var x: Int;
+    var y: Int;
+}
+
+var p: Point = Point(3, 5);
+
+print(p.x);
+print(p.y);

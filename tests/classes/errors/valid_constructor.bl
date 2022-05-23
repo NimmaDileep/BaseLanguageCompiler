@@ -1,0 +1,9 @@
+class Animal {
+    var age: Int;
+}
+
+class Dog: Animal {
+    var name: String;
+}
+
+var d: Dog = Dog(5);

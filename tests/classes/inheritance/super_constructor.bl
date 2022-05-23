@@ -1,0 +1,10 @@
+class Point {
+    var x: Int;
+    var y: Int;
+}
+
+class Point3: Point {
+    var z: Int;
+}
+
+var p3: Point3 = Point3(2, 3, 5);

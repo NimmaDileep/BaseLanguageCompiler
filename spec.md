@@ -378,7 +378,7 @@ fun add(x: Int, y: Int) -> Int { // the "-> Int" is optional in this case
 }
 ```
 
-Functions can be used in places where expressions are required using the function call syntax, similar to other languages.
+Functions can be used in places where expressions are required using the function call syntax, similar to other languages. The argument types must match the parameter types in the function definition.
 
 ```kotlin
 var result = add(1, 2);

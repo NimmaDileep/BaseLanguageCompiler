@@ -1,0 +1,8 @@
+class Three {
+    fun mult(other: Int) -> Int {
+        return 3 * other;
+    }
+}
+
+var t: Three = Three();
+print(t.mult(5));

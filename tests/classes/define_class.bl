@@ -1,0 +1,10 @@
+class Car {
+    var speed: Int;
+
+    // comment
+    fun drive() -> String {
+        return "Driving";
+    }
+}
+
+var c: Car = Car(5);

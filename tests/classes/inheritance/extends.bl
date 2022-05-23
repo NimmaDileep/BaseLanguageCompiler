@@ -1,0 +1,17 @@
+class Animal {
+    var age: Int;
+    var species: String;
+}
+
+class Pet: Animal {
+    var name: String;
+
+    fun describe() -> String {
+        var desc: String = concat("My name is ", concat(self.name, concat(" and I am ", str(self.age))));
+        return desc;
+    }
+}
+
+var p: Pet = Pet(5, "Dog", "Fido");
+
+print(p.describe());
