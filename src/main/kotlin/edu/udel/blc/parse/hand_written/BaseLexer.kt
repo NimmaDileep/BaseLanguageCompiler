@@ -131,10 +131,17 @@ class BaseLexer(
     }
 
     private fun number(): BaseToken.Kind {
-        while (isDigit(peek)) {
+        var isFloat: Boolean = false
+        while(isDigit(peek) || peek == '.') {
+            if(peek == '.') {
+                if(isFloat)
+                    println("Error in floating value")
+                else
+                    isFloat = true
+            }
             advance()
         }
-        return NUMBER
+        return if(isFloat) FLOAT else NUMBER
     }
 
     private fun whitespace(): BaseToken.Kind {
@@ -168,7 +175,7 @@ class BaseLexer(
     private fun isAlpha(c: Char): Boolean = c in 'a'..'z' || c in 'A'..'Z' || c == '_'
 
     private fun isDigit(c: Char): Boolean = c in '0'..'9'
-
+//    private var isFloat: Boolean = true
     private fun isAlphaNumeric(c: Char): Boolean = isAlpha(c) || isDigit(c)
 
     companion object {

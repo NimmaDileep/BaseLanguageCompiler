@@ -116,8 +116,8 @@ class CheckTypes(
 
 
     private fun binaryMath(node: BinaryExpressionNode) {
-        checkType("check left operand for binary math", node.left, IntType)
-        checkType("check right operand for binary math", node.right, IntType)
+        checkType("check left operand for binary math", node.left, IntType, FloatType)
+        checkType("check right operand for binary math", node.right, IntType, FloatType)
     }
 
     private fun equality(node: BinaryExpressionNode) {
@@ -125,8 +125,8 @@ class CheckTypes(
     }
 
     private fun comparison(node: BinaryExpressionNode) {
-        checkType("check left operand for comparison", node.left, BooleanType, IntType, StringType)
-        checkType("check right operand for comparison", node.right, BooleanType, IntType, StringType)
+        checkType("check left operand for comparison", node.left, BooleanType, IntType, StringType, FloatType)
+        checkType("check right operand for comparison", node.right, BooleanType, IntType, StringType, FloatType)
 
         val leftTypeAttribute = Attribute(node.left, "type")
         val rightTypeAttribute = Attribute(node.right, "type")
@@ -152,7 +152,7 @@ class CheckTypes(
     private fun unaryExpression(node: UnaryExpressionNode) {
         when (node.operator) {
             LOGICAL_COMPLEMENT -> checkType("check operand for logical complement", node.operand, BooleanType)
-            NEGATION -> checkType("check operand for negation", node.operand, IntType)
+            NEGATION -> checkType("check operand for negation", node.operand, IntType, FloatType)
         }
     }
 

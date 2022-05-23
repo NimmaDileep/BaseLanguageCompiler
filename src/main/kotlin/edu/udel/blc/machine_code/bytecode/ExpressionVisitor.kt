@@ -29,6 +29,7 @@ class ExpressionVisitor(
         register(IntLiteralNode::class.java, ::intLiteral)
         register(StringLiteralNode::class.java, ::stringLiteral)
         register(UnitLiteralNode::class.java, ::unitLiteral)
+        register(FloatLiteralNode::class.java, ::floatLiteral)
 
         register(AssignmentNode::class.java, ::assignment)
         register(BinaryExpressionNode::class.java, ::binaryExpression)
@@ -49,6 +50,11 @@ class ExpressionVisitor(
     private fun intLiteral(node: IntLiteralNode) {
         method.push(node.value)
         method.box(LONG_TYPE)
+    }
+
+    private fun floatLiteral(node: FloatLiteralNode){
+        method.push(node.value)
+        method.box(FLOAT_TYPE)
     }
 
     private fun stringLiteral(node: StringLiteralNode) {

@@ -455,6 +455,7 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
         return when {
             check(FALSE, TRUE) -> booleanLiteral()
             check(NUMBER) -> intLiteral()
+            check(FLOAT) -> floatLiteral()
             check(QUOTE_OPEN) -> stringLiteral()
             check(SELF) -> self()
             check(IDENTIFIER) -> identifier()
@@ -473,6 +474,11 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
     fun intLiteral(): IntLiteralNode {
         val literal = consume(NUMBER) { "Expect number." }
         return IntLiteralNode(literal.range, literal.text.toLong())
+    }
+
+    fun floatLiteral(): FloatLiteralNode{
+        val literal = consume(FLOAT) { "Expect floating point."}
+        return FloatLiteralNode(literal.range, literal.text.toFloat())
     }
 
     fun stringLiteral(): StringLiteralNode {

@@ -40,6 +40,7 @@ class ResolveTypes(
         register(ArrayLiteralNode::class.java, PRE_VISIT, ::arrayLiteral)
         register(BooleanLiteralNode::class.java, PRE_VISIT, ::booleanLiteral)
         register(IntLiteralNode::class.java, PRE_VISIT, ::intLiteral)
+        register(FloatLiteralNode::class.java, PRE_VISIT, ::floatLiteral)
         register(StringLiteralNode::class.java, PRE_VISIT, ::stringLiteral)
         register(UnitLiteralNode::class.java, PRE_VISIT, ::unitLiteral)
 
@@ -378,6 +379,10 @@ class ResolveTypes(
 
     private fun intLiteral(node: IntLiteralNode) {
         reactor[node, "type"] = IntType
+    }
+
+    private fun floatLiteral(node: FloatLiteralNode) {
+        reactor[node, "type"] = FloatType
     }
 
     private fun stringLiteral(node: StringLiteralNode) {
