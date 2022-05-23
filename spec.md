@@ -189,7 +189,7 @@ var y: Float = 5.0;
 
 print(x + y); // prints 10.0
 print(x - y); // prints -4.0
-print(x \* y); // prints 25.0
+print(x * y); // prints 25.0
 print(x / y); // prints 1.0
 print(x % y); // prints 0.0
 ```

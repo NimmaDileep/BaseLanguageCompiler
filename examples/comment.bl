@@ -1,8 +1,12 @@
-struct A {
-    b: Int,
+class Foo {
+    fun A() -> Unit {
+        fun B() -> Unit {
+            print("hi");
+        }
+
+        B();
+    }
 }
 
-var a: A = A(5);
-
-a.b = 5 + 5;
-print(a.b);
+var f: Foo = Foo();
+f.A();
