@@ -121,41 +121,13 @@ class CheckReturns(
                 .map { Attribute(it, "returns") },
             to = Attribute(node, "returns"),
         ) { branchReturns: List<Boolean> ->
-            val returns = branchReturns.isNotEmpty() && branchReturns.all { it }
-
-            if (returns) {
-                // infer its return type
-                reactor.flatMap(
-                    name = "infer return type of if",
-                    from = listOfNotNull(node.thenStatement, node.elseStatement)
-                        .filter { isReturnContainer(it) }
-                        .map { Attribute(it, "returnType") },
-                    to = Attribute(node, "returnType")
-                ) { branchReturnTypes: List<Type> ->
-                    branchReturnTypes.reduce { acc, type -> acc.commonSupertype(type) }
-                }
-            }
-
-            returns
+            branchReturns.isNotEmpty() && branchReturns.all { it }
         }
     }
 
     private fun returnStmt(node: ReturnNode) {
         // Indicate that return statements return
         reactor[node, "returns"] = true
-
-        if (node.expression != null) {
-            reactor.map(
-                name = "infer return type of return",
-                from = Attribute(node.expression, "type"),
-                to = Attribute(node, "returnType")
-            ) {
-                type: Type -> type
-            }
-        } else {
-            reactor[node, "returnType"] = UnitType
-        }
-
     }
 
     private fun isReturnContainer(node: Node): Boolean {

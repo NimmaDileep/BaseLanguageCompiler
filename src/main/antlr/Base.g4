@@ -82,7 +82,7 @@ expr
     | value=FLOAT_LITERAL                                                                # floatLiteral
     | value=STRING_LITERAL                                                               # stringLiteral
     | UNIT                                                                               # unitLiteral
-    | LBRACE elements+=expr ( COMMA elements+=expr )* COMMA? RBRACE                      # arrayLiteral
+    | LBRACE ( elements+=expr ( COMMA elements+=expr )* COMMA? )? RBRACE                      # arrayLiteral
     | SELF                                                                               # self
     | reference                                                                          # referenceAsExpression
     ;

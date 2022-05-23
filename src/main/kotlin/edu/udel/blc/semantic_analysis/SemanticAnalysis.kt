@@ -18,6 +18,7 @@ object SemanticAnalysis : Function<CompilationUnitNode, Result<Reactor>> {
 
         ResolveReferences(reactor)
             .andThen(ResolveTypes(reactor))
+            .andThen(CheckInferred(reactor))
             .andThen(CheckTypes(reactor))
             .andThen(CheckReturns(reactor))
             .accept(compilationUnit)

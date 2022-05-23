@@ -100,7 +100,8 @@ class LineMap(
 
 
     private fun getLine(lineNumber: Int): String {
-        return content.substring(rangeOf(lineNumber))
+        val errorRange = rangeOf(lineNumber)
+        return content.substring(errorRange.first until errorRange.last)
     }
 
     fun lineSnippet(line: Int, column: Int, snippetLength: Int = 100): String {

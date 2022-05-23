@@ -51,8 +51,12 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
         consume(LPAREN) { "Expect '(' after function name." }
         val parameters = list(RPAREN, ::parameter)
         consume(RPAREN) { "Expect ')' after parameters." }
-        consume(ARROW) { "Expect '->' before return type" }
-        val returnType = type()
+
+        val returnType = if(check(ARROW)) {
+            consume(ARROW) { "Expect '->' before return type" }
+            type()
+        } else null
+
         val body = block()
         return FunctionDeclarationNode(keyword.range, name.text, parameters, returnType, body)
     }
