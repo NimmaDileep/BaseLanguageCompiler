@@ -8,3 +8,9 @@ print(x + y);
 y = -2;
 
 print(x + y);
+
+var p: Float = 1.5;
+var q: Float = 2.7;
+print(p + q);
+print(x + q);
+

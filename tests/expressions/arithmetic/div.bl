@@ -9,3 +9,7 @@ print(x / y);
 y = -4;
 print(x / y);
 
+var p: Float = 1.5;
+var q: Float = 2.7;
+print(q / p);
+print(x / q);
