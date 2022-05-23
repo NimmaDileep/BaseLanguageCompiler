@@ -1,0 +1,5 @@
+var u = [1];
+print(u);
+
+var p: [Int] = [];
+print(p);

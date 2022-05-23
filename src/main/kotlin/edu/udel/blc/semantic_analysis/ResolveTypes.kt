@@ -62,6 +62,18 @@ class ResolveTypes(
             attribute = Attribute(node, "symbol")
         ) { symbol: VariableSymbol ->
             if (node.type != null) {
+                reactor.on(
+                    name = "infer variable initializer type",
+                    attribute = Attribute(symbol, "type")
+                ){inferType: Type ->
+                    if(reactor.get<Type?>(node.initializer, "type") == null){
+                        reactor.copy(
+                            name = "type variable declaration symbol",
+                            to = Attribute(node.initializer, "type"),
+                            from = Attribute(symbol, "type")
+                        )
+                    }
+                }
                 reactor.copy(
                     name = "type variable declaration symbol",
                     to = Attribute(symbol, "type"),
@@ -397,16 +409,18 @@ class ResolveTypes(
         val nodeTypeAttribute = Attribute(node, "type")
         val elementTypeAttributes = node.elements.map { Attribute(it, "type") }
 
-        reactor.flatMap(
-            name = "type array literal",
-            from = elementTypeAttributes,
-            to = nodeTypeAttribute,
-        ) { elementTypes: List<Type> ->
-            when {
-                elementTypes.isEmpty() -> SemanticError(node, "unable to determine type for array literal")
-                else -> {
-                    val supertype = elementTypes.reduce { acc, type -> acc.commonSupertype(type) }
-                    ArrayType(supertype)
+        if(!node.elements.isEmpty()){
+            reactor.flatMap(
+                name = "type array literal",
+                from = elementTypeAttributes,
+                to = nodeTypeAttribute,
+            ) { elementTypes: List<Type> ->
+                when {
+                    elementTypes.isEmpty() -> SemanticError(node, "unable to determine type for array literal")
+                    else -> {
+                        val supertype = elementTypes.reduce { acc, type -> acc.commonSupertype(type) }
+                        ArrayType(supertype)
+                    }
                 }
             }
         }

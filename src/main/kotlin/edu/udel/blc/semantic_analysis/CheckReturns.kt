@@ -36,7 +36,13 @@ class CheckReturns(
             val symbolTypeAttribute = Attribute(symbol, "type")
             val bodyReturnsAttribute = Attribute(node.body, "returns")
 
-            val returnTypeAttribute = if(node.returnType != null) Attribute(node.returnType, "type") else Attribute(node.body, "type")
+            if(node.returnType != null){
+                reactor.copy(
+                    name ="infer the function return type",
+                    from = Attribute(node.)
+                )
+                Attribute(node.returnType, "type")
+            } else Attribute(node.body, "type")
 
             reactor.rule("check that function returns if necessary") {
                 using(symbolTypeAttribute, bodyReturnsAttribute)

@@ -123,8 +123,10 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
     fun variableDeclaration(requireSemicolon: Boolean = true, requireInitializer: Boolean = true): StatementNode {
         val keyword = consume(VAR) { "Expect 'var'." }
         val name = consume(IDENTIFIER) { "Expect variable name." }
-        consume(COLON) { "Expect ':' after variable name." }
-        val type = type()
+        val type = if(check(COLON)){
+            consume(COLON) { "Expect ':' after variable name." }
+            type()
+        } else null
         consume(EQUAL) { "Expect '=' before initializer." }
         val initializer = expression()
         if (requireSemicolon) consume(SEMICOLON) { "Expect ';' after variable declaration." }
