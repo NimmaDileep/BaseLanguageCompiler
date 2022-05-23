@@ -1,1 +1,6 @@
-[];
+fun x() {
+    print("hi");
+}
+x();
+var p = [2390];
+print(p);
