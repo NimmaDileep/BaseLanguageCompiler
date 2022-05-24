@@ -1,0 +1,28 @@
+class Item {
+    var price: Int;
+    var name: String;
+}
+
+class Laptop: Item {
+    var model: String;
+}
+
+class Candy: Item {
+    var size: Float;
+}
+
+fun buyItem(budget: Int) {
+    if(budget >= 500) {
+        return Laptop(500, "XPS", "Dell");
+    } else {
+        return Candy(0, "Snickers", 2.3249);
+    }
+}
+
+var x = buyItem(500);
+
+print(x.name);
+
+x = buyItem(0);
+
+print(x.name);
