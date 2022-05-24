@@ -1,0 +1,6 @@
+fun x() {
+    return 1;
+}
+
+var p: Int = x();
+print(p);

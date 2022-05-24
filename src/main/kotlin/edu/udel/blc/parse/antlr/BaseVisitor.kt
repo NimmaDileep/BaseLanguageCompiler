@@ -26,7 +26,7 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
     ): FunctionDeclarationNode {
         val name = ctx.name.text
         val params = ctx.parameters.map { it.accept(this) as ParameterNode }
-        val returnType = ctx.returnType.accept(this) as Node
+        val returnType = ctx.returnType?.accept(this) as Node?
         val body = ctx.body.accept(this) as BlockNode
         return FunctionDeclarationNode(ctx.range, name, params, returnType, body)
     }
@@ -80,7 +80,7 @@ class BaseVisitor : BaseBaseVisitor<Node>() {
             ctx: BaseParser.VariableDeclarationContext
     ): VariableDeclarationNode {
         val name = ctx.variable().name.text
-        val type = ctx.variable().type.accept(this) as Node
+        val type = ctx.variable().type?.accept(this) as Node?
         val initializer = ctx.initializer.accept(this) as ExpressionNode
         return VariableDeclarationNode(ctx.range, name, type, initializer)
     }

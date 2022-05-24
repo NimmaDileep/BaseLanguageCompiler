@@ -126,7 +126,7 @@ open class Reactor {
                 // For now: skip and keep the first reported error. In the future, might want to let the
                 // user pick - but that required changing error propagation to change the whole chain.
             }
-            old != null -> error("attempting to redefine: $attribute from $old to $value")
+//            old != null -> error("attempting to redefine: $attribute from $old to $value")
             value is Throwable -> {
                 if (value.cause == null) {
                     errors += value

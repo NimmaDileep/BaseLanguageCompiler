@@ -1,0 +1,21 @@
+fun A(){
+    return [1, 2, 3];
+}
+
+fun B(y: [Int]){
+    return y;
+}
+
+fun C(z: [Int]){
+    return z;
+}
+
+var x = A();
+print(x);
+
+var y = [3, 2, 1];
+var s = B(y);
+print(s);
+
+var z: [Int] = [];
+print(C(z));

@@ -51,8 +51,12 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
         consume(LPAREN) { "Expect '(' after function name." }
         val parameters = list(RPAREN, ::parameter)
         consume(RPAREN) { "Expect ')' after parameters." }
-        consume(ARROW) { "Expect '->' before return type" }
-        val returnType = type()
+
+        val returnType = if(check(ARROW)) {
+            consume(ARROW) { "Expect '->' before return type" }
+            type()
+        } else null
+
         val body = block()
         return FunctionDeclarationNode(keyword.range, name.text, parameters, returnType, body)
     }
@@ -123,8 +127,10 @@ class BaseParser(private val tokens: Iterator<BaseToken>) {
     fun variableDeclaration(requireSemicolon: Boolean = true, requireInitializer: Boolean = true): StatementNode {
         val keyword = consume(VAR) { "Expect 'var'." }
         val name = consume(IDENTIFIER) { "Expect variable name." }
-        consume(COLON) { "Expect ':' after variable name." }
-        val type = type()
+        val type = if(check(COLON)){
+            consume(COLON) { "Expect ':' after variable name." }
+            type()
+        } else null
         consume(EQUAL) { "Expect '=' before initializer." }
         val initializer = expression()
         if (requireSemicolon) consume(SEMICOLON) { "Expect ';' after variable declaration." }

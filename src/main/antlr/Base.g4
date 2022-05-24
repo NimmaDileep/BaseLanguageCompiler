@@ -27,7 +27,7 @@ member
     ;
 
 variable
-    : VAR name=IDENTIFIER COLON type=typeExpression
+    : VAR name=IDENTIFIER (COLON type=typeExpression)?
     ;
 
 functionDeclaration
@@ -36,8 +36,7 @@ functionDeclaration
         LPAREN
         ( parameters+=parameter (',' parameters+=parameter )* (',')? )?
         RPAREN
-        ARROW
-        returnType=typeExpression
+        (ARROW returnType=typeExpression)?
         body=block
     ;
 
@@ -83,7 +82,7 @@ expr
     | value=FLOAT_LITERAL                                                                # floatLiteral
     | value=STRING_LITERAL                                                               # stringLiteral
     | UNIT                                                                               # unitLiteral
-    | LBRACE elements+=expr ( COMMA elements+=expr )* COMMA? RBRACE                      # arrayLiteral
+    | LBRACE ( elements+=expr ( COMMA elements+=expr )* COMMA? )? RBRACE                      # arrayLiteral
     | SELF                                                                               # self
     | reference                                                                          # referenceAsExpression
     ;

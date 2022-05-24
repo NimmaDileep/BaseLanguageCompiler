@@ -19,8 +19,8 @@ sealed interface Type {
     fun isSubClass(subClass: ClassType, superClass: ClassType): Boolean {
         var testClass: ClassType? = subClass
 
-        while(testClass != null) {
-            if(testClass == superClass) return true
+        while (testClass != null) {
+            if (testClass == superClass) return true
             testClass = testClass.superClass
         }
 
@@ -31,6 +31,21 @@ sealed interface Type {
         return when {
             this.isAssignableTo(other) -> other
             other.isAssignableTo(this) -> this
+            this is ClassType && other is ClassType -> {
+                var testSuper: ClassType? = this
+                var commonSuper: ClassType? = null
+
+                while(testSuper != null) {
+                    if(isSubClass(other, testSuper)) {
+                        commonSuper = testSuper
+                        break
+                    }
+
+                    testSuper = testSuper.superClass
+                }
+
+                commonSuper ?: AnyType
+            }
             else -> AnyType
         }
     }
