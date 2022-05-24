@@ -1,12 +1,25 @@
-class Foo {
-    fun A() -> Unit {
-        fun B() -> Unit {
-            print("hi");
-        }
+class Super {
 
-        B();
+}
+
+class A: Super {
+
+}
+
+class B: Super {
+
+}
+
+fun foo() {
+    var x = 5 == 1;
+
+    if (x) {
+        return A();
+    } else {
+        return B();
     }
 }
 
-var f: Foo = Foo();
-f.A();
+var x = foo();
+var y: Int = x;
+print(y);

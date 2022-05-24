@@ -87,7 +87,7 @@ class ResolveTypes(
             }
             else{
                 reactor.copy(
-                    name = "type variable declaration symbol",
+                    name = "infer variable declaration symbol",
                     to = Attribute(symbol, "type"),
                     from = Attribute(node.initializer, "type")
                 )
