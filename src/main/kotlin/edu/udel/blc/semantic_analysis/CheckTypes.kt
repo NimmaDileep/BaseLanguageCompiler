@@ -13,6 +13,7 @@ import edu.udel.blc.util.visitor.ReflectiveAccessorWalker
 import edu.udel.blc.util.visitor.WalkVisitType.PRE_VISIT
 import java.lang.Integer.min
 import java.util.function.Consumer
+import kotlin.math.exp
 
 
 class CheckTypes(
@@ -29,6 +30,7 @@ class CheckTypes(
         register(BinaryExpressionNode::class.java, PRE_VISIT, ::binaryExpression)
         register(CallNode::class.java, PRE_VISIT, ::call)
         register(UnaryExpressionNode::class.java, PRE_VISIT, ::unaryExpression)
+        register(ReferenceNode::class.java, PRE_VISIT, ::reference)
 
         // statements
         register(AssignmentNode::class.java, PRE_VISIT, ::assignment)
@@ -153,6 +155,31 @@ class CheckTypes(
         when (node.operator) {
             LOGICAL_COMPLEMENT -> checkType("check operand for logical complement", node.operand, BooleanType)
             NEGATION -> checkType("check operand for negation", node.operand, IntType, FloatType)
+        }
+    }
+
+    private fun reference(node: ReferenceNode) {
+        reactor.on(
+            name = "check reference type",
+            attribute = Attribute(node, "symbol")
+        ) {
+            symbol: Symbol ->
+
+            val symbolType = Attribute(symbol, "type")
+            val referenceType = Attribute(node, "type")
+            reactor.rule {
+                using(symbolType)
+                using(referenceType)
+                by {
+                    r ->
+                    val leftType = reactor.get<Type>(symbolType)
+                    val rightType = reactor.get<Type>(referenceType)
+
+                    if (!rightType.isAssignableTo(leftType)) {
+                        reactor.error(SemanticError(node, "type error after inference"))
+                    }
+                }
+            }
         }
     }
 

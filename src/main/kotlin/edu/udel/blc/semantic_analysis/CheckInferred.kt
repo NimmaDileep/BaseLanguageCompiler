@@ -25,17 +25,38 @@ class CheckInferred(
    }
 
     private fun variableDeclaration(node: VariableDeclarationNode) {
+
         reactor.on(
             name = "check inferred variable declaration type",
             attribute = Attribute(node, "symbol")
-        ) { symbol: VariableSymbol -> checkInferred(node, symbol) }
+        ) { symbol: VariableSymbol ->
+            if (node.type != null) {
+               reactor.copy(
+                    name = "reassign variable type",
+                    from = Attribute(node.type, "type"),
+                    to = Attribute(symbol, "type")
+                )
+            }
+
+            checkInferred(node, symbol)
+        }
+
     }
 
     private fun functionDeclaration(node: FunctionDeclarationNode) {
         reactor.on(
             name = "check inferred function type",
             attribute = Attribute(node, "symbol")
-        ) { symbol: CallableSymbol -> checkInferred(node, symbol) }
+        ) { symbol: CallableSymbol ->
+            if(node.returnType != null) {
+                reactor.copy(
+                    name = "reassign variable type",
+                    from = Attribute(node.returnType, "type"),
+                    to = Attribute(symbol, "type")
+                )
+            }
+            checkInferred(node, symbol)
+        }
     }
 
     private fun arrayLiteral(node: ArrayLiteralNode) = checkInferred(node, node)
