@@ -1,4 +1,4 @@
-
+// Floating Point Numbers
 
 fun getArea(radius: Float) {
     var pi = 3.14159;
@@ -7,13 +7,15 @@ fun getArea(radius: Float) {
 }
 
 fun semiCircleArea(radius: Float) {
-    return getArea(radius) / 2; // using division
+    return getArea(radius) / 2.0; // using division
 }
 
 var area = getArea(5.2);
 
 print(area);
 
-print(area + 50); // usage with ints
+print(area - 50); // usage with ints
 
 print(semiCircleArea(5.2)); // semicircle area
+
+print(-5.234 + -5.4);

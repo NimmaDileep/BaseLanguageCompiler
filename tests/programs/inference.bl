@@ -1,3 +1,5 @@
+// Type Inference
+
 class Item {
     var price: Int;
     var name: String;
