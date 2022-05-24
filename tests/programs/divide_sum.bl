@@ -1,5 +1,5 @@
 fun divideSum( x: Int, y: Int){
-    if(x == 0){
+    if(y == 0){
         return 0;
     }
     else{
@@ -8,14 +8,14 @@ fun divideSum( x: Int, y: Int){
     return 0;
 }
 
-print(divideSum(5, 5));
+print(divideSum(10, 5));
 
 print(divideSum(0, 0));
 
-print(divideSum(0, 10));
+print(divideSum(5, 10));
 
-print(divideSum(40, -100));
+print(5 / 12.3124);
 
-print(divideSum(-50, 10));
+print(12.3 / 4);
 
 
