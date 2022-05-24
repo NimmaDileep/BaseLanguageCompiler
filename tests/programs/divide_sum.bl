@@ -1,0 +1,21 @@
+fun divideSum( x: Int, y: Int){
+    if(x == 0){
+        return 0;
+    }
+    else{
+        return x/y;
+    }
+    return 0;
+}
+
+print(divideSum(5, 5));
+
+print(divideSum(0, 0));
+
+print(divideSum(0, 10));
+
+print(divideSum(40, -100));
+
+print(divideSum(-50, 10));
+
+
