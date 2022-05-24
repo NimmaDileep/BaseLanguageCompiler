@@ -1,0 +1,21 @@
+fun rev_num(num: Int){
+    var rev = 0;
+
+    for( ;num != 0; num = num/10){
+        var rem = num % 10;
+        rev = rev * 10 + rem;
+    }
+    return rev;
+}
+
+var num1 = 123456;
+print(rev_num(num1));
+
+var num2 = 0;
+print(rev_num(num2));
+
+var num3 = 325;
+print(rev_num(num3));
+
+var num4 = -5956;
+print(rev_num(num4));

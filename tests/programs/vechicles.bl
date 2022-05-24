@@ -1,0 +1,37 @@
+class Vehicle{
+    var model: String;
+    var maxSpeed: Int;
+    var price: Int;
+
+    fun drive() -> Unit {
+        var desc: String = concat("has max speed of ", str(self.maxSpeed));
+        print(desc);
+    }
+}
+
+class Car: Vehicle {
+    var year: Int;
+
+    fun drive() -> Unit {
+        var desc1: String = concat("The model is ", str(self.model));
+        var desc2: String = concat(". This has max speed of ", str(self.maxSpeed));
+        var desc3: String = concat(" and was made in ", str(self.year));
+
+        var desc: String = concat(desc1, desc2);
+
+        print(desc);
+    }
+}
+
+
+var vehicles: [Vehicle] = [
+    Vehicle("Honda", 200, 30000),
+    Vehicle("Toyota", 220, 25000),
+    Car("Tesla", 250, 45000, 2020)
+];
+
+for (var i: Int = 0; i < len(vehicles); i = i + 1) {
+    var vehicle: Vehicle = vehicles[i];
+    print(vehicles[i].model);
+    vehicle.drive();
+}
