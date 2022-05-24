@@ -1,5 +1,5 @@
 fun findMul(x:Int, y:Int) {
-    println(x * y);
+    print(x * y);
 }
 
 var x = 5;

@@ -1,0 +1,13 @@
+struct Dogs {
+    age: Int,
+    name: String,
+    isHappy: Boolean
+}
+
+fun dog(){
+    return Dogs(1, "Jackie", true);
+}
+
+print(dog());
+
+
